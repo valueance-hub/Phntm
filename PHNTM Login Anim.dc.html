@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0a0a0b;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+input{outline:none}
+:root{--eo:cubic-bezier(0.16,1,0.3,1)}
+@keyframes dotPulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+/* 7a Ink Bleed — materialize via blur+scale */
+@keyframes inkCard{0%{opacity:0;transform:scale(.96);filter:blur(14px)}22%,88%{opacity:1;transform:scale(1);filter:blur(0)}100%{opacity:0;transform:scale(.96);filter:blur(14px)}}
+/* 7b Frame Assemble — hairlines draw the frame, content fades */
+@keyframes faH{0%,6%{transform:scaleX(0)}26%,88%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes faV{0%,6%{transform:scaleY(0)}26%,88%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+@keyframes faIn{0%,20%{opacity:0;transform:translateY(8px)}40%,88%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(8px)}}
+/* 7c Rack Focus — blur clears element by element */
+@keyframes rackItem{0%{opacity:0;filter:blur(8px);transform:translateY(10px)}100%{opacity:1;filter:blur(0);transform:translateY(0)}}
+@keyframes rackHold{0%{opacity:0}8%{opacity:0}18%{opacity:1}88%{opacity:1}100%{opacity:0}}
+/* 7d Weight Settle — tracking collapse on logo */
+@keyframes trackLogo{0%,8%{opacity:0;letter-spacing:.6em;filter:blur(6px)}30%,88%{opacity:1;letter-spacing:.01em;filter:blur(0)}100%{opacity:0;letter-spacing:.6em;filter:blur(6px)}}
+@keyframes riseSoft{0%{opacity:0;transform:translateY(16px)}18%,88%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(16px)}}
+/* 7e Deal In — fields deal from a stack */
+@keyframes dealCard{0%{opacity:0;transform:translateY(24px)}16%,88%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(24px)}}
+@keyframes dealItem{0%{opacity:0;transform:translateY(28px) rotate(-2deg)}100%{opacity:1;transform:translateY(0) rotate(0)}}
+@keyframes dealHold{0%,10%{opacity:0}22%{opacity:1}88%{opacity:1}100%{opacity:0}}
+
+/* 7f Scan Boot — scan line reveals content top→bottom */
+@keyframes bootReveal{0%,8%{clip-path:inset(0 0 100% 0)}40%,88%{clip-path:inset(0 0 0% 0)}100%{clip-path:inset(0 0 100% 0)}}
+@keyframes bootLine{0%,8%{top:0;opacity:0}12%{opacity:1}40%{top:100%;opacity:0}100%{opacity:0}}
+@keyframes bootFrame{0%{opacity:0}8%,88%{opacity:1}100%{opacity:0}}
+/* 7g Grid Precipitate — dot grid fades, card condenses out */
+@keyframes gridFade{0%,14%{opacity:0}30%,82%{opacity:.5}100%{opacity:0}}
+@keyframes precip{0%{opacity:0;transform:scale(.97);filter:blur(6px)}26%,88%{opacity:1;transform:scale(1);filter:blur(0)}100%{opacity:0;transform:scale(.97);filter:blur(6px)}}
+/* 7h Aperture — iris blades open */
+@keyframes aperture{0%,6%{clip-path:circle(0% at 50% 42%);opacity:0}6.5%{opacity:1}34%,88%{clip-path:circle(80% at 50% 42%)}100%{clip-path:circle(0% at 50% 42%);opacity:0}}
+@keyframes ringSpin{0%{transform:rotate(0);opacity:0}10%{opacity:.7}40%{opacity:0}100%{transform:rotate(160deg);opacity:0}}
+/* 7i Readout — mono decode print with cursor */
+@keyframes readPrint{0%,10%{clip-path:inset(0 100% 0 0)}34%,88%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 100% 0 0)}}
+@keyframes readCursor{0%,88%{opacity:1}50%{opacity:.2}100%{opacity:1}}
+@keyframes scan2{0%{background-position:0 0}100%{background-position:0 6px}}
+@keyframes readIn{0%,26%{opacity:0;transform:translateY(8px)}44%,88%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(8px)}}
+/* 7j Hologram — chromatic offset converges + single flicker */
+@keyframes holoLogo{0%,8%{opacity:0;text-shadow:6px 0 rgba(255,255,255,.6),-6px 0 rgba(255,255,255,.4)}18%{opacity:1}30%,88%{opacity:1;text-shadow:0 0 rgba(255,255,255,0)}100%{opacity:0;text-shadow:6px 0 rgba(255,255,255,.6),-6px 0 rgba(255,255,255,.4)}}
+@keyframes holoFlicker{0%,12%,14%,88%{opacity:1}13%{opacity:.4}16%{opacity:.7}18%{opacity:1}100%{opacity:1}}
+@keyframes holoIn{0%,16%{opacity:0;transform:translateY(10px);filter:blur(4px)}34%,88%{opacity:1;transform:translateY(0);filter:blur(0)}100%{opacity:0;transform:translateY(10px);filter:blur(4px)}}
+
+.card{position:relative;width:340px;box-sizing:border-box;padding:38px 34px;display:flex;flex-direction:column;gap:20px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.1);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5)}
+.logo{text-align:center;font-family:'Michroma',sans-serif;font-size:26px;color:#fff;white-space:nowrap}
+.fld{width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:14px;padding:8px 0;transition:border-color .3s var(--eo)}
+.fld:focus{border-color:#fff}
+.btn{border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:500;padding:13px;border-radius:99px;text-align:center;cursor:pointer;transition:transform .16s ease-out}
+.btn:active{transform:scale(.97)}
+.badge{position:absolute;top:14px;left:16px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.12em;color:#0a0a0b;background:#fff;padding:3px 8px;border-radius:5px;z-index:5}
+.hint{position:absolute;top:16px;right:16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#6a6a6a;z-index:5}
+.stage{position:relative;width:440px;height:500px;border-radius:18px;background:radial-gradient(120% 60% at 50% 110%,rgba(150,152,162,.14),transparent 60%),#080809;border:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.hb{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.14em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.ht{font-family:'Michroma',sans-serif;font-size:14px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.sect{margin:0 0 10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;color:#7a7c86;text-transform:uppercase}
+</style>
+</helmet>
+
+<section style="padding:56px 64px;display:flex;flex-direction:column;gap:40px">
+
+  <div>
+    <div class="sect">Unique · 7a–7e</div>
+    <div style="display:flex;flex-wrap:wrap;gap:40px">
+
+      <!-- 7a -->
+      <div id="7a" style="position:relative">
+        <div class="hd"><span class="hb">7A</span><span class="ht">Ink Bleed</span><span class="hs">— materializes from blur, like ink settling</span></div>
+        <div class="stage"><span class="badge">7A</span><span class="hint">loops</span>
+          <div class="card" style="animation:inkCard 5.5s var(--eo) infinite">
+            <div class="logo">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+            <input class="fld" placeholder="ghost@phntm.io"><input class="fld" type="password" placeholder="••••••••••">
+            <div class="btn">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7b -->
+      <div id="7b" style="position:relative">
+        <div class="hd"><span class="hb">7B</span><span class="ht">Frame Assemble</span><span class="hs">— hairlines draw the frame, then content</span></div>
+        <div class="stage"><span class="badge">7B</span><span class="hint">loops</span>
+          <div style="position:relative;width:340px;height:300px;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;top:0;left:0;right:0;height:1px;background:rgba(255,255,255,.5);transform-origin:left;animation:faH 5.5s var(--eo) infinite"></div>
+            <div style="position:absolute;bottom:0;left:0;right:0;height:1px;background:rgba(255,255,255,.5);transform-origin:right;animation:faH 5.5s var(--eo) infinite"></div>
+            <div style="position:absolute;top:0;bottom:0;left:0;width:1px;background:rgba(255,255,255,.5);transform-origin:top;animation:faV 5.5s var(--eo) infinite"></div>
+            <div style="position:absolute;top:0;bottom:0;right:0;width:1px;background:rgba(255,255,255,.5);transform-origin:bottom;animation:faV 5.5s var(--eo) infinite"></div>
+            <div style="display:flex;flex-direction:column;gap:20px;width:100%;padding:34px;box-sizing:border-box;animation:faIn 5.5s var(--eo) infinite">
+              <div class="logo">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+              <input class="fld" placeholder="ghost@phntm.io"><input class="fld" type="password" placeholder="••••••••••">
+              <div class="btn">Continue →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7c -->
+      <div id="7c" style="position:relative">
+        <div class="hd"><span class="hb">7C</span><span class="ht">Rack Focus</span><span class="hs">— focus racks element by element</span></div>
+        <div class="stage"><span class="badge">7C</span><span class="hint">loops</span>
+          <div class="card">
+            <div class="logo" style="animation:rackHold 5.5s infinite,rackItem .5s var(--eo) .3s both">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+            <input class="fld" placeholder="ghost@phntm.io" style="animation:rackHold 5.5s infinite"><input class="fld" type="password" placeholder="••••••••••" style="animation:rackHold 5.5s infinite">
+            <div class="btn" style="animation:rackHold 5.5s infinite">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7d -->
+      <div id="7d" style="position:relative">
+        <div class="hd"><span class="hb">7D</span><span class="ht">Weight Settle</span><span class="hs">— logo tracking collapses into place</span></div>
+        <div class="stage"><span class="badge">7D</span><span class="hint">loops</span>
+          <div class="card">
+            <div class="logo" style="animation:trackLogo 5.5s var(--eo) infinite">phntm<span style="color:#7a7c86">.</span></div>
+            <input class="fld" placeholder="ghost@phntm.io" style="animation:riseSoft 5.5s var(--eo) infinite"><input class="fld" type="password" placeholder="••••••••••" style="animation:riseSoft 5.5s var(--eo) infinite">
+            <div class="btn" style="animation:riseSoft 5.5s var(--eo) infinite">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7e -->
+      <div id="7e" style="position:relative">
+        <div class="hd"><span class="hb">7E</span><span class="ht">Deal In</span><span class="hs">— fields deal in like a dealt hand</span></div>
+        <div class="stage"><span class="badge">7E</span><span class="hint">loops</span>
+          <div class="card" style="animation:dealCard 5.5s var(--eo) infinite">
+            <div class="logo" style="animation:dealHold 5.5s infinite,dealItem .5s var(--eo) .2s both">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+            <input class="fld" placeholder="ghost@phntm.io" style="animation:dealHold 5.5s infinite,dealItem .5s var(--eo) .32s both"><input class="fld" type="password" placeholder="••••••••••" style="animation:dealHold 5.5s infinite,dealItem .5s var(--eo) .44s both">
+            <div class="btn" style="animation:dealHold 5.5s infinite,dealItem .5s var(--eo) .56s both">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <div class="sect">Futuristic · 7f–7j</div>
+    <div style="display:flex;flex-wrap:wrap;gap:40px">
+
+      <!-- 7f -->
+      <div id="7f" style="position:relative">
+        <div class="hd"><span class="hb">7F</span><span class="ht">Scan Boot</span><span class="hs">— a scan line reveals it top to bottom</span></div>
+        <div class="stage"><span class="badge">7F</span><span class="hint">loops</span>
+          <div style="position:relative">
+            <div class="card" style="animation:bootFrame 5.5s infinite">
+              <div style="animation:bootReveal 5.5s var(--eo) infinite">
+                <div class="logo">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+                <div style="height:20px"></div>
+                <input class="fld" placeholder="ghost@phntm.io"><div style="height:20px"></div><input class="fld" type="password" placeholder="••••••••••"><div style="height:20px"></div>
+                <div class="btn">Continue →</div>
+              </div>
+            </div>
+            <div style="position:absolute;left:8px;right:8px;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);box-shadow:0 0 12px rgba(255,255,255,.6);animation:bootLine 5.5s var(--eo) infinite"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7g -->
+      <div id="7g" style="position:relative">
+        <div class="hd"><span class="hb">7G</span><span class="ht">Grid Precipitate</span><span class="hs">— condenses out of a faint grid</span></div>
+        <div class="stage"><span class="badge">7G</span><span class="hint">loops</span>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.14) 1px,transparent 1.4px);background-size:24px 24px;mask-image:radial-gradient(80% 70% at 50% 50%,#000,transparent 75%);-webkit-mask-image:radial-gradient(80% 70% at 50% 50%,#000,transparent 75%);animation:gridFade 5.5s var(--eo) infinite"></div>
+          <div class="card" style="animation:precip 5.5s var(--eo) infinite">
+            <div class="logo">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+            <input class="fld" placeholder="ghost@phntm.io"><input class="fld" type="password" placeholder="••••••••••">
+            <div class="btn">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7h -->
+      <div id="7h" style="position:relative">
+        <div class="hd"><span class="hb">7H</span><span class="ht">Aperture</span><span class="hs">— an iris opens onto the form</span></div>
+        <div class="stage"><span class="badge">7H</span><span class="hint">loops</span>
+          <div style="position:relative;display:flex;align-items:center;justify-content:center">
+            <div style="position:absolute;width:360px;height:360px;border-radius:50%;border:1px solid rgba(255,255,255,.25);border-top-color:rgba(255,255,255,.8);animation:ringSpin 5.5s var(--eo) infinite"></div>
+            <div class="card" style="animation:aperture 5.5s var(--eo) infinite">
+              <div class="logo">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+              <input class="fld" placeholder="ghost@phntm.io"><input class="fld" type="password" placeholder="••••••••••">
+              <div class="btn">Continue →</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7i -->
+      <div id="7i" style="position:relative">
+        <div class="hd"><span class="hb">7I</span><span class="ht">Readout</span><span class="hs">— logo prints like a terminal readout</span></div>
+        <div class="stage"><span class="badge">7I</span><span class="hint">loops</span>
+          <div class="card">
+            <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.04) 0 1px,transparent 1px 3px);border-radius:20px;pointer-events:none;animation:scan2 .6s linear infinite"></div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:3px;position:relative">
+              <div class="logo" style="font-family:'JetBrains Mono',monospace;font-size:24px;overflow:hidden;animation:readPrint 5.5s steps(1) infinite">phntm<span style="color:#7a7c86">.</span></div>
+              <span style="width:9px;height:22px;background:#fff;animation:readCursor 5.5s infinite"></span>
+            </div>
+            <input class="fld" placeholder="ghost@phntm.io" style="position:relative;animation:readIn 5.5s var(--eo) infinite"><input class="fld" type="password" placeholder="••••••••••" style="position:relative;animation:readIn 5.5s var(--eo) infinite">
+            <div class="btn" style="position:relative;animation:readIn 5.5s var(--eo) infinite">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7j -->
+      <div id="7j" style="position:relative">
+        <div class="hd"><span class="hb">7J</span><span class="ht">Hologram</span><span class="hs">— chromatic split converges with a flicker</span></div>
+        <div class="stage"><span class="badge">7J</span><span class="hint">loops</span>
+          <div class="card" style="animation:holoFlicker 5.5s infinite">
+            <div class="logo" style="animation:holoLogo 5.5s var(--eo) infinite">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></div>
+            <input class="fld" placeholder="ghost@phntm.io" style="animation:holoIn 5.5s var(--eo) infinite"><input class="fld" type="password" placeholder="••••••••••" style="animation:holoIn 5.5s var(--eo) infinite">
+            <div class="btn" style="animation:holoIn 5.5s var(--eo) infinite">Continue →</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+</x-dc>
+</body>
+</html>

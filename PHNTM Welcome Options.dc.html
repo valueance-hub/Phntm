@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0a0a0b;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+:root{--eo:cubic-bezier(0.16,1,0.3,1)}
+.badge{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.12em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.stage{position:relative;width:600px;height:520px;border-radius:20px;background:radial-gradient(120% 70% at 50% 0%,rgba(150,152,162,.12),transparent 60%),#060607;border:1px solid rgba(255,255,255,.07);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:52px;box-sizing:border-box}
+@keyframes wUp{0%{opacity:0;transform:translateY(20px)}20%,88%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(20px)}}
+@keyframes wRule{0%,14%{transform:scaleX(0)}32%,88%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+@keyframes wCeo{0%,34%{opacity:0;transform:translateY(10px)}54%,88%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(10px)}}
+.top{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:#7a7a7a}
+.name{margin-top:16px;font-family:'Archivo',sans-serif;font-size:40px;font-weight:200;letter-spacing:-.02em;color:#fff;line-height:1.05}
+.rule{width:80px;height:1px;background:rgba(255,255,255,.6);margin:22px 0;transform-origin:center}
+.line{max-width:420px;font-size:14.5px;line-height:1.6;color:#9a9a9a;font-style:italic}
+.ceo{max-width:440px;font-size:13.5px;line-height:1.7;color:#b8b8b8;text-wrap:pretty}
+.sig{margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:#6a6a6a}
+.div2{width:100%;max-width:300px;height:1px;background:rgba(255,255,255,.08);margin:28px 0 22px}
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:wrap;gap:44px;padding:60px;align-items:flex-start">
+
+  <div id="1a" style="position:relative">
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px"><span class="badge">1A</span><span style="font-family:'Michroma',sans-serif;font-size:15px;color:#fff">Your Journey</span></div>
+    <div class="stage">
+      <div class="top" style="animation:wUp 7s var(--eo) infinite">YOUR JOURNEY BEGINS</div>
+      <div class="name" style="animation:wUp 7s var(--eo) infinite .1s">Welcome, Alexander</div>
+      <div class="rule" style="animation:wRule 7s var(--eo) infinite"></div>
+      <div class="line" style="animation:wUp 7s var(--eo) infinite .2s">"Fortune favors the bold — and the patient. Conquer one day at a time."</div>
+      <div class="div2"></div>
+      <div class="ceo" style="animation:wCeo 7s var(--eo) infinite">I built PHNTM for the traders grinding in silence — the ones who kept going when it hurt, who blew accounts and still showed up the next morning. This is for you. I hope it carries you further than you ever thought you could go.</div>
+      <div class="sig" style="animation:wCeo 7s var(--eo) infinite">— JAKE · FOUNDER</div>
+    </div>
+  </div>
+
+  <div id="1b" style="position:relative">
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px"><span class="badge">1B</span><span style="font-family:'Michroma',sans-serif;font-size:15px;color:#fff">To The One Who Showed Up</span></div>
+    <div class="stage">
+      <div class="top" style="animation:wUp 7s var(--eo) infinite">TO THE ONE WHO SHOWED UP</div>
+      <div class="name" style="animation:wUp 7s var(--eo) infinite .1s">Welcome, Alexander</div>
+      <div class="rule" style="animation:wRule 7s var(--eo) infinite"></div>
+      <div class="line" style="animation:wUp 7s var(--eo) infinite .2s">"There is nothing impossible to him who will try."</div>
+      <div class="div2"></div>
+      <div class="ceo" style="animation:wCeo 7s var(--eo) infinite">I know how heavy it gets — the losses you can't tell anyone about, the nights you question everything. I was that trader, drowning, wishing someone had my back. So I built the thing I needed. Now I've got yours. Go make it.</div>
+      <div class="sig" style="animation:wCeo 7s var(--eo) infinite">— JAKE</div>
+    </div>
+  </div>
+
+  <div id="1c" style="position:relative">
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:16px"><span class="badge">1C</span><span style="font-family:'Michroma',sans-serif;font-size:15px;color:#fff">The Climb</span></div>
+    <div class="stage">
+      <div class="top" style="animation:wUp 7s var(--eo) infinite">THE CLIMB STARTS HERE</div>
+      <div class="name" style="animation:wUp 7s var(--eo) infinite .1s">Welcome, Alexander</div>
+      <div class="rule" style="animation:wRule 7s var(--eo) infinite"></div>
+      <div class="line" style="animation:wUp 7s var(--eo) infinite .2s">"Empires are not won in a day, but lost in one. March with discipline."</div>
+      <div class="div2"></div>
+      <div class="ceo" style="animation:wCeo 7s var(--eo) infinite">Every trader I've ever met carried a quiet pain and a loud dream. I built PHNTM so the dream gets a fair fight. Whatever you've lost to get here, it wasn't wasted — it brought you to the start line. I'm honored to walk it with you. Wishing you the discipline to arrive, and peace when you do.</div>
+      <div class="sig" style="animation:wCeo 7s var(--eo) infinite">— JAKE · CEO</div>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+</body>
+</html>

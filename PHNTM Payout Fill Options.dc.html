@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0b0b0c;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+:root{--eo:cubic-bezier(0.16,1,0.3,1)}
+.badge{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.12em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.ht{font-family:'Michroma',sans-serif;font-size:15px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.card{width:360px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:26px 28px}
+.lab{font-size:14px;color:#fff}
+.cap{font-size:12px;color:#7a7a7a;margin-top:3px}
+.mono{font-family:'JetBrains Mono',monospace}
+@keyframes fillW{from{width:0}to{width:62%}}
+@keyframes fillH{from{height:0}to{height:62%}}
+@keyframes seg{to{stroke-dashoffset:75.4}}
+@keyframes arcSweep{to{stroke-dashoffset:57}}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}100%{opacity:1;transform:scale(1)}}
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:wrap;gap:40px;padding:56px;align-items:flex-start">
+
+  <!-- 1a segmented ring -->
+  <div id="1a" style="position:relative">
+    <div class="hd"><span class="badge">1A</span><span class="ht">Segmented ring</span><span class="hs">— 21 ticks light around a dial</span></div>
+    <div class="card" style="display:flex;align-items:center;gap:22px">
+      <div style="width:92px;height:92px;border-radius:50%;flex:none;background:conic-gradient(#fff 0deg 223deg, rgba(255,255,255,.12) 223deg 360deg);display:flex;align-items:center;justify-content:center"><div style="width:66px;height:66px;border-radius:50%;background:#101011;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">62%</div></div>
+      <div><div class="lab">13 / 21 days</div><div class="cap">8 days to payout</div></div>
+    </div>
+  </div>
+
+  <!-- 1b liquid fill -->
+  <div id="1b" style="position:relative">
+    <div class="hd"><span class="badge">1B</span><span class="ht">Liquid fill</span><span class="hs">— a vessel filling toward the top</span></div>
+    <div class="card" style="display:flex;align-items:center;gap:22px">
+      <div style="width:60px;height:90px;border-radius:14px;border:1px solid rgba(255,255,255,.2);position:relative;overflow:hidden;background:rgba(255,255,255,.03)">
+        <div style="position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(180deg,rgba(255,255,255,.85),rgba(255,255,255,.4));animation:fillH 1.4s var(--eo) both"></div>
+      </div>
+      <div><div class="lab">13 / 21 days</div><div class="cap">62% to payout</div></div>
+    </div>
+  </div>
+
+  <!-- 1c pips row -->
+  <div id="1c" style="position:relative">
+    <div class="hd"><span class="badge">1C</span><span class="ht">Day pips</span><span class="hs">— one slim pip per day, left to right</span></div>
+    <div class="card">
+      <div class="lab" style="margin-bottom:14px">13 / 21 days on account</div>
+      <div style="display:flex;gap:3px">
+        <sc-for list="{{ pips }}" as="p" hint-placeholder-count="21"><div style="{{ p }}"></div></sc-for>
+      </div>
+      <div class="cap" style="margin-top:12px">8 more days, then payout unlocks</div>
+    </div>
+  </div>
+
+  <!-- 1d staircase -->
+  <div id="1d" style="position:relative">
+    <div class="hd"><span class="badge">1D</span><span class="ht">Staircase</span><span class="hs">— steps climb as days bank</span></div>
+    <div class="card">
+      <div class="lab" style="margin-bottom:16px">13 / 21 days</div>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:70px">
+        <sc-for list="{{ steps }}" as="s" hint-placeholder-count="12"><div style="{{ s }}"></div></sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1e dot grid -->
+  <div id="1e" style="position:relative">
+    <div class="hd"><span class="badge">1E</span><span class="ht">Dot grid</span><span class="hs">— a 7×3 field of days filling in</span></div>
+    <div class="card">
+      <div class="lab" style="margin-bottom:14px">13 / 21 days</div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px">
+        <sc-for list="{{ grid }}" as="g" hint-placeholder-count="21"><div style="{{ g }}"></div></sc-for>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1f arc gauge -->
+  <div id="1f" style="position:relative">
+    <div class="hd"><span class="badge">1F</span><span class="ht">Arc gauge</span><span class="hs">— a calm half-dial sweeping to payout</span></div>
+    <div class="card" style="display:flex;align-items:center;gap:22px">
+      <svg width="120" height="72" viewBox="0 0 120 72">
+        <path d="M12,64 A48,48 0 0 1 108,64" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M12,64 A48,48 0 0 1 108,64" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="150.8" stroke-dashoffset="150.8" style="animation:arcSweep 1.6s var(--eo) forwards"/>
+      </svg>
+      <div><div class="lab">13 / 21</div><div class="cap">days on account</div></div>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const done = 13, total = 21;
+    const pips = Array.from({ length: total }, (_, i) => 'flex:1;height:28px;border-radius:3px;transition:background .3s;background:' + (i < done ? (i === done - 1 ? '#fff' : 'rgba(255,255,255,.7)') : 'rgba(255,255,255,.12)'));
+    const steps = Array.from({ length: 12 }, (_, i) => { const on = i < Math.round(done / total * 12); return 'flex:1;border-radius:3px 3px 0 0;transition:all .3s;height:' + Math.round(20 + i * 6.5) + '%;background:' + (on ? 'linear-gradient(180deg,#fff,rgba(255,255,255,.4))' : 'rgba(255,255,255,.1)'); });
+    const grid = Array.from({ length: total }, (_, i) => 'aspect-ratio:1;border-radius:50%;transition:all .3s;background:' + (i < done ? '#fff' : 'rgba(255,255,255,.12)') + (i === done - 1 ? ';box-shadow:0 0 8px rgba(255,255,255,.6)' : ''));
+    return { pips, steps, grid };
+  }
+}
+</script>
+</body>
+</html>

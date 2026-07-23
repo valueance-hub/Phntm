@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0a0a0b;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+:root{--eo:cubic-bezier(0.16,1,0.3,1)}
+/* 8a Depth Tunnel */
+@keyframes tunnel{0%{transform:translateZ(-900px) rotate(0deg);opacity:0}12%{opacity:.5}88%{opacity:.5}100%{transform:translateZ(180px) rotate(22deg);opacity:0}}
+/* 8b Plane Grid */
+@keyframes planeDrift{0%{background-position:0 0}100%{background-position:0 46px}}
+@keyframes planeSway{0%,100%{transform:rotateX(66deg) rotateZ(-3deg)}50%{transform:rotateX(66deg) rotateZ(3deg)}}
+/* 8c Orbit */
+@keyframes orbit{to{transform:rotateY(360deg)}}
+/* 8d Parallax sway */
+@keyframes sway{0%,100%{transform:rotateX(6deg) rotateY(-7deg)}50%{transform:rotateX(-5deg) rotateY(7deg)}}
+/* 8e Monolith */
+@keyframes monolith{0%,100%{transform:rotateY(-26deg) rotateX(4deg)}50%{transform:rotateY(26deg) rotateX(-4deg)}}
+@keyframes dotPulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.stage{position:relative;width:520px;height:600px;border-radius:20px;background:#070708;border:1px solid rgba(255,255,255,.06);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.hb{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.14em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.ht{font-family:'Michroma',sans-serif;font-size:14px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.vig{position:absolute;inset:0;background:radial-gradient(120% 90% at 50% 45%,transparent 46%,rgba(0,0,0,.55));z-index:2;pointer-events:none}
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:wrap;gap:44px;padding:60px;align-items:flex-start">
+
+  <!-- 8a Depth Tunnel -->
+  <div id="8a" style="position:relative">
+    <div class="hd"><span class="hb">8A</span><span class="ht">Depth Tunnel</span><span class="hs">— hairline rings drift toward you in 3D</span></div>
+    <div class="stage">
+      <div style="position:absolute;inset:0;perspective:800px;perspective-origin:50% 45%">
+        <div style="position:absolute;top:45%;left:50%;width:280px;height:280px;margin:-140px 0 0 -140px;transform-style:preserve-3d">
+          <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.5);border-radius:16px;animation:tunnel 9s linear infinite"></div>
+          <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.5);border-radius:16px;animation:tunnel 9s linear infinite -1.8s"></div>
+          <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.5);border-radius:16px;animation:tunnel 9s linear infinite -3.6s"></div>
+          <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.5);border-radius:16px;animation:tunnel 9s linear infinite -5.4s"></div>
+          <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,.5);border-radius:16px;animation:tunnel 9s linear infinite -7.2s"></div>
+        </div>
+      </div>
+      <div class="vig"></div>
+      <dc-import name="LoginCard" hint-size="100%,100%" style="position:absolute;inset:0;z-index:3"></dc-import>
+    </div>
+  </div>
+
+  <!-- 8b Plane Grid -->
+  <div id="8b" style="position:relative">
+    <div class="hd"><span class="hb">8B</span><span class="ht">Floor Plane</span><span class="hs">— a receding grid plane swaying in space</span></div>
+    <div class="stage">
+      <div style="position:absolute;inset:0;perspective:600px;perspective-origin:50% 50%;overflow:hidden">
+        <div style="position:absolute;left:-40%;right:-40%;bottom:-10%;height:80%;background-image:linear-gradient(rgba(255,255,255,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.10) 1px,transparent 1px);background-size:46px 46px;transform-origin:bottom;animation:planeSway 14s ease-in-out infinite,planeDrift 4s linear infinite;mask-image:linear-gradient(transparent,#000 60%,transparent);-webkit-mask-image:linear-gradient(transparent,#000 60%,transparent)"></div>
+      </div>
+      <div class="vig"></div>
+      <dc-import name="LoginCard" hint-size="100%,100%" style="position:absolute;inset:0;z-index:3"></dc-import>
+    </div>
+  </div>
+
+  <!-- 8c Orbit -->
+  <div id="8c" style="position:relative">
+    <div class="hd"><span class="hb">8C</span><span class="ht">Orbit Field</span><span class="hs">— faint motes orbiting in true 3D</span></div>
+    <div class="stage">
+      <div style="position:absolute;top:45%;left:50%;perspective:900px">
+        <div style="position:relative;transform-style:preserve-3d;animation:orbit 26s linear infinite">
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(0deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(45deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(90deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(135deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(180deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(225deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(270deg) translateZ(210px)"></div>
+          <div style="position:absolute;width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);transform:rotateY(315deg) translateZ(210px)"></div>
+        </div>
+      </div>
+      <div class="vig"></div>
+      <dc-import name="LoginCard" hint-size="100%,100%" style="position:absolute;inset:0;z-index:3"></dc-import>
+    </div>
+  </div>
+
+  <!-- 8d Parallax -->
+  <div id="8d" style="position:relative">
+    <div class="hd"><span class="hb">8D</span><span class="ht">Parallax Depth</span><span class="hs">— layered dot fields, slow camera sway</span></div>
+    <div class="stage">
+      <div style="position:absolute;inset:0;perspective:700px;transform-style:preserve-3d">
+        <div style="position:absolute;inset:-20%;transform-style:preserve-3d;animation:sway 18s ease-in-out infinite">
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.28) 1px,transparent 1.6px);background-size:60px 60px;transform:translateZ(-120px)"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.16) 1px,transparent 1.4px);background-size:40px 40px;transform:translateZ(-40px)"></div>
+          <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.10) 1px,transparent 1.2px);background-size:26px 26px;transform:translateZ(30px)"></div>
+        </div>
+      </div>
+      <div class="vig"></div>
+      <dc-import name="LoginCard" hint-size="100%,100%" style="position:absolute;inset:0;z-index:3"></dc-import>
+    </div>
+  </div>
+
+  <!-- 8e Monolith -->
+  <div id="8e" style="position:relative">
+    <div class="hd"><span class="hb">8E</span><span class="ht">Monolith</span><span class="hs">— a slab turning slowly, edges catching light</span></div>
+    <div class="stage">
+      <div style="position:absolute;top:50%;left:50%;perspective:1100px">
+        <div style="position:relative;width:220px;height:400px;margin:-200px 0 0 -110px;transform-style:preserve-3d;animation:monolith 16s ease-in-out infinite">
+          <div style="position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.03),rgba(255,255,255,.09));border:1px solid rgba(255,255,255,.25);transform:translateZ(30px)"></div>
+          <div style="position:absolute;inset:0;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.12);transform:translateZ(-30px)"></div>
+          <div style="position:absolute;top:0;bottom:0;left:0;width:60px;background:linear-gradient(90deg,rgba(255,255,255,.10),transparent);transform:rotateY(90deg) translateZ(30px);transform-origin:left"></div>
+        </div>
+      </div>
+      <div class="vig"></div>
+      <dc-import name="LoginCard" hint-size="100%,100%" style="position:absolute;inset:0;z-index:3"></dc-import>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+</body>
+</html>

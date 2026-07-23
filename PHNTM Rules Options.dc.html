@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0b0b0c;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+:root{--eo:cubic-bezier(0.16,1,0.3,1)}
+.badge{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.12em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.ht{font-family:'Michroma',sans-serif;font-size:15px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.panel{width:400px;background:linear-gradient(180deg,#161616,#0e0e0e);border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:28px 30px}
+.lab{font-size:12px;color:#7a7a7a}
+.fieldRow{display:flex;flex-direction:column;gap:8px;margin-bottom:22px}
+.fakeInput{border-bottom:1px solid rgba(255,255,255,.2);color:#8a8a8a;font-size:15px;padding:9px 0}
+.sect{margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)}
+.q{font-size:14px;color:#eaeaea;margin-bottom:14px}
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:wrap;gap:44px;padding:60px;align-items:flex-start">
+
+  <!-- 1a Yes/No toggle -->
+  <div id="1a" style="position:relative">
+    <div class="hd"><span class="badge">1A</span><span class="ht">Yes / No toggle</span><span class="hs">— one tap, in the log form</span></div>
+    <div class="panel">
+      <div class="fieldRow"><span class="lab">Symbol</span><div class="fakeInput">NQ</div></div>
+      <div class="fieldRow"><span class="lab">P&L</span><div class="fakeInput">+$620</div></div>
+      <div class="sect">
+        <div class="q">Did you follow your rules?</div>
+        <div style="display:flex;gap:10px">
+          <button onClick="{{ setYes1 }}" style="{{ yesSt1 }}">✓ Yes, I followed my plan</button>
+          <button onClick="{{ setNo1 }}" style="{{ noSt1 }}">✗ No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1b Rule checklist -->
+  <div id="1b" style="position:relative">
+    <div class="hd"><span class="badge">1B</span><span class="ht">Rule checklist</span><span class="hs">— tick your own rules, get a score</span></div>
+    <div class="panel">
+      <div class="fieldRow"><span class="lab">Symbol</span><div class="fakeInput">NQ</div></div>
+      <div class="sect">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
+          <span class="q" style="margin:0">Rules followed</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ scoreColor }}">{{ scoreText }}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+            <button onClick="{{ r.toggle }}" style="{{ r.st }}"><span style="{{ r.boxSt }}">{{ r.check }}</span>{{ r.label }}</button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1c Discipline grade -->
+  <div id="1c" style="position:relative">
+    <div class="hd"><span class="badge">1C</span><span class="ht">Discipline grade</span><span class="hs">— rate the process, not the result</span></div>
+    <div class="panel">
+      <div class="fieldRow"><span class="lab">Symbol</span><div class="fakeInput">NQ</div></div>
+      <div class="sect">
+        <div class="q">How disciplined was this trade?</div>
+        <div style="display:flex;gap:8px">
+          <sc-for list="{{ grades }}" as="g" hint-placeholder-count="5"><button onClick="{{ g.pick }}" style="{{ g.st }}">{{ g.label }}</button></sc-for>
+        </div>
+        <div style="margin-top:14px;font-size:12.5px;color:#8a8a8a;line-height:1.5">{{ gradeNote }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1d Post-save reflection -->
+  <div id="1d" style="position:relative">
+    <div class="hd"><span class="badge">1D</span><span class="ht">Post-save reflection</span><span class="hs">— a calm check after you log, keeps form clean</span></div>
+    <div style="width:400px;background:radial-gradient(120% 70% at 50% 0%,rgba(150,152,162,.1),transparent 60%),#0e0e10;border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:40px 34px;text-align:center">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;color:#7a7a7a;margin-bottom:16px">TRADE LOGGED</div>
+      <div style="font-size:24px;font-weight:200;color:#fff;line-height:1.2">Quick check —<br>did you stick to your plan?</div>
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:26px">
+        <button onClick="{{ setYes4 }}" style="{{ yesSt4 }}">Yes</button>
+        <button onClick="{{ setPartial4 }}" style="{{ partSt4 }}">Mostly</button>
+        <button onClick="{{ setNo4 }}" style="{{ noSt4 }}">No</button>
+      </div>
+      <div style="margin-top:18px;font-size:12.5px;color:#8a8a8a;line-height:1.5;text-wrap:pretty">{{ reflectNote }}</div>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { a: null, checks: {}, grade: null, d: null };
+  renderVals() {
+    const pill = (on) => 'flex:1;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;padding:12px;border-radius:12px;transition:background .3s,color .3s,border-color .3s;border:1px solid ' + (on ? '#fff;background:#fff;color:#000;font-weight:500' : 'rgba(255,255,255,.18);background:none;color:#c8c8c8');
+    const ruleList = ['Waited for my setup', 'Risk ≤ 1%', 'No revenge trade', 'Set stop before entry'];
+    const checked = this.state.checks || {};
+    const n = ruleList.filter((_, i) => checked[i]).length;
+    const grades = ['A', 'B', 'C', 'D', 'F'];
+    const gradeNotes = { A: 'Textbook execution — this is the trade to repeat.', B: 'Solid. One small slip to tighten.', C: 'Some drift from plan. Review what pulled you.', D: 'Mostly emotion. Name the trigger.', F: 'Rules ignored. The loss is tuition — study it.' };
+    const dNotes = { Yes: 'Discipline logged. Process over outcome.', Mostly: 'Close. Note the one thing that slipped.', No: 'Honesty is the first rule. Tomorrow, tighter.' };
+    return {
+      setYes1: () => this.setState({ a: 'yes' }), setNo1: () => this.setState({ a: 'no' }),
+      yesSt1: pill(this.state.a === 'yes'), noSt1: 'cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;padding:12px 16px;border-radius:12px;transition:all .3s;border:1px solid ' + (this.state.a === 'no' ? '#e0a05a;background:rgba(224,160,90,.12);color:#e0a05a' : 'rgba(255,255,255,.18);background:none;color:#c8c8c8'),
+      rules: ruleList.map((label, i) => { const on = !!checked[i]; return { label, check: on ? '✓' : '', toggle: () => this.setState((s) => ({ checks: { ...s.checks, [i]: !s.checks[i] } })),
+        st: 'display:flex;align-items:center;gap:11px;text-align:left;cursor:pointer;font-family:Archivo,sans-serif;font-size:13.5px;padding:11px 13px;border-radius:12px;transition:background .3s;border:none;background:' + (on ? 'rgba(255,255,255,.06)' : 'rgba(255,255,255,.02)') + ';color:' + (on ? '#fff' : '#9a9a9a'),
+        boxSt: 'width:20px;height:20px;flex:none;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;transition:all .3s;border:1px solid ' + (on ? '#fff;background:#fff;color:#000' : 'rgba(255,255,255,.25);background:none;color:transparent') }; }),
+      scoreText: n + ' / ' + ruleList.length, scoreColor: n === ruleList.length ? '#5fbf83' : n >= ruleList.length / 2 ? '#eaeaea' : '#e0a05a',
+      grades: grades.map((label) => { const on = this.state.grade === label; return { label, pick: () => this.setState({ grade: label }),
+        st: 'width:46px;height:46px;cursor:pointer;font-family:Michroma,sans-serif;font-size:15px;border-radius:12px;transition:all .3s;border:1px solid ' + (on ? '#fff;background:#fff;color:#000' : 'rgba(255,255,255,.18);background:none;color:#9a9a9a') }; }),
+      gradeNote: this.state.grade ? gradeNotes[this.state.grade] : 'Grade your execution — win or lose, discipline is the score that compounds.',
+      setYes4: () => this.setState({ d: 'Yes' }), setPartial4: () => this.setState({ d: 'Mostly' }), setNo4: () => this.setState({ d: 'No' }),
+      yesSt4: pill(this.state.d === 'Yes'), partSt4: pill(this.state.d === 'Mostly'), noSt4: pill(this.state.d === 'No'),
+      reflectNote: this.state.d ? dNotes[this.state.d] : 'No judgement on the P&L — just the process.',
+    };
+  }
+}
+</script>
+</body>
+</html>

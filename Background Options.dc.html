@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0b0b0b;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
+</style>
+</helmet>
+<section style="padding:40px 40px 0">
+  <div style="margin-bottom:26px">
+    <div style="font-size:26px;font-weight:200;color:#fff">Signature set — built from the brand, not decoration</div>
+    <div style="margin-top:6px;font-size:13.5px;color:#7a7a7a">Every one of these is your journal itself, turned into atmosphere. 3d is interactive — move your mouse over it.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(480px,1fr));gap:22px;max-width:1400px">
+    <sc-for list="{{ tiles3 }}" as="o" hint-placeholder-count="5">
+      <div id="{{ o.id }}" style="position:relative;height:360px;background:#060606;border:1px solid rgba(255,255,255,.1);overflow:hidden">
+        <x-import component-from-global-scope="bg-fx" from="./bg-fx.js" mode="{{ o.mode }}" style="position:absolute;inset:0" hint-size="100%,360px"></x-import>
+        <div style="position:absolute;top:16px;left:18px;display:flex;align-items:center;gap:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#000;background:#fff;padding:3px 8px;border-radius:99px">{{ o.id }}</span>
+          <span style="font-size:14px;color:#fff">{{ o.name }}</span>
+        </div>
+        <div style="position:absolute;top:40px;left:18px;max-width:70%;font-size:12px;line-height:1.6;color:#7a7a7a">{{ o.desc }}</div>
+        <div style="position:absolute;left:18px;bottom:20px">
+          <div style="font-size:12px;color:#7a7a7a">Net P&amp;L — this week</div>
+          <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;color:#fff">+$9,420</div>
+        </div>
+        <div style="position:absolute;right:18px;bottom:20px;font-size:13px;letter-spacing:.32em;color:#fff">PHNTM</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+<section style="padding:40px 40px 0">
+  <div style="margin-bottom:26px">
+    <div style="font-size:26px;font-weight:200;color:#fff">Advanced set — round two</div>
+    <div style="margin-top:6px;font-size:13.5px;color:#7a7a7a">More engineered: flow fields, liquid light, generative print and type.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(480px,1fr));gap:22px;max-width:1400px">
+    <sc-for list="{{ tiles2 }}" as="o" hint-placeholder-count="7">
+      <div id="{{ o.id }}" style="position:relative;height:320px;background:#060606;border:1px solid rgba(255,255,255,.1);overflow:hidden">
+        <x-import component-from-global-scope="bg-fx" from="./bg-fx.js" mode="{{ o.mode }}" style="position:absolute;inset:0" hint-size="100%,320px"></x-import>
+        <div style="position:absolute;top:16px;left:18px;display:flex;align-items:center;gap:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#000;background:#fff;padding:3px 8px;border-radius:99px">{{ o.id }}</span>
+          <span style="font-size:14px;color:#fff">{{ o.name }}</span>
+        </div>
+        <div style="position:absolute;top:40px;left:18px;max-width:75%;font-size:12px;line-height:1.6;color:#7a7a7a">{{ o.desc }}</div>
+        <div style="position:absolute;left:18px;bottom:20px">
+          <div style="font-size:12px;color:#7a7a7a">Net P&amp;L — this week</div>
+          <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;color:#fff">+$9,420</div>
+        </div>
+        <div style="position:absolute;right:18px;bottom:20px;font-size:13px;letter-spacing:.32em;color:#fff">PHNTM</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+<section style="padding:40px">
+  <div style="margin-bottom:26px">
+    <div style="font-size:26px;font-weight:200;color:#fff">Background overlays — pick one</div>
+    <div style="margin-top:6px;font-size:13.5px;color:#7a7a7a">All monochrome, all live. Each tile shows the animation behind real dashboard content so you can judge legibility.</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,minmax(480px,1fr));gap:22px;max-width:1400px">
+    <sc-for list="{{ tiles }}" as="o" hint-placeholder-count="7">
+      <div id="{{ o.id }}" style="position:relative;height:320px;background:#060606;border:1px solid rgba(255,255,255,.1);overflow:hidden">
+        <x-import component-from-global-scope="bg-fx" from="./bg-fx.js" mode="{{ o.mode }}" style="position:absolute;inset:0" hint-size="100%,320px"></x-import>
+        <div style="position:absolute;top:16px;left:18px;display:flex;align-items:center;gap:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#000;background:#fff;padding:3px 8px;border-radius:99px">{{ o.id }}</span>
+          <span style="font-size:14px;color:#fff">{{ o.name }}</span>
+        </div>
+        <div style="position:absolute;top:40px;left:18px;max-width:75%;font-size:12px;line-height:1.6;color:#7a7a7a">{{ o.desc }}</div>
+        <div style="position:absolute;left:18px;bottom:20px">
+          <div style="font-size:12px;color:#7a7a7a">Net P&amp;L — this week</div>
+          <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;color:#fff">+$9,420</div>
+        </div>
+        <div style="position:absolute;right:18px;bottom:20px;font-size:13px;letter-spacing:.32em;color:#fff">PHNTM</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    return { tiles3: [
+      { id: '3a', mode: 'replay', name: 'Ghost session', desc: 'Your last session literally haunts the page — a candlestick replay draws itself bar by bar, pings your entry and exit, then dissolves and replays. Nobody else has this.' },
+      { id: '3b', mode: 'tape', name: 'Phantom tape', desc: 'Real fills from your journal drifting up like apparitions — timestamps, prices, R multiples materializing and dissolving. Your own history as atmosphere.' },
+      { id: '3c', mode: 'pulse', name: 'Market pulse', desc: 'An EKG heartbeat sweeping across the page with a fading trace, like a monitor in an OR. The market is alive; the journal is watching it.' },
+      { id: '3d', mode: 'xray', name: 'X-ray reveal', desc: 'INTERACTIVE — the page hides a blueprint of your best trade. Your cursor is a flashlight that reveals the grid, the route, entry, exit, the stop you never moved.' },
+      { id: '3e', mode: 'monolith', name: 'Data corridor', desc: 'Two perspective walls of your journal entries scrolling past, like standing inside your own black box. Blade Runner, monochrome.' },
+    ], tiles2: [
+      { id: '2a', mode: 'flowfield', name: 'Flow field', desc: 'Hundreds of particles tracing invisible currents — ghostly streamlines, like order flow made visible.' },
+      { id: '2b', mode: 'metaball', name: 'Liquid light', desc: 'Soft chrome blobs merging and separating under heavy blur. The lava-lamp of a 9-figure brand.' },
+      { id: '2c', mode: 'halftone', name: 'Halftone wave', desc: 'A dot-matrix print where waves pass through dot sizes. Editorial, Vanquish-adjacent.' },
+      { id: '2d', mode: 'orbit', name: 'Orbital system', desc: 'Concentric arcs rotating at different speeds with tracer dots — precision-instrument energy.' },
+      { id: '2e', mode: 'terrain', name: 'Wire terrain', desc: 'A perspective wireframe landscape rolling beneath the content. The market as terrain.' },
+      { id: '2f', mode: 'typo', name: 'Echo type', desc: 'Your own wordmark echoed in drifting outline layers. Pure brand, zero decoration.' },
+      { id: '2g', mode: 'threads', name: 'Silk threads', desc: 'Fine horizontal threads swaying like fabric in slow air. The most elegant and least busy.' },
+    ], tiles: [
+      { id: '1a', mode: 'mist', name: 'Phantom mist', desc: 'Slow-breathing fog drifting across the frame. The most on-brand for a ghost — barely there, expensive feel.' },
+      { id: '1b', mode: 'rain', name: 'Ticker rain', desc: 'Faint price digits falling in columns. Trading DNA without being a cliché chart.' },
+      { id: '1c', mode: 'ridge', name: 'Ridge lines', desc: 'Topographic contour lines slowly undulating — reads as terrain you are climbing.' },
+      { id: '1d', mode: 'grid', name: 'Grid sweep', desc: 'Fine engineering grid with a light band sweeping through, like a scanner pass.' },
+      { id: '1e', mode: 'sweep', name: 'Lighthouse beam', desc: 'A soft beam slowly panning from below — cinematic, keeps the center clean for content.' },
+      { id: '1f', mode: 'dust', name: 'Particle drift', desc: 'Fine dust with parallax depth twinkling upward. Quietest of the seven.' },
+      { id: '1g', mode: 'candles', name: 'Candle skyline', desc: 'A skyline of faint candlesticks breathing at the base of the page. Unmistakably a journal.' },
+    ]};
+  }
+}
+</script>
+</body>
+</html>

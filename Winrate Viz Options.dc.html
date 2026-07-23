@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#080809;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{display:flex;flex-wrap:wrap;gap:40px;padding:64px;align-items:flex-start}
+.opt{position:relative;width:600px}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.hb{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.14em;color:#080809;background:#fff;padding:4px 9px;border-radius:6px}
+.ht{font-size:16px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.card{display:flex;gap:20px}
+.panel{flex:1;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:20px 22px}
+.pt{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8a8a8a;margin-bottom:18px}
+.mono{font-family:'JetBrains Mono',monospace}
+.lbl{font-size:11px;color:#7a7a7a;text-align:center;margin-top:9px}
+.val{font-family:'JetBrains Mono',monospace;font-size:12px;color:#fff}
+</style>
+</helmet>
+
+<div class="wrap">
+
+  <!-- 1A Tracked bars -->
+  <div class="opt" id="1a">
+    <div class="hd"><span class="hb">1A</span><span class="ht">Tracked Bars</span><span class="hs">— bars inside a 100% ghost, 50% guide, left axis</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="display:flex;gap:16px;height:170px">
+          <div style="display:flex;flex-direction:column;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9px;color:#5c5c5c;padding-bottom:20px">
+            <span>100</span><span>50</span><span>0</span>
+          </div>
+          <div style="flex:1;display:flex;gap:22px;align-items:flex-end">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+              <div style="position:relative;width:100%;max-width:44px;height:150px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden;display:flex;align-items:flex-end">
+                <div style="position:absolute;left:0;right:0;bottom:75px;height:1px;background:rgba(255,255,255,.14);border-top:1px dashed rgba(255,255,255,.2)"></div>
+                <div style="width:100%;height:78%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.35));border-radius:6px 6px 0 0"></div>
+              </div>
+              <div class="lbl">London</div><div class="val">78%</div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+              <div style="position:relative;width:100%;max-width:44px;height:150px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden;display:flex;align-items:flex-end">
+                <div style="position:absolute;left:0;right:0;bottom:75px;height:1px;background:rgba(255,255,255,.14);border-top:1px dashed rgba(255,255,255,.2)"></div>
+                <div style="width:100%;height:64%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.35));border-radius:6px 6px 0 0"></div>
+              </div>
+              <div class="lbl">New York</div><div class="val">64%</div>
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center">
+              <div style="position:relative;width:100%;max-width:44px;height:150px;background:rgba(255,255,255,.05);border-radius:6px;overflow:hidden;display:flex;align-items:flex-end">
+                <div style="position:absolute;left:0;right:0;bottom:75px;height:1px;background:rgba(255,255,255,.14);border-top:1px dashed rgba(255,255,255,.2)"></div>
+                <div style="width:100%;height:41%;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.2));border-radius:6px 6px 0 0"></div>
+              </div>
+              <div class="lbl">Asia</div><div class="val">41%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="display:flex;gap:10px;align-items:flex-end;height:150px">
+          <div style="flex:1;text-align:center"><div style="width:100%;height:108px;background:rgba(255,255,255,.05);border-radius:5px;display:flex;align-items:flex-end;overflow:hidden"><div style="width:100%;height:72%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.35))"></div></div><div class="lbl">M</div></div>
+          <div style="flex:1;text-align:center"><div style="width:100%;height:108px;background:rgba(255,255,255,.05);border-radius:5px;display:flex;align-items:flex-end;overflow:hidden"><div style="width:100%;height:55%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.35))"></div></div><div class="lbl">T</div></div>
+          <div style="flex:1;text-align:center"><div style="width:100%;height:108px;background:rgba(255,255,255,.05);border-radius:5px;display:flex;align-items:flex-end;overflow:hidden"><div style="width:100%;height:80%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.35))"></div></div><div class="lbl">W</div></div>
+          <div style="flex:1;text-align:center"><div style="width:100%;height:108px;background:rgba(255,255,255,.05);border-radius:5px;display:flex;align-items:flex-end;overflow:hidden"><div style="width:100%;height:47%;background:linear-gradient(180deg,rgba(255,255,255,.6),rgba(255,255,255,.2))"></div></div><div class="lbl">T</div></div>
+          <div style="flex:1;text-align:center"><div style="width:100%;height:108px;background:rgba(255,255,255,.05);border-radius:5px;display:flex;align-items:flex-end;overflow:hidden"><div style="width:100%;height:66%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.35))"></div></div><div class="lbl">F</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1B Horizontal meters -->
+  <div class="opt" id="1b">
+    <div class="hd"><span class="hb">1B</span><span class="ht">Horizontal Meters</span><span class="hs">— label left, 100% track, % at the end</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="display:flex;flex-direction:column;gap:20px">
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:13px;color:#cfcfcf">London</span><span class="val">78%</span></div><div style="height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:78%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff);border-radius:99px"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:13px;color:#cfcfcf">New York</span><span class="val">64%</span></div><div style="height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:64%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff);border-radius:99px"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:7px"><span style="font-size:13px;color:#cfcfcf">Asia</span><span class="val">41%</span></div><div style="height:8px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:41%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.35),rgba(255,255,255,.7));border-radius:99px"></div></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:#cfcfcf">Mon</span><span class="val">72%</span></div><div style="height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:72%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:#cfcfcf">Tue</span><span class="val">55%</span></div><div style="height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:55%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:#cfcfcf">Wed</span><span class="val">80%</span></div><div style="height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:80%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff)"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:#cfcfcf">Thu</span><span class="val">47%</span></div><div style="height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:47%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.35),rgba(255,255,255,.7))"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;color:#cfcfcf">Fri</span><span class="val">66%</span></div><div style="height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden"><div style="width:66%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),#fff)"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1C Lollipops -->
+  <div class="opt" id="1c">
+    <div class="hd"><span class="hb">1C</span><span class="ht">Lollipops</span><span class="hs">— stem to a dot, 50% baseline, ceiling ticks</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="position:relative;height:170px;display:flex;gap:22px;align-items:flex-end;padding-top:6px">
+          <div style="position:absolute;left:0;right:0;bottom:calc(20px + 50%*.86);height:1px;background:rgba(255,255,255,.12);border-top:1px dashed rgba(255,255,255,.18)"></div>
+          <div style="position:absolute;left:0;right:0;top:6px;font-family:'JetBrains Mono',monospace;font-size:9px;color:#5c5c5c">100</div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+            <div style="width:2px;height:78%;background:rgba(255,255,255,.25);position:relative"><div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.5)"></div></div>
+            <div class="lbl">London</div><div class="val">78%</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+            <div style="width:2px;height:64%;background:rgba(255,255,255,.25);position:relative"><div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.5)"></div></div>
+            <div class="lbl">New York</div><div class="val">64%</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end">
+            <div style="width:2px;height:41%;background:rgba(255,255,255,.18);position:relative"><div style="position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,.55)"></div></div>
+            <div class="lbl">Asia</div><div class="val">41%</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="position:relative;height:150px;display:flex;gap:10px;align-items:flex-end">
+          <div style="position:absolute;left:0;right:0;bottom:calc(18px + 50%*.8);height:1px;background:rgba(255,255,255,.1);border-top:1px dashed rgba(255,255,255,.16)"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:2px;height:72%;background:rgba(255,255,255,.25);position:relative"><div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#fff"></div></div><div class="lbl">M</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:2px;height:55%;background:rgba(255,255,255,.25);position:relative"><div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#fff"></div></div><div class="lbl">T</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:2px;height:80%;background:rgba(255,255,255,.25);position:relative"><div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#fff"></div></div><div class="lbl">W</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:2px;height:47%;background:rgba(255,255,255,.18);position:relative"><div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.55)"></div></div><div class="lbl">T</div></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end"><div style="width:2px;height:66%;background:rgba(255,255,255,.25);position:relative"><div style="position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:9px;height:9px;border-radius:50%;background:#fff"></div></div><div class="lbl">F</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1D Rings -->
+  <div class="opt" id="1d">
+    <div class="hd"><span class="hb">1D</span><span class="ht">Rings</span><span class="hs">— circular % gauges, full ring = 100%</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="display:flex;gap:14px;justify-content:space-around;padding:8px 0">
+          <div style="text-align:center"><div style="width:82px;height:82px;border-radius:50%;background:conic-gradient(#fff 281deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:62px;height:62px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center" class="val">78%</div></div><div class="lbl">London</div></div>
+          <div style="text-align:center"><div style="width:82px;height:82px;border-radius:50%;background:conic-gradient(#fff 230deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:62px;height:62px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center" class="val">64%</div></div><div class="lbl">New York</div></div>
+          <div style="text-align:center"><div style="width:82px;height:82px;border-radius:50%;background:conic-gradient(rgba(255,255,255,.55) 148deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:62px;height:62px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center" class="val">41%</div></div><div class="lbl">Asia</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="display:flex;gap:8px;justify-content:space-between;padding:8px 0">
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(#fff 259deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:42px;height:42px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center;font-size:10px" class="val">72</div></div><div class="lbl">M</div></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(#fff 198deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:42px;height:42px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center;font-size:10px" class="val">55</div></div><div class="lbl">T</div></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(#fff 288deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:42px;height:42px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center;font-size:10px" class="val">80</div></div><div class="lbl">W</div></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(rgba(255,255,255,.55) 169deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:42px;height:42px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center;font-size:10px" class="val">47</div></div><div class="lbl">T</div></div>
+          <div style="text-align:center"><div style="width:56px;height:56px;border-radius:50%;background:conic-gradient(#fff 238deg,rgba(255,255,255,.08) 0);display:flex;align-items:center;justify-content:center"><div style="width:42px;height:42px;border-radius:50%;background:#0c0c0d;display:flex;align-items:center;justify-content:center;font-size:10px" class="val">66</div></div><div class="lbl">F</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1E Heat tiles -->
+  <div class="opt" id="1e">
+    <div class="hd"><span class="hb">1E</span><span class="ht">Heat Tiles</span><span class="hs">— brightness = win rate, 0–100 legend</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1;aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.78);display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#0a0a0a">78%</span><span style="font-size:11px;color:#333;margin-top:4px">London</span></div>
+          <div style="flex:1;aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.5);display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#0a0a0a">64%</span><span style="font-size:11px;color:#222;margin-top:4px">New York</span></div>
+          <div style="flex:1;aspect-ratio:1;border-radius:12px;background:rgba(255,255,255,.16);display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'JetBrains Mono',monospace;font-size:20px;color:#fff">41%</span><span style="font-size:11px;color:#aaa;margin-top:4px">Asia</span></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:16px"><span style="font-size:9px;color:#5c5c5c" class="mono">0</span><div style="flex:1;height:5px;border-radius:99px;background:linear-gradient(90deg,rgba(255,255,255,.1),#fff)"></div><span style="font-size:9px;color:#5c5c5c" class="mono">100</span></div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="display:flex;gap:8px">
+          <div style="flex:1;aspect-ratio:.8;border-radius:9px;background:rgba(255,255,255,.7);display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono" style="font-size:13px;color:#0a0a0a">72</span><span style="font-size:10px;color:#333">M</span></div>
+          <div style="flex:1;aspect-ratio:.8;border-radius:9px;background:rgba(255,255,255,.44);display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono" style="font-size:13px;color:#0a0a0a">55</span><span style="font-size:10px;color:#222">T</span></div>
+          <div style="flex:1;aspect-ratio:.8;border-radius:9px;background:rgba(255,255,255,.82);display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono" style="font-size:13px;color:#0a0a0a">80</span><span style="font-size:10px;color:#333">W</span></div>
+          <div style="flex:1;aspect-ratio:.8;border-radius:9px;background:rgba(255,255,255,.22);display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono" style="font-size:13px;color:#fff">47</span><span style="font-size:10px;color:#aaa">T</span></div>
+          <div style="flex:1;aspect-ratio:.8;border-radius:9px;background:rgba(255,255,255,.56);display:flex;flex-direction:column;align-items:center;justify-content:center"><span class="mono" style="font-size:13px;color:#0a0a0a">66</span><span style="font-size:10px;color:#222">F</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1F Gauge arcs -->
+  <div class="opt" id="1f">
+    <div class="hd"><span class="hb">1F</span><span class="ht">Gauge Arcs</span><span class="hs">— half-dial, needle sweeps 0→100</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="display:flex;gap:14px;justify-content:space-around;padding:6px 0">
+          <div style="text-align:center"><div style="width:88px;height:44px;border-radius:88px 88px 0 0;background:conic-gradient(from 270deg,#fff 0deg 140deg,rgba(255,255,255,.08) 140deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:11px;right:11px;top:11px;border-radius:66px 66px 0 0;background:#0c0c0d"></div></div><div class="val" style="margin-top:6px">78%</div><div class="lbl" style="margin-top:2px">London</div></div>
+          <div style="text-align:center"><div style="width:88px;height:44px;border-radius:88px 88px 0 0;background:conic-gradient(from 270deg,#fff 0deg 115deg,rgba(255,255,255,.08) 115deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:11px;right:11px;top:11px;border-radius:66px 66px 0 0;background:#0c0c0d"></div></div><div class="val" style="margin-top:6px">64%</div><div class="lbl" style="margin-top:2px">New York</div></div>
+          <div style="text-align:center"><div style="width:88px;height:44px;border-radius:88px 88px 0 0;background:conic-gradient(from 270deg,rgba(255,255,255,.55) 0deg 74deg,rgba(255,255,255,.08) 74deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:11px;right:11px;top:11px;border-radius:66px 66px 0 0;background:#0c0c0d"></div></div><div class="val" style="margin-top:6px">41%</div><div class="lbl" style="margin-top:2px">Asia</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="display:flex;gap:6px;justify-content:space-between;padding:6px 0">
+          <div style="text-align:center"><div style="width:52px;height:26px;border-radius:52px 52px 0 0;background:conic-gradient(from 270deg,#fff 0deg 130deg,rgba(255,255,255,.08) 130deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:7px;right:7px;top:7px;border-radius:40px 40px 0 0;background:#0c0c0d"></div></div><div class="lbl" style="margin-top:4px">M·72</div></div>
+          <div style="text-align:center"><div style="width:52px;height:26px;border-radius:52px 52px 0 0;background:conic-gradient(from 270deg,#fff 0deg 99deg,rgba(255,255,255,.08) 99deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:7px;right:7px;top:7px;border-radius:40px 40px 0 0;background:#0c0c0d"></div></div><div class="lbl" style="margin-top:4px">T·55</div></div>
+          <div style="text-align:center"><div style="width:52px;height:26px;border-radius:52px 52px 0 0;background:conic-gradient(from 270deg,#fff 0deg 144deg,rgba(255,255,255,.08) 144deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:7px;right:7px;top:7px;border-radius:40px 40px 0 0;background:#0c0c0d"></div></div><div class="lbl" style="margin-top:4px">W·80</div></div>
+          <div style="text-align:center"><div style="width:52px;height:26px;border-radius:52px 52px 0 0;background:conic-gradient(from 270deg,rgba(255,255,255,.55) 0deg 85deg,rgba(255,255,255,.08) 85deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:7px;right:7px;top:7px;border-radius:40px 40px 0 0;background:#0c0c0d"></div></div><div class="lbl" style="margin-top:4px">T·47</div></div>
+          <div style="text-align:center"><div style="width:52px;height:26px;border-radius:52px 52px 0 0;background:conic-gradient(from 270deg,#fff 0deg 119deg,rgba(255,255,255,.08) 119deg 180deg,transparent 180deg);position:relative;overflow:hidden"><div style="position:absolute;bottom:0;left:7px;right:7px;top:7px;border-radius:40px 40px 0 0;background:#0c0c0d"></div></div><div class="lbl" style="margin-top:4px">F·66</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1G Dot matrix -->
+  <div class="opt" id="1g">
+    <div class="hd"><span class="hb">1G</span><span class="ht">Dot Matrix</span><span class="hs">— 10 dots = 100%, each dot 10%</span></div>
+    <div class="card">
+      <div class="panel">
+        <div class="pt">Win by session</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:#cfcfcf">London</span><span class="val">78%</span></div><div style="display:flex;gap:5px">
+            <span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.4)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:#cfcfcf">New York</span><span class="val">64%</span></div><div style="display:flex;gap:5px">
+            <span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:#fff"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.4)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span></div></div>
+          <div><div style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;color:#cfcfcf">Asia</span><span class="val">41%</span></div><div style="display:flex;gap:5px">
+            <span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.7)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.7)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.7)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.7)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:10px;border-radius:2px;background:rgba(255,255,255,.08)"></span></div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="pt">Win rate by day</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:26px;font-size:12px;color:#9a9a9a">Mon</span><div style="flex:1;display:flex;gap:4px"><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.15)"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span></div><span class="val" style="width:30px;text-align:right">72</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:26px;font-size:12px;color:#9a9a9a">Wed</span><div style="flex:1;display:flex;gap:4px"><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span></div><span class="val" style="width:30px;text-align:right">80</span></div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="width:26px;font-size:12px;color:#9a9a9a">Fri</span><div style="flex:1;display:flex;gap:4px"><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:#fff"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.6)"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span><span style="flex:1;height:9px;border-radius:2px;background:rgba(255,255,255,.08)"></span></div><span class="val" style="width:30px;text-align:right">66</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

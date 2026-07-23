@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0b0b0c;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+.badge{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.12em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.ht{font-family:'Michroma',sans-serif;font-size:15px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.panel{width:760px;background:#0e0e10;border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:30px 34px}
+.colhead{display:grid;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:#5c5c5c}
+.row{display:grid;gap:12px;padding:17px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13.5px;align-items:center}
+.sym{font-family:'JetBrains Mono',monospace;color:#fff}
+.time{font-family:'JetBrains Mono',monospace;font-size:12px;color:#5c5c5c}
+.pnl{font-family:'JetBrains Mono',monospace;text-align:right}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:wrap;gap:48px;padding:56px;align-items:flex-start">
+
+  <!-- 1a score chip -->
+  <div id="1a" style="position:relative">
+    <div class="hd"><span class="badge">1A</span><span class="ht">Score chip</span><span class="hs">— a quiet "4/4" pill, green when perfect</span></div>
+    <div class="panel">
+      <div class="colhead" style="grid-template-columns:80px 60px 1fr 80px 90px 70px"><span>SYMBOL</span><span>SIDE</span><span>SETUP</span><span>RULES</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 80px 90px 70px"><span class="sym">NQ</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Sweep + FVG</span><span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:3px 9px;border-radius:99px;background:rgba(95,191,131,.14);color:#5fbf83">4/4</span></span><span class="pnl" style="color:#eaeaea">+$620</span><span class="pnl" style="color:#8a8a8a">+2.1R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 80px 90px 70px"><span class="sym">ES</span><span style="color:#9a9a9a">Short</span><span style="color:#9a9a9a">OB retest</span><span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:3px 9px;border-radius:99px;background:rgba(224,160,90,.14);color:#e0a05a">2/4</span></span><span class="pnl" style="color:#e05a5a">−$180</span><span class="pnl" style="color:#c77">−0.9R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 80px 90px 70px"><span class="sym">GC</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Breaker</span><span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;padding:3px 9px;border-radius:99px;background:rgba(255,255,255,.06);color:#9a9a9a">3/4</span></span><span class="pnl" style="color:#eaeaea">+$240</span><span class="pnl" style="color:#8a8a8a">+1.2R</span></div>
+    </div>
+  </div>
+
+  <!-- 1b dots -->
+  <div id="1b" style="position:relative">
+    <div class="hd"><span class="badge">1B</span><span class="ht">Rule dots</span><span class="hs">— one dot per rule, filled = followed</span></div>
+    <div class="panel">
+      <div class="colhead" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span>SYMBOL</span><span>SIDE</span><span>SETUP</span><span>RULES</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span class="sym">NQ</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Sweep + FVG</span><span style="display:flex;gap:5px"><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span></span><span class="pnl" style="color:#eaeaea">+$620</span><span class="pnl" style="color:#8a8a8a">+2.1R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span class="sym">ES</span><span style="color:#9a9a9a">Short</span><span style="color:#9a9a9a">OB retest</span><span style="display:flex;gap:5px"><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span><span class="dot" style="background:rgba(255,255,255,.18)"></span><span class="dot" style="background:rgba(255,255,255,.18)"></span></span><span class="pnl" style="color:#e05a5a">−$180</span><span class="pnl" style="color:#c77">−0.9R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span class="sym">GC</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Breaker</span><span style="display:flex;gap:5px"><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span><span class="dot" style="background:#fff"></span><span class="dot" style="background:rgba(255,255,255,.18)"></span></span><span class="pnl" style="color:#eaeaea">+$240</span><span class="pnl" style="color:#8a8a8a">+1.2R</span></div>
+    </div>
+  </div>
+
+  <!-- 1c single status dot -->
+  <div id="1c" style="position:relative">
+    <div class="hd"><span class="badge">1C</span><span class="ht">Discipline dot</span><span class="hs">— one calm dot: green kept, amber slipped, red broke</span></div>
+    <div class="panel">
+      <div class="colhead" style="grid-template-columns:24px 80px 60px 1fr 90px 70px"><span></span><span>SYMBOL</span><span>SIDE</span><span>SETUP</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span></div>
+      <div class="row" style="grid-template-columns:24px 80px 60px 1fr 90px 70px"><span class="dot" style="background:#5fbf83;box-shadow:0 0 8px rgba(95,191,131,.5)"></span><span class="sym">NQ</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Sweep + FVG</span><span class="pnl" style="color:#eaeaea">+$620</span><span class="pnl" style="color:#8a8a8a">+2.1R</span></div>
+      <div class="row" style="grid-template-columns:24px 80px 60px 1fr 90px 70px"><span class="dot" style="background:#e05a5a"></span><span class="sym">ES</span><span style="color:#9a9a9a">Short</span><span style="color:#9a9a9a">OB retest</span><span class="pnl" style="color:#e05a5a">−$180</span><span class="pnl" style="color:#c77">−0.9R</span></div>
+      <div class="row" style="grid-template-columns:24px 80px 60px 1fr 90px 70px"><span class="dot" style="background:#e0a05a"></span><span class="sym">GC</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Breaker</span><span class="pnl" style="color:#eaeaea">+$240</span><span class="pnl" style="color:#8a8a8a">+1.2R</span></div>
+    </div>
+  </div>
+
+  <!-- 1d mini bar -->
+  <div id="1d" style="position:relative">
+    <div class="hd"><span class="badge">1D</span><span class="ht">Mini bar</span><span class="hs">— a slim discipline bar, fills with rules kept</span></div>
+    <div class="panel">
+      <div class="colhead" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span>SYMBOL</span><span>SIDE</span><span>SETUP</span><span>RULES</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span class="sym">NQ</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Sweep + FVG</span><span><div style="height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden"><div style="height:100%;width:100%;background:#5fbf83"></div></div></span><span class="pnl" style="color:#eaeaea">+$620</span><span class="pnl" style="color:#8a8a8a">+2.1R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span class="sym">ES</span><span style="color:#9a9a9a">Short</span><span style="color:#9a9a9a">OB retest</span><span><div style="height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden"><div style="height:100%;width:50%;background:#e0a05a"></div></div></span><span class="pnl" style="color:#e05a5a">−$180</span><span class="pnl" style="color:#c77">−0.9R</span></div>
+      <div class="row" style="grid-template-columns:80px 60px 1fr 96px 90px 70px"><span class="sym">GC</span><span style="color:#9a9a9a">Long</span><span style="color:#9a9a9a">Breaker</span><span><div style="height:5px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden"><div style="height:100%;width:75%;background:#fff"></div></div></span><span class="pnl" style="color:#eaeaea">+$240</span><span class="pnl" style="color:#8a8a8a">+1.2R</span></div>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+</body>
+</html>

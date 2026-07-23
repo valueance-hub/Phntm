@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="design_doc_mode" content="canvas">
+<style>
+  body{margin:0;background:#0a0a0a;color:#fff;font-family:'Archivo',sans-serif}
+  a{color:#fff}a:hover{color:#cfcfcf}
+</style>
+</helmet>
+<div style="padding:48px 44px 8px">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.32em;color:#7a7a7a">PHNTM · EQUITY VISUAL CONCEPTS</div>
+  <div style="font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:500;letter-spacing:-.02em;margin-top:12px;max-width:760px;text-wrap:pretty">Five ways to show one account: start, the pass line, the fail line, and where you stand right now.</div>
+  <div style="margin-top:12px;font-size:14px;color:#9a9a9a;max-width:680px;text-wrap:pretty">Same live data in every concept (Lucid 50K · Eval 1 — start $50K, pass $53K, fail $48K, now $52K). Reference an option in chat by its id, e.g. <a href="#1c">1c</a>.</div>
+</div>
+<section style="padding:26px 44px 8px;display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start">
+  <div style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:#9a9a9a">TURN 3 · ORGANIZED READS · GREYSCALE · WITH FIGURES</div>
+  <div id="3a" style="width:360px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3a</span><span style="font-size:16px;font-weight:600">Climber</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A figure scales the rope from the fail line up to the pass line — height is your progress.</div>
+    <canvas id="fx-climber" style="width:100%;height:460px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3b" style="width:360px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3b</span><span style="font-size:16px;font-weight:600">Rocket</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Altitude is progress: the rocket climbs toward orbit (pass) with live exhaust; the ground is your fail line.</div>
+    <canvas id="fx-rocket" style="width:100%;height:460px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3c" style="width:360px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3c</span><span style="font-size:16px;font-weight:600">Elevator</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A lift rises through floors — FAIL, START, PASS — and stops at your current level.</div>
+    <canvas id="fx-elevator" style="width:100%;height:460px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3d" style="width:360px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3d</span><span style="font-size:16px;font-weight:600">Rising Column</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A column of light fills to your level; a figure rides the surface upward toward pass.</div>
+    <canvas id="fx-column" style="width:100%;height:460px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3e" style="width:100%;background:radial-gradient(120% 160% at 20% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3e</span><span style="font-size:16px;font-weight:600">Trail Walk</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A figure walks the path from start toward the pass flag; slipping back heads to the fail pit.</div>
+    <canvas id="fx-trail" style="width:100%;height:300px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3f" style="width:100%;background:radial-gradient(120% 160% at 20% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3f</span><span style="font-size:16px;font-weight:600">Linear Meter</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">One clean horizontal gauge, fail → pass, with a token marking exactly where you stand.</div>
+    <canvas id="fx-meter" style="width:100%;height:260px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3g" style="width:100%;background:radial-gradient(120% 160% at 20% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3g</span><span style="font-size:16px;font-weight:600">Long Jump</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Clear the gap: the figure leaps from start toward the pass platform — the pit below is the fail line.</div>
+    <canvas id="fx-jump" style="width:100%;height:300px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="3h" style="width:360px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#d8dbe0;border-radius:6px;padding:3px 8px">3h</span><span style="font-size:16px;font-weight:600">Coin Stack</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Your equity stacked as coins rising to the pass line; the empty base is the fail line.</div>
+    <canvas id="fx-coins" style="width:100%;height:460px;display:block;margin-top:14px"></canvas>
+  </div>
+</section>
+<section style="padding:26px 44px 8px;display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start">
+  <div style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:#c9ccd2">TURN 2 · FUTURISTIC · IN MOTION</div>
+  <div id="2a" style="width:520px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(201,204,210,.14);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#c9ccd2;border-radius:6px;padding:3px 8px">2a</span><span style="font-size:16px;font-weight:600">Liquid Orb</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A glass sphere fills with luminous fluid to your level and gently ripples in real time.</div>
+    <canvas id="fx-orb" style="width:100%;height:380px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="2b" style="width:520px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(201,204,210,.14);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#c9ccd2;border-radius:6px;padding:3px 8px">2b</span><span style="font-size:16px;font-weight:600">Aurora Flow</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Layered light-ribbons drift; the higher they sit, the more you're up. A node marks where you are now.</div>
+    <canvas id="fx-aurora" style="width:100%;height:380px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="2c" style="width:520px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(201,204,210,.14);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#c9ccd2;border-radius:6px;padding:3px 8px">2c</span><span style="font-size:16px;font-weight:600">Gyroscope</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Concentric rings tilt and spin in 3D; the outer arc tracks progress and the core pulses.</div>
+    <canvas id="fx-gyro" style="width:100%;height:380px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="2d" style="width:520px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(201,204,210,.14);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#c9ccd2;border-radius:6px;padding:3px 8px">2d</span><span style="font-size:16px;font-weight:600">Ascension</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Particles stream upward to your current level; the pass ring ignites as you close in.</div>
+    <canvas id="fx-particle" style="width:100%;height:380px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="2e" style="width:520px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(201,204,210,.14);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#c9ccd2;border-radius:6px;padding:3px 8px">2e</span><span style="font-size:16px;font-weight:600">Depth Bars</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Trades as extruded bars receding into space, the latest one lit, rising toward the pass plane.</div>
+    <canvas id="fx-bars" style="width:100%;height:380px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="2f" style="width:520px;max-width:100%;background:radial-gradient(120% 120% at 30% 0%,#151515,#0b0b0b);border:1px solid rgba(201,204,210,.14);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#c9ccd2;border-radius:6px;padding:3px 8px">2f</span><span style="font-size:16px;font-weight:600">Comet</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A comet traces a luminous arc from start toward the pass mark, trailing light behind it.</div>
+    <canvas id="fx-comet" style="width:100%;height:380px;display:block;margin-top:14px"></canvas>
+  </div>
+</section>
+<section style="padding:26px 44px 80px;display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start">
+  <div style="width:100%;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.3em;color:#7a7a7a">TURN 1 · STATIC READS</div>
+  <div id="1a" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1a</span><span style="font-size:16px;font-weight:600">Climb Meter</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A vertical gauge — fill rises from start toward the pass line, and drains toward the fail line as you draw down.</div>
+    <canvas id="concept-climb" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1b" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1b</span><span style="font-size:16px;font-weight:600">Speed Gauge</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A needle sweeps from fail (left) to pass (right). Instant read on your standing, like a dashboard dial.</div>
+    <canvas id="concept-gauge" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1c" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1c</span><span style="font-size:16px;font-weight:600">Progress Ring</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">How much of the target you've banked, with the remaining buffer to the fail line called out below.</div>
+    <canvas id="concept-ring" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1d" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1d</span><span style="font-size:16px;font-weight:600">Charge Tank</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Equity as a liquid level between fail (empty) and pass (full). Sinking below start tints the fluid red.</div>
+    <canvas id="concept-tank" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1e" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1e</span><span style="font-size:16px;font-weight:600">Milestone Track</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A path from fail → start → pass with a live marker, plus a small equity trail showing how you got here.</div>
+    <canvas id="concept-track" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1f" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1f</span><span style="font-size:16px;font-weight:600">Charge Battery</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Segmented cells charge from fail toward pass — red near empty, bright as you top up to the target.</div>
+    <canvas id="concept-battery" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1g" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1g</span><span style="font-size:16px;font-weight:600">Altitude Climb</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Your equity as terrain you're climbing, with a summit flag at the pass altitude and a marker at your height.</div>
+    <canvas id="concept-mountain" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1h" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1h</span><span style="font-size:16px;font-weight:600">Progress Matrix</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">A grid that fills cell-by-cell as you close the gap to pass — a tactile, pixel-style completion read.</div>
+    <canvas id="concept-matrix" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1i" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1i</span><span style="font-size:16px;font-weight:600">Orbit</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Your account as a node between two rings — the inner fail ring and the outer pass ring. Drift outward = closer to passing.</div>
+    <canvas id="concept-orbit" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1j" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1j</span><span style="font-size:16px;font-weight:600">Staircase</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Discrete steps from the fail floor up to the pass landing, with your marker standing on the current step.</div>
+    <canvas id="concept-stairs" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1k" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1k</span><span style="font-size:16px;font-weight:600">Dual Ring</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Two arcs at once: the outer tracks progress to pass, the inner tracks how much drawdown cushion you have left.</div>
+    <canvas id="concept-dual" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+  <div id="1l" style="width:520px;max-width:100%;background:linear-gradient(180deg,#141414,#0d0d0d);border:1px solid rgba(255,255,255,.09);border-radius:20px;padding:22px 22px 18px;box-sizing:border-box">
+    <div style="display:flex;align-items:center;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#000;background:#fff;border-radius:6px;padding:3px 8px">1l</span><span style="font-size:16px;font-weight:600">Pulse</span></div>
+    <div style="margin-top:6px;font-size:12.5px;color:#8a8a8a;text-wrap:pretty">Each trade as a bar above/below the line (win up, loss down), with a cumulative line rising toward the pass mark.</div>
+    <canvas id="concept-pulse" style="width:100%;height:360px;display:block;margin-top:14px"></canvas>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  START = 50000; GOAL = 53000; FAIL = 48000;
+  PATH = (() => { const d=[300,-180,450,220,-260,520,150,-300,480,240,-160,360,300,-120]; let e=50000; const a=[50000]; d.forEach(x=>{e+=x;a.push(e);}); return a; })();
+  componentDidMount(){ this._drawAll(); this._onR=()=>this._drawAll(); window.addEventListener('resize',this._onR); this._ivl=setInterval(()=>this._drawAll(),1200);
+    this._t0=performance.now(); const fr=()=>{ this._fx(); this._raf=requestAnimationFrame(fr); }; fr(); }
+  componentWillUnmount(){ window.removeEventListener('resize',this._onR); clearInterval(this._ivl); cancelAnimationFrame(this._raf); }
+  _fx(){ const t=(performance.now()-this._t0)/1000; const cur=this.PATH[this.PATH.length-1];
+    this._orb(t,cur); this._aurora(t,cur); this._gyro(t,cur); this._particle(t,cur); this._bars(t,cur); this._comet(t,cur);
+    this._climber(t,cur); this._rocket(t,cur); this._elevator(t,cur); this._column(t,cur); this._trail(t,cur); this._meter(t,cur); this._jump(t,cur); this._coins(t,cur); }
+  _fig(c,x,y,s,t,active){ // feet at (x,y), height ~s
+    c.save(); c.strokeStyle='#fff'; c.fillStyle='#fff'; c.lineWidth=Math.max(1.4,s*0.12); c.lineCap='round';
+    const hipY=y-s*0.42, shY=y-s*0.74, headY=y-s*0.9, hr=s*0.16;
+    const sw=active?Math.sin(t*4)*s*0.18:s*0.1, aw=active?Math.sin(t*4+1)*s*0.22:s*0.12;
+    c.beginPath(); c.moveTo(x,hipY); c.lineTo(x-sw,y); c.moveTo(x,hipY); c.lineTo(x+sw,y); c.stroke();
+    c.beginPath(); c.moveTo(x,hipY); c.lineTo(x,shY); c.stroke();
+    c.beginPath(); c.moveTo(x,shY); c.lineTo(x-aw,shY+s*0.16); c.moveTo(x,shY); c.lineTo(x+aw,shY-s*0.08); c.stroke();
+    c.beginPath(); c.arc(x,headY,hr,0,7); c.fill(); c.restore(); }
+  _k(v){ const a=Math.abs(v),s=v<0?'-$':'$'; if(a>=1000){const k=a/1000;return s+(a%1000===0?k.toFixed(0):k.toFixed(1))+'K';} return s+Math.round(a).toLocaleString(); }
+  _money(v){ return (v<0?'-$':'$')+Math.abs(Math.round(v)).toLocaleString(); }
+  _ctx(id){ const cv=document.getElementById(id); if(!cv) return null; const dpr=Math.min(devicePixelRatio,2); const w=cv.clientWidth||480,h=cv.clientHeight||360; cv.width=w*dpr; cv.height=h*dpr; const c=cv.getContext('2d'); c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,w,h); c._w=w; c._h=h; c.lineJoin='round'; c.lineCap='round'; return c; }
+  _rr(c,x,y,w,h,r){ r=Math.min(r,w/2,h/2); c.beginPath(); c.moveTo(x+r,y); c.arcTo(x+w,y,x+w,y+h,r); c.arcTo(x+w,y+h,x,y+h,r); c.arcTo(x,y+h,x,y,r); c.arcTo(x,y,x+w,y,r); c.closePath(); }
+  _drawAll(){ const cur=this.PATH[this.PATH.length-1];
+    this._climb(cur); this._gauge(cur); this._ring(cur); this._tank(cur); this._track(cur);
+    this._battery(cur); this._mountain(cur); this._matrix(cur); this._orbit(cur); this._stairs(cur); this._dual(cur); this._pulse(cur); }
+  _mono(px){ return px+"px 'Archivo',sans-serif"; }
+
+  _climb(cur){ const c=this._ctx('concept-climb'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const topY=34, botY=h-46, cx=w*0.42, bw=22;
+    const y=(v)=>topY+(G-v)/(G-F)*(botY-topY);
+    this._rr(c,cx-bw/2,topY,bw,botY-topY,11); c.fillStyle='rgba(255,255,255,.06)'; c.fill();
+    const yc=y(cur), ys=y(S); const up=cur>=S; const t=Math.min(yc,ys), ht=Math.abs(yc-ys);
+    const g=c.createLinearGradient(0,t,0,t+ht); if(up){ g.addColorStop(0,'rgba(255,255,255,.95)'); g.addColorStop(1,'rgba(255,255,255,.35)'); } else { g.addColorStop(0,'rgba(224,90,90,.4)'); g.addColorStop(1,'rgba(224,90,90,.85)'); }
+    this._rr(c,cx-bw/2,t,bw,Math.max(2,ht),11); c.fillStyle=g; c.fill();
+    c.font=this._mono(9); c.textAlign='right';
+    for(let v=F; v<=G+1; v+=1000){ const yy=y(v); c.strokeStyle='rgba(255,255,255,.09)'; c.beginPath(); c.moveTo(cx+bw/2+4,yy); c.lineTo(cx+bw/2+12,yy); c.stroke(); c.fillStyle='rgba(255,255,255,.32)'; c.fillText(this._k(v),cx-bw/2-10,yy+3); }
+    c.textAlign='left'; c.font="700 "+this._mono(11);
+    c.fillStyle='#fff'; c.fillText('PASS · '+this._k(G),cx+bw/2+18,y(G)+4);
+    c.fillStyle='#e05a5a'; c.fillText('FAIL · '+this._k(F),cx+bw/2+18,y(F)+4);
+    c.fillStyle='rgba(255,255,255,.4)'; c.font="600 "+this._mono(9); c.fillText('START · '+this._k(S),cx+bw/2+18,ys+3);
+    c.shadowColor='#fff'; c.shadowBlur=14; c.fillStyle='#fff'; c.beginPath(); c.arc(cx,yc,6,0,7); c.fill(); c.shadowBlur=0;
+    const pct=Math.round((cur-S)/(G-S)*100);
+    c.font="600 "+this._mono(15); c.fillStyle='#fff'; c.fillText(this._money(cur),cx+bw/2+18,yc-6);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(pct+'% to pass',cx+bw/2+18,yc+12);
+  }
+
+  _gauge(cur){ const c=this._ctx('concept-gauge'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w/2, cy=h*0.72, R=Math.min(w*0.36,h*0.6), lw=16;
+    const frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    c.lineWidth=lw; c.strokeStyle='rgba(255,255,255,.08)'; c.beginPath(); c.arc(cx,cy,R,Math.PI,2*Math.PI); c.stroke();
+    // danger third near fail
+    c.strokeStyle='rgba(224,90,90,.3)'; c.beginPath(); c.arc(cx,cy,R,Math.PI,Math.PI+ (S-F)/(G-F)*Math.PI); c.stroke();
+    c.strokeStyle='#fff'; c.shadowColor='rgba(255,255,255,.5)'; c.shadowBlur=8; c.beginPath(); c.arc(cx,cy,R,Math.PI,Math.PI+frac*Math.PI); c.stroke(); c.shadowBlur=0;
+    const th=Math.PI+frac*Math.PI, nx=cx+R*Math.cos(th), ny=cy+R*Math.sin(th);
+    c.fillStyle='#fff'; c.beginPath(); c.arc(nx,ny,6,0,7); c.fill();
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(34); c.fillText(this._money(cur),cx,cy-18);
+    const pct=Math.round((cur-S)/(G-S)*100);
+    c.font=this._mono(12); c.fillStyle=pct>=0?'rgba(255,255,255,.6)':'rgba(224,90,90,.9)'; c.fillText((pct>=0?'+':'')+pct+'% to pass',cx,cy+4);
+    c.font="700 "+this._mono(10); c.textAlign='left'; c.fillStyle='#e05a5a'; c.fillText('FAIL',cx-R-6,cy+16);
+    c.textAlign='right'; c.fillStyle='#fff'; c.fillText('PASS',cx+R+6,cy+16);
+    c.textAlign='left'; c.fillStyle='rgba(255,255,255,.35)'; c.font=this._mono(9); c.fillText(this._k(F),cx-R-6,cy+30);
+    c.textAlign='right'; c.fillText(this._k(G),cx+R+6,cy+30);
+  }
+
+  _ring(cur){ const c=this._ctx('concept-ring'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w/2, cy=h*0.46, R=Math.min(w,h)*0.28, lw=18;
+    const frac=Math.max(0,Math.min(1,(cur-S)/(G-S)));
+    c.lineWidth=lw; c.strokeStyle='rgba(255,255,255,.09)'; c.beginPath(); c.arc(cx,cy,R,0,7); c.stroke();
+    const a0=-Math.PI/2; c.strokeStyle='#fff'; c.shadowColor='rgba(255,255,255,.5)'; c.shadowBlur=10; c.beginPath(); c.arc(cx,cy,R,a0,a0+frac*2*Math.PI); c.stroke(); c.shadowBlur=0;
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(32); c.fillText(this._money(cur),cx,cy-2);
+    c.font="600 "+this._mono(13); c.fillStyle='rgba(255,255,255,.6)'; c.fillText(Math.round(frac*100)+'% of pass target',cx,cy+22);
+    const buf=cur-F; const bt=(buf>0?'':'-')+'$'+Math.abs(buf).toLocaleString();
+    c.font="600 "+this._mono(11); c.fillStyle=buf<=(S-F)*0.4?'#e05a5a':'rgba(255,255,255,.5)';
+    c.fillText('BUFFER TO FAIL  '+bt,cx,h-30);
+    c.font=this._mono(9); c.fillStyle='rgba(255,255,255,.3)'; c.fillText('start '+this._k(S)+'   ·   pass '+this._k(G)+'   ·   fail '+this._k(F),cx,h-14);
+  }
+
+  _tank(cur){ const c=this._ctx('concept-tank'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const cw=Math.min(w*0.4,190), cx=w*0.4, top=38, bot=h-46, x=cx-cw/2;
+    const y=(v)=>top+(G-v)/(G-F)*(bot-top);
+    this._rr(c,x,top,cw,bot-top,16); c.save(); c.clip();
+    const yc=y(cur), red=cur<S;
+    const g=c.createLinearGradient(0,yc,0,bot); if(red){ g.addColorStop(0,'rgba(224,90,90,.5)'); g.addColorStop(1,'rgba(224,90,90,.15)'); } else { g.addColorStop(0,'rgba(255,255,255,.32)'); g.addColorStop(1,'rgba(255,255,255,.08)'); }
+    c.fillStyle=g; c.beginPath(); c.moveTo(x,yc);
+    for(let px=0;px<=cw;px+=6){ c.lineTo(x+px, yc+Math.sin(px/22+ (Date.now()/600))*3); }
+    c.lineTo(x+cw,bot); c.lineTo(x,bot); c.closePath(); c.fill();
+    c.strokeStyle=red?'rgba(224,90,90,.9)':'rgba(255,255,255,.8)'; c.lineWidth=2; c.beginPath(); c.moveTo(x,yc); for(let px=0;px<=cw;px+=6){ c.lineTo(x+px, yc+Math.sin(px/22+(Date.now()/600))*3); } c.stroke();
+    c.restore();
+    this._rr(c,x,top,cw,bot-top,16); c.strokeStyle='rgba(255,255,255,.14)'; c.lineWidth=1.5; c.stroke();
+    c.setLineDash([4,5]); c.strokeStyle='rgba(255,255,255,.3)'; c.beginPath(); c.moveTo(x,y(S)); c.lineTo(x+cw,y(S)); c.stroke(); c.setLineDash([]);
+    c.textAlign='left'; c.font="700 "+this._mono(11); c.fillStyle='#fff'; c.fillText('PASS · '+this._k(G),x+cw+16,top+6);
+    c.fillStyle='#e05a5a'; c.fillText('FAIL · '+this._k(F),x+cw+16,bot+4);
+    c.fillStyle='rgba(255,255,255,.45)'; c.font="600 "+this._mono(9); c.fillText('START · '+this._k(S),x+cw+16,y(S)+3);
+    c.font="600 "+this._mono(15); c.fillStyle='#fff'; c.fillText(this._money(cur),x+cw+16,yc-4);
+    const pctFull=Math.round((cur-F)/(G-F)*100);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(pctFull+'% full',x+cw+16,yc+12);
+  }
+
+  _track(cur){ const c=this._ctx('concept-track'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const x0=64, x1=w-64, ty=h*0.66;
+    const X=(v)=>x0+(v-F)/(G-F)*(x1-x0);
+    // sparkline of equity trail above the track
+    const P=this.PATH; const sx=(i)=>x0+i/(P.length-1)*(x1-x0); const sTop=54, sBot=ty-40;
+    const eMin=Math.min(...P,S), eMax=Math.max(...P,S); const sy=(v)=>sBot-(v-eMin)/((eMax-eMin)||1)*(sBot-sTop);
+    c.strokeStyle='rgba(255,255,255,.5)'; c.lineWidth=1.6; c.beginPath(); P.forEach((v,i)=>{ i?c.lineTo(sx(i),sy(v)):c.moveTo(sx(i),sy(v)); }); c.stroke();
+    c.fillStyle='rgba(255,255,255,.85)'; c.beginPath(); c.arc(sx(P.length-1),sy(cur),3,0,7); c.fill();
+    // track base
+    c.strokeStyle='rgba(255,255,255,.12)'; c.lineWidth=4; c.beginPath(); c.moveTo(x0,ty); c.lineTo(x1,ty); c.stroke();
+    c.strokeStyle='#fff'; c.lineWidth=4; c.beginPath(); c.moveTo(x0,ty); c.lineTo(X(cur),ty); c.stroke();
+    const node=(v,label,tone)=>{ const xx=X(v); c.fillStyle=tone==='fail'?'#e05a5a':(tone==='pass'?'#fff':'rgba(255,255,255,.5)'); c.beginPath(); c.arc(xx,ty,tone==='mid'?4:6,0,7); c.fill(); c.textAlign='center'; c.font="600 "+this._mono(10); c.fillStyle=tone==='fail'?'#e05a5a':'rgba(255,255,255,.75)'; c.fillText(label,xx,ty+22); c.font=this._mono(9); c.fillStyle='rgba(255,255,255,.35)'; c.fillText(this._k(v),xx,ty+36); };
+    node(F,'FAIL','fail'); node(S,'START','mid'); node(G,'PASS','pass');
+    // live marker
+    const mx=X(cur); c.shadowColor='#fff'; c.shadowBlur=14; c.fillStyle='#fff'; c.beginPath(); c.arc(mx,ty,7,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='center'; c.font="600 "+this._mono(14); c.fillStyle='#fff'; c.fillText(this._money(cur),mx,ty-16);
+    const pct=Math.round((cur-S)/(G-S)*100); c.font=this._mono(9); c.fillStyle='rgba(255,255,255,.5)'; c.fillText((pct>=0?'+':'')+pct+'% to pass',mx,ty-30);
+  }
+  _battery(cur){ const c=this._ctx('concept-battery'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const n=12, gap=6, x0=54, x1=w-54, y=h*0.42, bh=88; const cw=(x1-x0-gap*(n-1))/n;
+    const frac=Math.max(0,Math.min(1,(cur-F)/(G-F))); const fillN=frac*n;
+    this._rr(c,x0-8,y-8,(x1-x0)+16,bh+16,14); c.strokeStyle='rgba(255,255,255,.18)'; c.lineWidth=1.5; c.stroke();
+    this._rr(c,x1+10,y+bh*0.3,7,bh*0.4,3); c.fillStyle='rgba(255,255,255,.18)'; c.fill();
+    for(let i=0;i<n;i++){ const x=x0+i*(cw+gap); const on=i<Math.floor(fillN); const part=(i===Math.floor(fillN))?(fillN-Math.floor(fillN)):0;
+      this._rr(c,x,y,cw,bh,4); c.fillStyle='rgba(255,255,255,.06)'; c.fill();
+      const p=i/(n-1); const col=p<0.34?'rgba(224,90,90,':'rgba(255,255,255,'; const al=0.55+p*0.4;
+      if(on){ this._rr(c,x,y,cw,bh,4); c.fillStyle=col+al+')'; c.fill(); }
+      else if(part>0){ this._rr(c,x,y+bh*(1-part),cw,bh*part,4); c.fillStyle=col+al+')'; c.fill(); } }
+    c.textAlign='left'; c.font="700 "+this._mono(10); c.fillStyle='#e05a5a'; c.fillText('FAIL '+this._k(F),x0-8,y+bh+34);
+    c.textAlign='right'; c.fillStyle='#fff'; c.fillText('PASS '+this._k(G),x1+10,y+bh+34);
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(30); c.fillText(this._money(cur),x0-8,y-30);
+    c.font=this._mono(11); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% charged to pass',x0-8,y-12);
+  }
+
+  _mountain(cur){ const c=this._ctx('concept-mountain'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const P=this.PATH, x0=40,x1=w-40, topY=70, botY=h-50;
+    const y=(v)=>topY+(G-v)/(G-F)*(botY-topY); const X=(i)=>x0+i/(P.length-1)*(x1-x0);
+    const grd=c.createLinearGradient(0,topY,0,botY); grd.addColorStop(0,'rgba(255,255,255,.28)'); grd.addColorStop(1,'rgba(255,255,255,.02)');
+    c.beginPath(); c.moveTo(x0,botY); P.forEach((v,i)=>c.lineTo(X(i),y(v))); c.lineTo(x1,botY); c.closePath(); c.fillStyle=grd; c.fill();
+    c.beginPath(); P.forEach((v,i)=>i?c.lineTo(X(i),y(v)):c.moveTo(X(i),y(v))); c.strokeStyle='#fff'; c.lineWidth=1.8; c.shadowColor='rgba(255,255,255,.4)'; c.shadowBlur=6; c.stroke(); c.shadowBlur=0;
+    // summit flag at pass altitude
+    const gy=y(G); c.setLineDash([4,6]); c.strokeStyle='rgba(255,255,255,.4)'; c.beginPath(); c.moveTo(x0,gy); c.lineTo(x1,gy); c.stroke(); c.setLineDash([]);
+    c.fillStyle='#fff'; c.fillRect(x1-60,gy-2,2,-20); c.beginPath(); c.moveTo(x1-58,gy-22); c.lineTo(x1-40,gy-17); c.lineTo(x1-58,gy-12); c.closePath(); c.fill();
+    c.textAlign='right'; c.font="700 "+this._mono(10); c.fillStyle='#fff'; c.fillText('SUMMIT · '+this._k(G),x1,gy-26);
+    // fail baseline
+    const fy=y(F); c.strokeStyle='rgba(224,90,90,.35)'; c.setLineDash([4,6]); c.beginPath(); c.moveTo(x0,fy); c.lineTo(x1,fy); c.stroke(); c.setLineDash([]);
+    c.textAlign='left'; c.fillStyle='#e05a5a'; c.fillText('FAIL · '+this._k(F),x0,fy-6);
+    // marker
+    const mx=X(P.length-1),my=y(cur); c.shadowColor='#fff'; c.shadowBlur=12; c.fillStyle='#fff'; c.beginPath(); c.arc(mx,my,5,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='right'; c.font="600 "+this._mono(14); c.fillText(this._money(cur),mx-8,my-4);
+    const pct=Math.round((cur-S)/(G-S)*100); c.font=this._mono(9); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(pct+'% climbed',mx-8,my+10);
+  }
+
+  _matrix(cur){ const c=this._ctx('concept-matrix'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL;
+    const cols=16, rows=7, x0=40, y0=70, cellW=(w-80)/cols, cellH=22, gap=4;
+    const frac=Math.max(0,Math.min(1,(cur-S)/(G-S))); const total=cols*rows, on=Math.round(frac*total);
+    let k=0; for(let r=rows-1;r>=0;r--){ for(let col=0;col<cols;col++){ const idx=(rows-1-r)*cols+col; const x=x0+col*cellW, y=y0+r*(cellH+gap);
+      this._rr(c,x,y,cellW-gap,cellH,3); if(idx<on){ const p=idx/total; c.fillStyle='rgba(255,255,255,'+(0.4+p*0.55).toFixed(2)+')'; } else c.fillStyle='rgba(255,255,255,.05)'; c.fill(); } }
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(30); c.fillText(this._money(cur),x0,y0-32);
+    c.font=this._mono(11); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% of pass target filled',x0,y0-14);
+    c.textAlign='left'; c.fillStyle='rgba(255,255,255,.3)'; c.font=this._mono(9); c.fillText('start '+this._k(S),x0,y0+rows*(cellH+gap)+16);
+    c.textAlign='right'; c.fillText('pass '+this._k(G),w-40,y0+rows*(cellH+gap)+16);
+  }
+
+  _orbit(cur){ const c=this._ctx('concept-orbit'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w/2, cy=h*0.5, rIn=Math.min(w,h)*0.16, rOut=Math.min(w,h)*0.34;
+    const frac=Math.max(0,Math.min(1,(cur-F)/(G-F))); const r=rIn+(rOut-rIn)*frac;
+    c.strokeStyle='rgba(224,90,90,.4)'; c.setLineDash([3,5]); c.lineWidth=1.4; c.beginPath(); c.arc(cx,cy,rIn,0,7); c.stroke();
+    c.strokeStyle='rgba(255,255,255,.4)'; c.beginPath(); c.arc(cx,cy,rOut,0,7); c.stroke(); c.setLineDash([]);
+    // current orbit
+    c.strokeStyle='rgba(255,255,255,.5)'; c.beginPath(); c.arc(cx,cy,r,0,7); c.stroke();
+    const th=-Math.PI/2 + (Date.now()/2200); const nx=cx+r*Math.cos(th), ny=cy+r*Math.sin(th);
+    c.strokeStyle='rgba(255,255,255,.15)'; c.beginPath(); c.moveTo(cx,cy); c.lineTo(nx,ny); c.stroke();
+    c.shadowColor='#fff'; c.shadowBlur=14; c.fillStyle='#fff'; c.beginPath(); c.arc(nx,ny,6,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(26); c.fillText(this._money(cur),cx,cy-2);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',cx,cy+18);
+    c.font="700 "+this._mono(9); c.fillStyle='#e05a5a'; c.fillText('FAIL '+this._k(F),cx,cy+rIn+16);
+    c.fillStyle='#fff'; c.fillText('PASS '+this._k(G),cx,cy-rOut-10);
+  }
+
+  _stairs(cur){ const c=this._ctx('concept-stairs'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const n=6, x0=54, x1=w-54, topY=70, botY=h-56; const sw=(x1-x0)/n, sh=(botY-topY)/n;
+    c.strokeStyle='rgba(255,255,255,.5)'; c.lineWidth=2; c.beginPath(); c.moveTo(x0,botY);
+    for(let i=0;i<n;i++){ const bx=x0+i*sw, by=botY-i*sh; c.lineTo(bx,by); c.lineTo(bx+sw,by); } c.stroke();
+    // fill up to current
+    const frac=Math.max(0,Math.min(1,(cur-F)/(G-F))); const cxp=x0+frac*(x1-x0); const stepI=Math.min(n-1,Math.floor(frac*n)); const my=botY-stepI*sh;
+    c.fillStyle='rgba(255,255,255,.07)'; c.beginPath(); c.moveTo(x0,botY);
+    for(let i=0;i<=stepI;i++){ const bx=x0+i*sw, by=botY-i*sh; c.lineTo(bx,by); c.lineTo(bx+sw,by); }
+    c.lineTo(cxp,my); c.lineTo(cxp,botY); c.closePath(); c.fill();
+    c.textAlign='left'; c.font="700 "+this._mono(10); c.fillStyle='#e05a5a'; c.fillText('FAIL · '+this._k(F),x0,botY+22);
+    c.textAlign='right'; c.fillStyle='#fff'; c.fillText('PASS · '+this._k(G),x1,topY-10);
+    // marker on current step
+    c.shadowColor='#fff'; c.shadowBlur=12; c.fillStyle='#fff'; c.beginPath(); c.arc(cxp,my,6,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='left'; c.font="600 "+this._mono(14); c.fillText(this._money(cur),cxp+12,my-4);
+    const pct=Math.round((cur-S)/(G-S)*100); c.font=this._mono(9); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(pct+'% to pass',cxp+12,my+10);
+  }
+
+  _dual(cur){ const c=this._ctx('concept-dual'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w/2, cy=h*0.46, R1=Math.min(w,h)*0.3, R2=R1-22, lw=15, a0=-Math.PI/2;
+    const prog=Math.max(0,Math.min(1,(cur-S)/(G-S)));
+    const safety=Math.max(0,Math.min(1,(cur-F)/(S-F)));
+    c.lineWidth=lw; c.lineCap='round';
+    c.strokeStyle='rgba(255,255,255,.08)'; c.beginPath(); c.arc(cx,cy,R1,0,7); c.stroke();
+    c.strokeStyle='#fff'; c.shadowColor='rgba(255,255,255,.5)'; c.shadowBlur=10; c.beginPath(); c.arc(cx,cy,R1,a0,a0+prog*2*Math.PI); c.stroke(); c.shadowBlur=0;
+    c.strokeStyle='rgba(224,90,90,.12)'; c.beginPath(); c.arc(cx,cy,R2,0,7); c.stroke();
+    c.strokeStyle='#e0a55a'; c.beginPath(); c.arc(cx,cy,R2,a0,a0+safety*2*Math.PI); c.stroke();
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(26); c.fillText(this._money(cur),cx,cy+2);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.5)'; c.fillText(Math.round(prog*100)+'% to pass',cx,cy+20);
+    c.textAlign='left'; c.font="600 "+this._mono(10);
+    c.fillStyle='#fff'; c.beginPath(); c.arc(46,h-38,4,0,7); c.fill(); c.fillText('progress to pass',56,h-34);
+    c.fillStyle='#e0a55a'; c.beginPath(); c.arc(46,h-20,4,0,7); c.fill(); c.fillStyle='rgba(255,255,255,.7)'; c.fillText('drawdown cushion left',56,h-16);
+  }
+
+  _pulse(cur){ const c=this._ctx('concept-pulse'); if(!c) return; const w=c._w,h=c._h; const S=this.START,G=this.GOAL;
+    const P=this.PATH, deltas=P.slice(1).map((v,i)=>v-P[i]); const x0=46,x1=w-46, midY=h*0.56;
+    const mx=Math.max(...deltas.map(Math.abs)); const bw=(x1-x0)/deltas.length;
+    deltas.forEach((d,i)=>{ const x=x0+i*bw; const hgt=Math.abs(d)/mx*(h*0.24); const up=d>=0;
+      c.fillStyle=up?'rgba(255,255,255,.8)':'rgba(224,90,90,.8)';
+      this._rr(c,x+2,up?midY-hgt:midY,bw-4,hgt,2); c.fill(); });
+    c.strokeStyle='rgba(255,255,255,.18)'; c.beginPath(); c.moveTo(x0,midY); c.lineTo(x1,midY); c.stroke();
+    // cumulative line toward pass
+    const topY=40, cTop=midY-h*0.3; const y=(v)=>midY - (v-S)/(G-S)*(midY-topY);
+    c.strokeStyle='#fff'; c.lineWidth=1.8; c.beginPath(); P.forEach((v,i)=>{ const x=x0+i/(P.length-1)*(x1-x0); i?c.lineTo(x,y(v)):c.moveTo(x,y(v)); }); c.shadowColor='rgba(255,255,255,.4)'; c.shadowBlur=6; c.stroke(); c.shadowBlur=0;
+    const gy=y(G); c.setLineDash([4,6]); c.strokeStyle='rgba(255,255,255,.4)'; c.beginPath(); c.moveTo(x0,gy); c.lineTo(x1,gy); c.stroke(); c.setLineDash([]);
+    c.textAlign='right'; c.font="700 "+this._mono(10); c.fillStyle='#fff'; c.fillText('PASS · '+this._k(G),x1,gy-6);
+    const lx=x1, ly=y(cur); c.shadowColor='#fff'; c.shadowBlur=12; c.fillStyle='#fff'; c.beginPath(); c.arc(lx,ly,5,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(26); c.fillText(this._money(cur),x0,30);
+    const pct=Math.round((cur-S)/(G-S)*100); c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(pct+'% to pass · win/loss per trade',x0+150,26);
+  }
+
+  _orb(t,cur){ const c=this._ctx('fx-orb'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w/2, cy=h*0.52, R=Math.min(w,h)*0.28, frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    let rg=c.createRadialGradient(cx-R*0.35,cy-R*0.4,R*0.05,cx,cy,R); rg.addColorStop(0,'rgba(255,255,255,.14)'); rg.addColorStop(1,'rgba(255,255,255,.02)');
+    c.fillStyle=rg; c.beginPath(); c.arc(cx,cy,R,0,7); c.fill();
+    c.save(); c.beginPath(); c.arc(cx,cy,R-2,0,7); c.clip();
+    const surf=cy+R-frac*2*R; const lg=c.createLinearGradient(0,surf-10,0,cy+R); lg.addColorStop(0,'rgba(201,204,210,.6)'); lg.addColorStop(1,'rgba(201,204,210,.12)');
+    c.fillStyle=lg; c.beginPath(); c.moveTo(cx-R,cy+R);
+    for(let x=-R;x<=R;x+=6){ const y=surf+Math.sin(x*0.05+t*1.8)*5+Math.sin(x*0.09-t*1.2)*3; c.lineTo(cx+x,y); }
+    c.lineTo(cx+R,cy+R); c.closePath(); c.fill();
+    c.strokeStyle='rgba(232,234,238,.75)'; c.lineWidth=1.5; c.beginPath();
+    for(let x=-R;x<=R;x+=6){ const y=surf+Math.sin(x*0.05+t*1.8)*5+Math.sin(x*0.09-t*1.2)*3; (x===-R?c.moveTo:c.lineTo).call(c,cx+x,y); } c.stroke();
+    c.restore();
+    c.fillStyle='rgba(255,255,255,.18)'; c.beginPath(); c.ellipse(cx-R*0.34,cy-R*0.4,R*0.22,R*0.11,-0.6,0,7); c.fill();
+    c.strokeStyle='rgba(255,255,255,.22)'; c.lineWidth=1; c.beginPath(); c.arc(cx,cy,R,0,7); c.stroke();
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(28); c.fillText(this._money(cur),cx,cy-R-18);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass · '+this._k(G),cx,cy+R+26); }
+
+  _aurora(t,cur){ const c=this._ctx('fx-aurora'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL;
+    const frac=Math.max(0,Math.min(1,(cur-S)/(G-S))); const x0=34,x1=w-34; const midY=h*0.66-frac*(h*0.32);
+    for(let k=4;k>=0;k--){ const amp=24-k*3; c.beginPath();
+      for(let x=x0;x<=x1;x+=5){ const p=(x-x0)/(x1-x0); const y=midY+k*8+Math.sin(p*6.283+t*1.1+k*0.7)*amp*Math.sin(p*Math.PI); (x===x0?c.moveTo:c.lineTo).call(c,x,y); }
+      c.strokeStyle=(k%2?'rgba(201,204,210,':'rgba(255,255,255,')+(0.5-k*0.08)+')'; c.lineWidth=1.8-k*0.2; if(k===0){c.shadowColor='#c9ccd2';c.shadowBlur=8;} c.stroke(); c.shadowBlur=0; }
+    const nx=x0+frac*(x1-x0), np=frac, ny=midY+Math.sin(np*6.283+t*1.1)*24*Math.sin(np*Math.PI);
+    c.shadowColor='#c9ccd2'; c.shadowBlur=16; c.fillStyle='#fff'; c.beginPath(); c.arc(nx,ny,5,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(28); c.fillText(this._money(cur),x0,44);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',x0,62);
+    c.textAlign='right'; c.font="700 "+this._mono(10); c.fillStyle='#c9ccd2'; c.fillText('PASS '+this._k(G),x1,44); }
+
+  _gyro(t,cur){ const c=this._ctx('fx-gyro'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL;
+    const cx=w/2, cy=h*0.5, R=Math.min(w,h)*0.28, frac=Math.max(0,Math.min(1,(cur-S)/(G-S)));
+    for(let i=2;i>=0;i--){ const rr=R-i*20, ph=t*(0.7+i*0.3)+i, ry=rr*(0.3+0.7*Math.abs(Math.cos(ph)));
+      c.strokeStyle=(i===0?'rgba(255,255,255,':'rgba(201,204,210,')+(0.55-i*0.12)+')'; c.lineWidth=2-i*0.4;
+      c.beginPath(); c.ellipse(cx,cy,rr,Math.max(3,ry),0,0,7); c.stroke(); }
+    c.lineWidth=4; c.lineCap='round'; c.strokeStyle='#fff'; c.shadowColor='#c9ccd2'; c.shadowBlur=12; c.beginPath(); c.arc(cx,cy,R+10,-Math.PI/2,-Math.PI/2+frac*2*Math.PI); c.stroke(); c.shadowBlur=0;
+    const cr=6+2*Math.sin(t*3); c.fillStyle='#fff'; c.shadowColor='#c9ccd2'; c.shadowBlur=20; c.beginPath(); c.arc(cx,cy,cr,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),cx,cy+R+42);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',cx,cy+R+60); }
+
+  _particle(t,cur){ const c=this._ctx('fx-particle'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w/2, topY=64, botY=h-40, frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    if(!this._parts){ this._parts=Array.from({length:80},()=>({x:Math.random()*2-1,y:Math.random(),sp:0.12+Math.random()*0.5,r:0.6+Math.random()*1.9})); }
+    const levelY=botY-frac*(botY-topY);
+    // pass ring
+    const glow=frac>0.85?1:0.3; c.strokeStyle='rgba(201,204,210,'+glow+')'; c.lineWidth=2; c.shadowColor='#c9ccd2'; c.shadowBlur=frac>0.85?18:6; c.beginPath(); c.ellipse(cx,topY,w*0.17,11,0,0,7); c.stroke(); c.shadowBlur=0;
+    for(const p of this._parts){ p.y+=p.sp*0.006; if(p.y>frac){ p.y=0; p.x=Math.random()*2-1; }
+      const px=cx+p.x*w*0.14*(1-p.y*0.25), py=botY-p.y*(botY-topY), a=Math.min(1,(frac-p.y)/frac+0.1)*(0.5+0.5*(1-p.y));
+      c.fillStyle='rgba('+(p.x>0?'180,205,255':'255,255,255')+','+a.toFixed(2)+')'; c.beginPath(); c.arc(px,py,p.r*(1.1-p.y*0.4),0,7); c.fill(); }
+    c.setLineDash([3,5]); c.strokeStyle='rgba(255,255,255,.25)'; c.beginPath(); c.moveTo(cx-w*0.16,levelY); c.lineTo(cx+w*0.16,levelY); c.stroke(); c.setLineDash([]);
+    c.textAlign='center'; c.fillStyle='#c9ccd2'; c.font="700 "+this._mono(9); c.fillText('PASS '+this._k(G),cx,topY-16);
+    c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),cx,botY+2? levelY-10:0);
+    c.fillStyle='rgba(255,255,255,.55)'; c.font=this._mono(10); c.fillText(Math.round(frac*100)+'% to pass',cx,botY+24); }
+
+  _bars(t,cur){ const c=this._ctx('fx-bars'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const P=this.PATH, n=8, y0=h*0.74, maxH=h*0.42, x0=70, bw=(w-150)/n, dx=14, dy=-9;
+    const planeY=y0-maxH; c.setLineDash([4,6]); c.strokeStyle='rgba(201,204,210,.4)'; c.beginPath(); c.moveTo(x0,planeY); c.lineTo(x0+n*bw+dx,planeY+dy); c.stroke(); c.setLineDash([]);
+    for(let i=0;i<n;i++){ const v=P[Math.round(i/(n-1)*(P.length-1))]; const fr=Math.max(0.02,Math.min(1,(v-F)/(G-F))); const bh=fr*maxH;
+      const x=x0+i*bw, yt=y0-bh, bwF=bw*0.66; const last=i===n-1; const em=0.4+0.35*Math.sin(t*2-i*0.5);
+      // front
+      const g=c.createLinearGradient(0,yt,0,y0); if(last){ g.addColorStop(0,'rgba(201,204,210,.95)'); g.addColorStop(1,'rgba(201,204,210,.25)'); } else { g.addColorStop(0,'rgba(255,255,255,'+(0.35+em*0.3)+')'); g.addColorStop(1,'rgba(255,255,255,.06)'); }
+      c.fillStyle=g; c.fillRect(x,yt,bwF,bh);
+      // top face
+      c.fillStyle=last?'rgba(220,222,228,.9)':'rgba(255,255,255,.5)'; c.beginPath(); c.moveTo(x,yt); c.lineTo(x+dx,yt+dy); c.lineTo(x+dx+bwF,yt+dy); c.lineTo(x+bwF,yt); c.closePath(); c.fill();
+      // side
+      c.fillStyle=last?'rgba(150,150,155,.6)':'rgba(255,255,255,.12)'; c.beginPath(); c.moveTo(x+bwF,yt); c.lineTo(x+bwF+dx,yt+dy); c.lineTo(x+bwF+dx,y0+dy); c.lineTo(x+bwF,y0); c.closePath(); c.fill();
+      if(last){ c.shadowColor='#c9ccd2'; c.shadowBlur=16; c.fillStyle='#fff'; c.beginPath(); c.arc(x+bwF/2,yt,3,0,7); c.fill(); c.shadowBlur=0; } }
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(26); c.fillText(this._money(cur),x0,48);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round((cur-S)/(G-S)*100)+'% to pass',x0,66);
+    c.textAlign='right'; c.fillStyle='#c9ccd2'; c.font="700 "+this._mono(9); c.fillText('PASS PLANE '+this._k(G),w-40,planeY-8); }
+
+  _comet(t,cur){ const c=this._ctx('fx-comet'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL;
+    const p0=[60,h-64], p1=[w*0.42,h*0.28], p2=[w-64,80], frac=Math.max(0.02,Math.min(1,(cur-S)/(G-S)));
+    const B=(u)=>[ (1-u)*(1-u)*p0[0]+2*(1-u)*u*p1[0]+u*u*p2[0], (1-u)*(1-u)*p0[1]+2*(1-u)*u*p1[1]+u*u*p2[1] ];
+    c.setLineDash([3,7]); c.strokeStyle='rgba(255,255,255,.14)'; c.lineWidth=1.4; c.beginPath(); for(let u=0;u<=1.001;u+=0.02){ const b=B(u); (u===0?c.moveTo:c.lineTo).call(c,b[0],b[1]); } c.stroke(); c.setLineDash([]);
+    c.lineWidth=2.4; c.strokeStyle='#fff'; c.shadowColor='#c9ccd2'; c.shadowBlur=10; c.beginPath(); for(let u=0;u<=frac+0.001;u+=0.02){ const b=B(u); (u===0?c.moveTo:c.lineTo).call(c,b[0],b[1]); } c.stroke(); c.shadowBlur=0;
+    const s=B(0); c.fillStyle='rgba(255,255,255,.5)'; c.beginPath(); c.arc(s[0],s[1],4,0,7); c.fill();
+    const e=B(1); c.strokeStyle='rgba(201,204,210,.7)'; c.lineWidth=2; c.beginPath(); c.arc(e[0],e[1],9,0,7); c.stroke();
+    const head=B(frac);
+    for(let j=1;j<=8;j++){ const b=B(Math.max(0,frac-j*0.02)); const a=(1-j/8)*0.5*(0.6+0.4*Math.sin(t*6-j)); c.fillStyle='rgba(220,222,228,'+a.toFixed(2)+')'; c.beginPath(); c.arc(b[0]+Math.sin(t*5+j)*1.5,b[1]+Math.cos(t*5+j)*1.5,2.2-j*0.15,0,7); c.fill(); }
+    c.shadowColor='#c9ccd2'; c.shadowBlur=20; c.fillStyle='#fff'; c.beginPath(); c.arc(head[0],head[1],6,0,7); c.fill(); c.shadowBlur=0;
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),head[0]-70,head[1]-16);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',head[0]-70,head[1]-2);
+    c.textAlign='right'; c.fillStyle='#c9ccd2'; c.font="700 "+this._mono(9); c.fillText('PASS '+this._k(G),e[0]+2,e[1]-14);
+    c.textAlign='left'; c.fillStyle='rgba(255,255,255,.4)'; c.fillText('START',s[0]-4,s[1]+20); }
+
+  _climber(t,cur){ const c=this._ctx('fx-climber'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w*0.44, topY=76, botY=h-52, frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    const Y=(v)=>botY-((v-F)/(G-F))*(botY-topY);
+    c.strokeStyle='rgba(255,255,255,.16)'; c.lineWidth=2; c.beginPath(); c.moveTo(cx,topY); c.lineTo(cx,botY); c.stroke();
+    const mk=(v,l,red)=>{ const y=Y(v); c.setLineDash([3,6]); c.strokeStyle=red?'rgba(224,90,90,.4)':'rgba(255,255,255,.13)'; c.beginPath(); c.moveTo(40,y); c.lineTo(w-30,y); c.stroke(); c.setLineDash([]); c.textAlign='left'; c.font=(red?'700 ':'600 ')+this._mono(9); c.fillStyle=red?'#e05a5a':'rgba(255,255,255,.5)'; c.fillText(l+' '+this._k(v),40,y-6); };
+    mk(G,'PASS'); mk(S,'START'); mk(F,'FAIL',true);
+    const fy=Y(cur); this._fig(c,cx,fy,30,t,true);
+    for(let j=0;j<6;j++){ const ph=(t*0.5+j*0.17)%1; c.fillStyle='rgba(255,255,255,'+((1-ph)*0.25).toFixed(2)+')'; c.beginPath(); c.arc(cx+ (j%2?8:-8)+Math.sin(t+j)*2, fy-10+ph*22, 1.6,0,7); c.fill(); }
+    c.textAlign='right'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),w-30,topY-16);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',w-30,botY+22); }
+
+  _rocket(t,cur){ const c=this._ctx('fx-rocket'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w*0.5, topY=90, botY=h-60, frac=Math.max(0,Math.min(1,(cur-F)/(G-F))), ry=botY-frac*(botY-topY);
+    c.strokeStyle='rgba(255,255,255,.5)'; c.setLineDash([5,8]); c.beginPath(); c.ellipse(cx,topY,w*0.2,12,0,0,7); c.stroke(); c.setLineDash([]);
+    c.textAlign='center'; c.fillStyle='rgba(255,255,255,.7)'; c.font="700 "+this._mono(9); c.fillText('ORBIT · PASS '+this._k(G),cx,topY-16);
+    c.strokeStyle='rgba(224,90,90,.5)'; c.beginPath(); c.moveTo(40,botY); c.lineTo(w-40,botY); c.stroke();
+    c.textAlign='left'; c.fillStyle='#e05a5a'; c.fillText('GROUND · FAIL '+this._k(F),40,botY+20);
+    for(let j=0;j<16;j++){ const ph=(t*0.9+j*0.09)%1; const a=(1-ph)*0.5; c.fillStyle='rgba(255,255,255,'+a.toFixed(2)+')'; c.beginPath(); c.arc(cx+Math.sin(j*3+t*6)*5,ry+16+ph*46,(1-ph)*3+0.5,0,7); c.fill(); }
+    c.save(); c.translate(cx,ry); c.fillStyle='#fff';
+    c.beginPath(); c.moveTo(0,-22); c.quadraticCurveTo(9,-6,9,10); c.lineTo(-9,10); c.quadraticCurveTo(-9,-6,0,-22); c.closePath(); c.fill();
+    c.fillStyle='rgba(255,255,255,.5)'; c.beginPath(); c.moveTo(-9,4); c.lineTo(-17,16); c.lineTo(-9,12); c.closePath(); c.moveTo(9,4); c.lineTo(17,16); c.lineTo(9,12); c.closePath(); c.fill();
+    c.fillStyle='#111'; c.beginPath(); c.arc(0,-6,3.2,0,7); c.fill(); c.restore();
+    c.textAlign='right'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),w-40,topY+2);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to orbit',w-40,topY+20); }
+
+  _elevator(t,cur){ const c=this._ctx('fx-elevator'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w*0.5, sw=84, topY=80, botY=h-54, frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    const Y=(v)=>botY-((v-F)/(G-F))*(botY-topY);
+    c.strokeStyle='rgba(255,255,255,.12)'; c.lineWidth=1.5; c.strokeRect(cx-sw/2,topY,sw,botY-topY);
+    const flr=(v,l,red)=>{ const y=Y(v); c.strokeStyle=red?'rgba(224,90,90,.4)':'rgba(255,255,255,.14)'; c.setLineDash([3,5]); c.beginPath(); c.moveTo(cx-sw/2,y); c.lineTo(cx+sw/2,y); c.stroke(); c.setLineDash([]); c.textAlign='left'; c.font=(red?'700 ':'600 ')+this._mono(9); c.fillStyle=red?'#e05a5a':'rgba(255,255,255,.55)'; c.fillText(l,cx+sw/2+10,y+3); c.textAlign='right'; c.fillStyle='rgba(255,255,255,.35)'; c.font=this._mono(9); c.fillText(this._k(v),cx-sw/2-10,y+3); };
+    flr(G,'PASS'); flr(S,'START'); flr(F,'FAIL',true);
+    const cy=Y(cur)+Math.sin(t*2)*1.5; c.strokeStyle='rgba(255,255,255,.25)'; c.lineWidth=1; c.beginPath(); c.moveTo(cx,topY); c.lineTo(cx,cy-24); c.stroke();
+    c.fillStyle='rgba(255,255,255,.1)'; this._rr(c,cx-26,cy-26,52,52,6); c.fill(); c.strokeStyle='rgba(255,255,255,.4)'; c.lineWidth=1.4; this._rr(c,cx-26,cy-26,52,52,6); c.stroke();
+    this._fig(c,cx,cy+18,26,t,false);
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(22); c.fillText(this._money(cur),cx,topY-14);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',cx,botY+22); }
+
+  _column(t,cur){ const c=this._ctx('fx-column'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w*0.5, cw=74, topY=80, botY=h-54, frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    const lvlY=botY-frac*(botY-topY);
+    c.save(); this._rr(c,cx-cw/2,topY,cw,botY-topY,12); c.clip();
+    const g=c.createLinearGradient(0,lvlY,0,botY); g.addColorStop(0,'rgba(255,255,255,.4)'); g.addColorStop(1,'rgba(255,255,255,.08)');
+    c.fillStyle=g; c.beginPath(); c.moveTo(cx-cw/2,botY); for(let x=-cw/2;x<=cw/2;x+=6){ c.lineTo(cx+x,lvlY+Math.sin(x*0.1+t*2)*3); } c.lineTo(cx+cw/2,botY); c.closePath(); c.fill();
+    for(let j=0;j<14;j++){ const ph=(t*0.4+j*0.12)%1; const y=botY-ph*(botY-lvlY); c.fillStyle='rgba(255,255,255,'+((1-ph)*0.4).toFixed(2)+')'; c.beginPath(); c.arc(cx+Math.sin(j*2+t)*cw*0.3,y,1.4,0,7); c.fill(); }
+    c.restore();
+    this._rr(c,cx-cw/2,topY,cw,botY-topY,12); c.strokeStyle='rgba(255,255,255,.16)'; c.lineWidth=1.5; c.stroke();
+    this._fig(c,cx,lvlY,24,t,false);
+    c.setLineDash([4,6]); c.strokeStyle='rgba(255,255,255,.35)'; c.beginPath(); c.moveTo(cx-cw/2-14,topY); c.lineTo(cx+cw/2+14,topY); c.stroke(); c.setLineDash([]);
+    c.textAlign='left'; c.font="700 "+this._mono(9); c.fillStyle='rgba(255,255,255,.6)'; c.fillText('PASS '+this._k(G),cx+cw/2+16,topY+3);
+    c.fillStyle='#e05a5a'; c.fillText('FAIL '+this._k(F),cx+cw/2+16,botY+3);
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(22); c.fillText(this._money(cur),cx,topY-16);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',cx,botY+22); }
+
+  _trail(t,cur){ const c=this._ctx('fx-trail'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const x0=80, x1=w-80, y0=h*0.66, X=(v)=>x0+((v-F)/(G-F))*(x1-x0), px=X(cur), frac=Math.max(0,Math.min(1,(cur-S)/(G-S)));
+    c.strokeStyle='rgba(255,255,255,.14)'; c.lineWidth=2; c.setLineDash([4,7]); c.beginPath(); c.moveTo(px,y0); c.lineTo(x1,y0); c.stroke(); c.setLineDash([]);
+    c.strokeStyle='#fff'; c.lineWidth=2.5; c.beginPath(); c.moveTo(x0,y0); c.lineTo(px,y0); c.stroke();
+    // fail pit at far left
+    c.fillStyle='rgba(224,90,90,.12)'; c.fillRect(40,y0+2,X(S)-60,26); c.textAlign='left'; c.fillStyle='#e05a5a'; c.font="700 "+this._mono(9); c.fillText('FAIL '+this._k(F),44,y0+42);
+    const flag=(x,l)=>{ c.strokeStyle='rgba(255,255,255,.6)'; c.lineWidth=2; c.beginPath(); c.moveTo(x,y0); c.lineTo(x,y0-40); c.stroke(); c.fillStyle='#fff'; c.beginPath(); c.moveTo(x,y0-40); c.lineTo(x+18,y0-34); c.lineTo(x,y0-28); c.closePath(); c.fill(); c.textAlign='center'; c.font="700 "+this._mono(9); c.fillStyle='rgba(255,255,255,.7)'; c.fillText(l,x,y0-48); };
+    flag(X(S),'START'); flag(x1,'PASS '+this._k(G));
+    this._fig(c,px,y0,34,t,true);
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),px,y0-52);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',px,y0-36); }
+
+  _meter(t,cur){ const c=this._ctx('fx-meter'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const x0=70, x1=w-70, y=h*0.6, bh=30, X=(v)=>x0+((v-F)/(G-F))*(x1-x0), px=X(cur), frac=Math.max(0,Math.min(1,(cur-S)/(G-S)));
+    this._rr(c,x0,y-bh/2,x1-x0,bh,bh/2); c.fillStyle='rgba(255,255,255,.06)'; c.fill();
+    this._rr(c,x0,y-bh/2,X(F)+ (px-x0),bh,bh/2);
+    const g=c.createLinearGradient(x0,0,px,0); g.addColorStop(0,'rgba(255,255,255,.25)'); g.addColorStop(1,'rgba(255,255,255,.7)'); c.save(); this._rr(c,x0,y-bh/2,px-x0,bh,bh/2); c.clip(); c.fillStyle=g; c.fillRect(x0,y-bh/2,px-x0,bh); c.restore();
+    const tick=(v,l,red)=>{ const xx=X(v); c.strokeStyle=red?'rgba(224,90,90,.5)':'rgba(255,255,255,.25)'; c.beginPath(); c.moveTo(xx,y-bh/2-6); c.lineTo(xx,y+bh/2+6); c.stroke(); c.textAlign='center'; c.font=(red?'700 ':'600 ')+this._mono(9); c.fillStyle=red?'#e05a5a':'rgba(255,255,255,.55)'; c.fillText(l,xx,y+bh/2+22); c.font=this._mono(9); c.fillStyle='rgba(255,255,255,.35)'; c.fillText(this._k(v),xx,y+bh/2+35); };
+    tick(F,'FAIL',true); tick(S,'START'); tick(G,'PASS');
+    c.shadowColor='#fff'; c.shadowBlur=12; c.fillStyle='#fff'; c.beginPath(); c.arc(px,y,bh/2+3,0,7); c.fill(); c.shadowBlur=0;
+    this._fig(c,px,y-bh/2-4,22,t,false);
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),px,y-bh/2-40);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',px,y-bh/2-24); }
+
+  _jump(t,cur){ const c=this._ctx('fx-jump'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const y0=h*0.72, x0=90, x1=w-90, X=(v)=>x0+((v-S)/(G-S))*(x1-x0);
+    const frac=Math.max(0,Math.min(1,(cur-S)/(G-S)));
+    // platforms
+    c.fillStyle='rgba(255,255,255,.16)'; c.fillRect(40,y0,X(S)-40+20,h-y0-30); c.fillRect(x1-20,y0,w-40-(x1-20),h-y0-30);
+    c.fillStyle='rgba(224,90,90,.14)'; c.fillRect(X(S)+20,y0+40,(x1-20)-(X(S)+20),h-y0-70);
+    c.textAlign='center'; c.font="700 "+this._mono(9); c.fillStyle='#e05a5a'; c.fillText('FAIL PIT · '+this._k(F),(X(S)+x1)/2,y0+70);
+    c.fillStyle='rgba(255,255,255,.6)'; c.fillText('START',X(S)-10,y0-10); c.fillText('PASS '+this._k(G),x1+4,y0-10);
+    // jump arc
+    const px=X(cur), arcH=110*Math.sin(frac*Math.PI); const py=y0-arcH;
+    c.strokeStyle='rgba(255,255,255,.18)'; c.setLineDash([3,6]); c.lineWidth=1.4; c.beginPath(); for(let u=0;u<=1.001;u+=0.03){ const xx=X(S)+u*(x1-X(S)); const yy=y0-110*Math.sin(u*Math.PI); (u===0?c.moveTo:c.lineTo).call(c,xx,yy); } c.stroke(); c.setLineDash([]);
+    this._fig(c,px,py,32,t,true);
+    c.textAlign='center'; c.fillStyle='#fff'; c.font="300 "+this._mono(24); c.fillText(this._money(cur),px,py-40);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',px,py-24); }
+
+  _coins(t,cur){ const c=this._ctx('fx-coins'); if(!c) return; const w=c._w,h=c._h,S=this.START,G=this.GOAL,F=this.FAIL;
+    const cx=w*0.42, topY=80, botY=h-54, frac=Math.max(0,Math.min(1,(cur-F)/(G-F)));
+    const maxN=15, coinH=(botY-topY)/maxN, n=Math.max(0,Math.round(frac*maxN)), rw=52;
+    // pass line
+    c.setLineDash([4,6]); c.strokeStyle='rgba(255,255,255,.4)'; c.beginPath(); c.moveTo(cx-rw,topY); c.lineTo(w-30,topY); c.stroke(); c.setLineDash([]);
+    c.textAlign='right'; c.font="700 "+this._mono(9); c.fillStyle='rgba(255,255,255,.65)'; c.fillText('PASS '+this._k(G),w-30,topY-8);
+    c.strokeStyle='rgba(224,90,90,.4)'; c.setLineDash([4,6]); c.beginPath(); c.moveTo(cx-rw,botY); c.lineTo(w-30,botY); c.stroke(); c.setLineDash([]);
+    c.fillStyle='#e05a5a'; c.fillText('FAIL '+this._k(F),w-30,botY+18);
+    for(let i=0;i<n;i++){ const y=botY-(i+1)*coinH; const wob=Math.sin(t*2+i*0.5)*1.2; const sh=0.4+i/maxN*0.5;
+      c.fillStyle='rgba(255,255,255,'+sh.toFixed(2)+')'; c.beginPath(); c.ellipse(cx+wob,y,rw/2,coinH*0.42,0,0,7); c.fill();
+      c.strokeStyle='rgba(0,0,0,.25)'; c.lineWidth=1; c.beginPath(); c.ellipse(cx+wob,y,rw/2,coinH*0.42,0,0,7); c.stroke(); }
+    const topCoinY=botY-n*coinH; this._fig(c,cx+rw/2+34,Math.max(topY+30,topCoinY+20),30,t,false);
+    c.textAlign='left'; c.fillStyle='#fff'; c.font="300 "+this._mono(22); c.fillText(this._money(cur),30,topY-30);
+    c.font=this._mono(10); c.fillStyle='rgba(255,255,255,.55)'; c.fillText(Math.round(frac*100)+'% to pass',30,topY-14); }
+
+  renderVals(){ return {}; }
+}
+</script>
+</body>
+</html>

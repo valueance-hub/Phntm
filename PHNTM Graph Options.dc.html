@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;background:#0b0b0c;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+.badge{display:inline-flex;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;letter-spacing:.12em;color:#0a0a0b;background:#fff;padding:4px 9px;border-radius:6px}
+.hd{display:flex;align-items:baseline;gap:12px;margin-bottom:14px}
+.ht{font-family:'Michroma',sans-serif;font-size:15px;color:#fff}
+.hs{font-size:13px;color:#6a6a6a}
+.stage{width:480px;height:260px;border-radius:20px;background:radial-gradient(120% 80% at 50% 0%,rgba(150,152,162,.08),transparent 60%),#070708;border:1px solid rgba(255,255,255,.08);overflow:hidden;position:relative;display:flex;align-items:flex-end;padding:30px 30px 34px;box-sizing:border-box}
+.row{display:flex;align-items:flex-end;gap:12px;width:100%;height:100%}
+.col{flex:1;height:100%;display:flex;align-items:flex-end}
+.bar{width:100%;transform-origin:bottom;animation:grow 5s cubic-bezier(.16,1,.3,1) infinite}
+.yax{position:absolute;left:0;top:0;bottom:0;width:46px;display:flex;flex-direction:column;justify-content:space-between;padding:22px 0 34px;box-sizing:border-box;font-family:'JetBrains Mono',monospace;font-size:10px;color:#5c5c5c;text-align:right}
+.yax span{padding-right:9px}
+@keyframes grow{0%{transform:scaleY(0)}14%,86%{transform:scaleY(1)}100%{transform:scaleY(0)}}
+@keyframes shine{0%,20%{background-position:-140% 0}55%,100%{background-position:140% 0}}
+@keyframes floatUp{0%{opacity:0;transform:translateY(10px)}30%,86%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(10px)}}
+@keyframes drawL{0%,10%{stroke-dashoffset:1}45%,86%{stroke-dashoffset:0}100%{stroke-dashoffset:1}}
+</style>
+</helmet>
+
+<section style="display:flex;flex-wrap:wrap;gap:40px;padding:56px;align-items:flex-start">
+
+  <!-- 3a Clean rising -->
+  <div id="3a" style="position:relative">
+    <div class="hd"><span class="badge">3A</span><span class="ht">Clean rising</span><span class="hs">— bars grow up in sequence, bright gradient caps</span></div>
+    <div class="stage"><div class="yax"><span>$6K</span><span>$3K</span><span>$0</span></div>
+      <div class="row" style="margin-left:32px">
+        <div class="col"><div class="bar" style="height:32%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:0s"></div></div>
+        <div class="col"><div class="bar" style="height:44%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:.08s"></div></div>
+        <div class="col"><div class="bar" style="height:39%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:.16s"></div></div>
+        <div class="col"><div class="bar" style="height:58%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:.24s"></div></div>
+        <div class="col"><div class="bar" style="height:52%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:.32s"></div></div>
+        <div class="col"><div class="bar" style="height:74%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:.4s"></div></div>
+        <div class="col"><div class="bar" style="height:88%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.32));border-radius:6px 6px 0 0;animation-delay:.48s"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3b Faux 3D depth -->
+  <div id="3b" style="position:relative">
+    <div class="hd"><span class="badge">3B</span><span class="ht">3D depth</span><span class="hs">— tilted bars with lit tops & side shading</span></div>
+    <div class="stage" style="perspective:900px">
+      <div class="yax"><span>$6K</span><span>$3K</span><span>$0</span></div>
+      <div class="row" style="margin-left:32px;transform:rotateX(26deg) rotateZ(-4deg);transform-style:preserve-3d">
+        <div class="col"><div class="bar" style="height:34%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:0s"></div></div>
+        <div class="col"><div class="bar" style="height:46%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:.1s"></div></div>
+        <div class="col"><div class="bar" style="height:40%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:.2s"></div></div>
+        <div class="col"><div class="bar" style="height:60%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:.3s"></div></div>
+        <div class="col"><div class="bar" style="height:55%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:.4s"></div></div>
+        <div class="col"><div class="bar" style="height:78%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:.5s"></div></div>
+        <div class="col"><div class="bar" style="height:92%;background:linear-gradient(105deg,rgba(255,255,255,.4),#fff);border-radius:4px 4px 0 0;box-shadow:6px 0 10px rgba(0,0,0,.5);border-top:3px solid #fff;animation-delay:.6s"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3c Glow pills -->
+  <div id="3c" style="position:relative">
+    <div class="hd"><span class="badge">3C</span><span class="ht">Glow pills</span><span class="hs">— rounded bars with a soft halo, brighter as they climb</span></div>
+    <div class="stage"><div class="yax"><span>$6K</span><span>$3K</span><span>$0</span></div>
+      <div class="row" style="margin-left:32px">
+        <div class="col"><div class="bar" style="height:34%;background:rgba(255,255,255,.55);border-radius:99px;box-shadow:0 0 12px rgba(255,255,255,.25);animation-delay:0s"></div></div>
+        <div class="col"><div class="bar" style="height:46%;background:rgba(255,255,255,.62);border-radius:99px;box-shadow:0 0 12px rgba(255,255,255,.3);animation-delay:.09s"></div></div>
+        <div class="col"><div class="bar" style="height:41%;background:rgba(255,255,255,.6);border-radius:99px;box-shadow:0 0 12px rgba(255,255,255,.28);animation-delay:.18s"></div></div>
+        <div class="col"><div class="bar" style="height:60%;background:rgba(255,255,255,.75);border-radius:99px;box-shadow:0 0 14px rgba(255,255,255,.35);animation-delay:.27s"></div></div>
+        <div class="col"><div class="bar" style="height:54%;background:rgba(255,255,255,.7);border-radius:99px;box-shadow:0 0 14px rgba(255,255,255,.32);animation-delay:.36s"></div></div>
+        <div class="col"><div class="bar" style="height:76%;background:rgba(255,255,255,.9);border-radius:99px;box-shadow:0 0 18px rgba(255,255,255,.45);animation-delay:.45s"></div></div>
+        <div class="col"><div class="bar" style="height:90%;background:#fff;border-radius:99px;box-shadow:0 0 22px rgba(255,255,255,.6);animation-delay:.54s"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3d Bar + line -->
+  <div id="3d" style="position:relative">
+    <div class="hd"><span class="badge">3D</span><span class="ht">Bars + trend line</span><span class="hs">— dim bars with a bright line drawn across the tops</span></div>
+    <div class="stage"><div class="yax"><span>$6K</span><span>$3K</span><span>$0</span></div>
+      <div class="row" style="margin-left:32px">
+        <div class="col"><div class="bar" style="height:32%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:0s"></div></div>
+        <div class="col"><div class="bar" style="height:44%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:.08s"></div></div>
+        <div class="col"><div class="bar" style="height:39%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:.16s"></div></div>
+        <div class="col"><div class="bar" style="height:58%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:.24s"></div></div>
+        <div class="col"><div class="bar" style="height:52%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:.32s"></div></div>
+        <div class="col"><div class="bar" style="height:74%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:.4s"></div></div>
+        <div class="col"><div class="bar" style="height:88%;background:rgba(255,255,255,.16);border-radius:5px 5px 0 0;animation-delay:.48s"></div></div>
+      </div>
+      <svg viewBox="0 0 480 260" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none">
+        <path d="M92,178 L145,158 L198,168 L251,110 L304,124 L357,68 L410,44" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" style="animation:drawL 5s cubic-bezier(.16,1,.3,1) infinite"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- 3e Reflection -->
+  <div id="3e" style="position:relative">
+    <div class="hd"><span class="badge">3E</span><span class="ht">Reflection</span><span class="hs">— bars mirror into a faded glass floor</span></div>
+    <div class="stage" style="align-items:center">
+      <div class="yax"><span>$6K</span><span>$3K</span><span>$0</span></div>
+      <div style="margin-left:32px;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center">
+        <div class="row" style="height:52%">
+          <div class="col"><div class="bar" style="height:40%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:0s"></div></div>
+          <div class="col"><div class="bar" style="height:54%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:.1s"></div></div>
+          <div class="col"><div class="bar" style="height:48%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:.2s"></div></div>
+          <div class="col"><div class="bar" style="height:70%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:.3s"></div></div>
+          <div class="col"><div class="bar" style="height:64%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:.4s"></div></div>
+          <div class="col"><div class="bar" style="height:88%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:.5s"></div></div>
+          <div class="col"><div class="bar" style="height:100%;background:linear-gradient(180deg,#fff,rgba(255,255,255,.4));border-radius:5px 5px 0 0;animation-delay:.6s"></div></div>
+        </div>
+        <div class="row" style="height:26%;transform:scaleY(-1);opacity:.14;-webkit-mask-image:linear-gradient(#000,transparent);mask-image:linear-gradient(#000,transparent)">
+          <div class="col"><div class="bar" style="height:40%;background:#fff;border-radius:5px 5px 0 0;animation-delay:0s"></div></div>
+          <div class="col"><div class="bar" style="height:54%;background:#fff;border-radius:5px 5px 0 0;animation-delay:.1s"></div></div>
+          <div class="col"><div class="bar" style="height:48%;background:#fff;border-radius:5px 5px 0 0;animation-delay:.2s"></div></div>
+          <div class="col"><div class="bar" style="height:70%;background:#fff;border-radius:5px 5px 0 0;animation-delay:.3s"></div></div>
+          <div class="col"><div class="bar" style="height:64%;background:#fff;border-radius:5px 5px 0 0;animation-delay:.4s"></div></div>
+          <div class="col"><div class="bar" style="height:88%;background:#fff;border-radius:5px 5px 0 0;animation-delay:.5s"></div></div>
+          <div class="col"><div class="bar" style="height:100%;background:#fff;border-radius:5px 5px 0 0;animation-delay:.6s"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3f Shine sweep -->
+  <div id="3f" style="position:relative">
+    <div class="hd"><span class="badge">3F</span><span class="ht">Shine sweep</span><span class="hs">— bars rise, then a light sweeps across the set</span></div>
+    <div class="stage"><div class="yax"><span>$6K</span><span>$3K</span><span>$0</span></div>
+      <div class="row" style="margin-left:32px;position:relative">
+        <div class="col"><div class="bar" style="height:34%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:0s"></div></div>
+        <div class="col"><div class="bar" style="height:46%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:.08s"></div></div>
+        <div class="col"><div class="bar" style="height:41%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:.16s"></div></div>
+        <div class="col"><div class="bar" style="height:60%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:.24s"></div></div>
+        <div class="col"><div class="bar" style="height:54%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:.32s"></div></div>
+        <div class="col"><div class="bar" style="height:76%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:.4s"></div></div>
+        <div class="col"><div class="bar" style="height:90%;background:rgba(255,255,255,.55);border-radius:5px 5px 0 0;animation-delay:.48s"></div></div>
+        <div style="position:absolute;top:0;bottom:0;width:90px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);background-size:200% 100%;animation:shine 5s ease-in-out infinite;pointer-events:none;mix-blend-mode:overlay"></div>
+      </div>
+    </div>
+  </div>
+
+</section>
+</x-dc>
+</body>
+</html>

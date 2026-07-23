@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHNTM — 3D metallic study</title>
+<style>
+  html,body{margin:0;height:100%;background:#060607;overflow:hidden}
+  #c{display:block;width:100vw;height:100vh}
+  .cap{position:fixed;left:24px;bottom:20px;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.2em;color:#5c5c5c}
+</style>
+<script type="importmap">
+{"imports":{"three":"https://esm.sh/three@0.160.0","three/addons/":"https://esm.sh/three@0.160.0/examples/jsm/"}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="cap">METALLIC STUDY · DRAG TO ROTATE</div>
+<script type="module">
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x060607);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 100);
+camera.position.set(0, 0.4, 8.2);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableZoom = false; controls.enablePan = false;
+controls.autoRotate = false; controls.dampingFactor = 0.08; controls.enableDamping = true;
+
+// key + rim lights on top of the env reflections
+const key = new THREE.DirectionalLight(0xffffff, 2.1); key.position.set(4, 6, 5); scene.add(key);
+const rim = new THREE.DirectionalLight(0xbfc6d0, 1.1); rim.position.set(-6, -2, -4); scene.add(rim);
+scene.add(new THREE.AmbientLight(0x404040, 0.5));
+
+// a subtle speckled roughness so the finish reads like grit-blasted metal
+const rc = document.createElement('canvas'); rc.width = rc.height = 256;
+const rx = rc.getContext('2d'); rx.fillStyle = '#7a7a7a'; rx.fillRect(0, 0, 256, 256);
+for (let i = 0; i < 14000; i++) { const v = 90 + Math.random() * 130; rx.fillStyle = 'rgba(' + v + ',' + v + ',' + v + ',.5)'; rx.fillRect(Math.random() * 256, Math.random() * 256, 1, 1); }
+const roughTex = new THREE.CanvasTexture(rc); roughTex.wrapS = roughTex.wrapT = THREE.RepeatWrapping; roughTex.repeat.set(2, 2);
+
+const logoC = document.createElement('canvas'); logoC.width = logoC.height = 512;
+const lx = logoC.getContext('2d');
+const drawLogo = () => { lx.fillStyle = '#141416'; lx.fillRect(0, 0, 512, 512); lx.fillStyle = '#eaeaea'; lx.textAlign = 'center'; lx.textBaseline = 'middle'; lx.font = "76px 'Michroma', sans-serif"; lx.fillText('phntm', 256, 262); };
+drawLogo();
+const logoTex = new THREE.CanvasTexture(logoC);
+if (document.fonts) document.fonts.ready.then(() => { drawLogo(); logoTex.needsUpdate = true; });
+
+const mat = new THREE.MeshStandardMaterial({ color: 0x2a2a2e, metalness: 1.0, roughness: 0.34, roughnessMap: roughTex, map: logoTex, envMapIntensity: 1.15 });
+
+const group = new THREE.Group();
+const geo = new RoundedBoxGeometry(1.55, 1.55, 0.2, 8, 0.34);
+const N = 5, ring = 1.75;
+for (let i = 0; i < N; i++) {
+  const a = (i / N) * Math.PI * 2 - Math.PI / 2;
+  const tile = new THREE.Mesh(geo, mat);
+  tile.position.set(Math.cos(a) * ring, Math.sin(a) * ring, 0);
+  tile.rotation.z = a + Math.PI / 2;
+  tile.rotation.x = (Math.random() - 0.5) * 0.5;
+  tile.rotation.y = (Math.random() - 0.5) * 0.5;
+  group.add(tile);
+}
+scene.add(group);
+
+addEventListener('resize', () => { camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+
+let t = 0;
+function loop() {
+  t += 0.0022;
+  group.rotation.x = 0.42;
+  group.rotation.y = t;              // the whole connected ring turns slowly, as one
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
