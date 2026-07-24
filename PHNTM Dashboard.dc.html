@@ -1443,7 +1443,7 @@ class Component extends DCLogic {
       const C = window.PHNTM && window.PHNTM.cloud; if (!C) return;
       const client = await C.ready(); if (!client) return;            // offline → stay on local data
       const user = await C.currentUser();
-      if (!user) { window.location.href = 'PHNTM Login.dc.html'; return; }  // not signed in
+      if (!user) { if (location.hash === '#welcome') return; window.location.href = 'PHNTM Login.dc.html'; return; }  // not signed in
       const data = await C.loadAll(); if (!data) return;
       const keys = Object.keys(data);
       if (!keys.length) { await this._migrateLocalToCloud(); return; }     // fresh cloud → push this device's data up
@@ -1479,7 +1479,7 @@ class Component extends DCLogic {
     this.setState({ foods: Array.isArray(foods) ? foods : [] });
     let mts = null; try { mts = JSON.parse(localStorage.getItem('phntm-my-trades-v1') || 'null'); } catch (e) {}
     if (Array.isArray(mts)) mts = mts.map((t) => (t.acct ? t : { ...t, acct: 'Live' })); // legacy trades → Live bucket
-    if (!Array.isArray(mts) || mts.length === 0) { mts = this._seedTrades(); try { localStorage.setItem('phntm-my-trades-v1', JSON.stringify(mts)); } catch (e) {} }
+    if (!Array.isArray(mts)) { mts = []; } // new accounts start empty — no demo trades
     this.setState({ myTrades: mts });
     let rt = null; try { rt = JSON.parse(localStorage.getItem('phntm-routines-v1') || 'null'); } catch (e) {}
     this.setState({ routines: Array.isArray(rt) ? rt : [{ id: 1, name: 'Review yesterday\u2019s trades', done: {} }, { id: 2, name: 'Mark key levels before open', done: {} }, { id: 3, name: 'No trades in first 5 min', done: {} }, { id: 4, name: 'Journal every entry', done: {} }] });
@@ -1513,6 +1513,8 @@ class Component extends DCLogic {
     this.setState({ meal: h < 11 ? 'Breakfast' : h < 15 ? 'Lunch' : h < 21 ? 'Dinner' : 'Snacks' });
     setTimeout(() => this.animateNumbers(), 1900); // start after intro veil lifts
     setTimeout(() => this.setState({ rolled: true }), 1650); // odometer digits roll in
+    try { if (sessionStorage.getItem('phntm-welcome') === '1') { sessionStorage.removeItem('phntm-welcome'); setTimeout(() => this.setState({ welcomeOpen: true }), 1900); } } catch (e) {}
+    try { if (location.hash === '#welcome') { if (!(this.state.userName || '').trim()) this.setState({ userName: 'Trader' }); this.setState({ welcomeOpen: true }); } } catch (e) {}
     this._cloudSync();
   }
   componentWillUnmount() { clearInterval(this._ck); cancelAnimationFrame(this._nr); }
