@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <script src="./phntm-quotes.js"></script>
+<script src="./phntm-supabase.js"></script>
 </head>
 <body>
 <template id="__bundler_thumbnail" data-bg-color="#1F1F1F">
@@ -48,7 +49,7 @@ input,select,textarea{outline:none}
 </style>
 </helmet>
 <div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; background-color: #2A2A2A">
-  <div style="position:absolute;inset:0;z-index:200;background:#060606;display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
+  <div style="position:fixed;inset:0;z-index:200;background:#060606;display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
     <span style="font-size:22px;font-weight:300;color:#fff;font-family:'Michroma',sans-serif;animation:introMark 2s .1s cubic-bezier(.16,1,.3,1) both">PHNTM</span>
   </div>
   <sc-if value="{{ nameModalOpen }}" hint-placeholder-val="{{ false }}">
@@ -997,17 +998,17 @@ class Component extends DCLogic {
   _saveEditFood() { const e = this.state.editFood; const foods = (this.state.foods || []).map((f) => f.id === this.state.editFoodId ? { ...f, name: e.name, kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, sugar: e.sugar } : f);
     this._saveFoods(foods); this.setState({ editFoodId: null, editFood: null }); this.animateNumbers(); }
   _removeEditFood() { this._saveFoods((this.state.foods || []).filter((f) => f.id !== this.state.editFoodId)); this.setState({ editFoodId: null, editFood: null }); this.animateNumbers(); }
-  _saveRoutines(list) { this.setState({ routines: list }); try { localStorage.setItem('phntm-routines-v1', JSON.stringify(list)); } catch (e) {} }
+  _saveRoutines(list) { this.setState({ routines: list }); this._persist('phntm-routines-v1', JSON.stringify(list)); }
   _addRoutine() { const n = (this.state.newRoutine || '').trim(); if (!n) return;
     this._saveRoutines([...(this.state.routines || []), { id: Date.now(), name: n, done: {} }]); this.setState({ newRoutine: '' }); }
   _toggleRoutine(id) { const k = this._dayKey();
     this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, done: { ...r.done, [k]: !r.done[k] } } : r)); }
   _removeRoutine(id) { this._saveRoutines((this.state.routines || []).filter((r) => r.id !== id)); }
   _renameRoutine(id, name) { this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, name } : r)); }
-  _saveNoteCats(list) { this.setState({ noteCats: list }); try { localStorage.setItem('phntm-note-cats-v1', JSON.stringify(list)); } catch (e) {} }
+  _saveNoteCats(list) { this.setState({ noteCats: list }); this._persist('phntm-note-cats-v1', JSON.stringify(list)); }
   _addNoteCat(name) { const n = (name || '').trim(); if (!n) return; const cur = this.state.noteCats || []; if (cur.includes(n)) return; this._saveNoteCats([...cur, n]); }
   _removeNoteCat(name) { this._saveNoteCats((this.state.noteCats || []).filter((c) => c !== name)); if (this.state.noteFilter === name) this.setState({ noteFilter: 'All' }); }
-  _saveNotes(list) { this.setState({ notes: list }); try { localStorage.setItem('phntm-notes-v1', JSON.stringify(list)); } catch (e) {} }
+  _saveNotes(list) { this.setState({ notes: list }); this._persist('phntm-notes-v1', JSON.stringify(list)); }
   _openEditor(note) {
     this._edKey = Date.now();
     const ed = note
@@ -1077,7 +1078,7 @@ class Component extends DCLogic {
   _activeChallenge() { const cs = this.state.challenges || []; return cs.find((c) => c.id === this.state.activeChallengeId) || cs[0] || null; }
   _firmLabel(token) { const c = (this.state.challenges || []).find((x) => x.token === token); return c ? c.name : 'Prop firm'; }
   _ordinal(n) { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
-  _saveChallenges(list, activeId) { const aid = activeId !== undefined ? activeId : this.state.activeChallengeId; this.setState({ challenges: list, activeChallengeId: aid }); try { localStorage.setItem('phntm-challenges-v1', JSON.stringify({ challenges: list, activeChallengeId: aid })); } catch (e) {} }
+  _saveChallenges(list, activeId) { const aid = activeId !== undefined ? activeId : this.state.activeChallengeId; this.setState({ challenges: list, activeChallengeId: aid }); try { this._persist('phntm-challenges-v1', JSON.stringify({ challenges: list, activeChallengeId: aid })); } catch (e) {} }
   _mirror(c) { this.setState({ acctFirm: c.token, acctMarket: c.market, acctSize: c.size, acctPhase: c.phase, viewAcct: c.phase }); }
   _selectChallenge(id) { const c = (this.state.challenges || []).find((x) => x.id === id); if (!c) return; this._mirror(c); this._saveChallenges(this.state.challenges, id); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
   _startSetup() { const n = (this.state.challenges || []).length; this.setState({ challengeSetup: { market: 'Futures', size: 50000, name: this._ordinal(n + 1) + ' prop firm challenge' } }); }
@@ -1202,7 +1203,7 @@ class Component extends DCLogic {
   _clearAllTrades() { const all = this.state.myTrades || []; if (!all.length) return; this._saveTrades([]); this.setState({ lastClearedAll: all }); clearTimeout(this._undoAllT); this._undoAllT = setTimeout(() => this.setState({ lastClearedAll: null }), 9000); this.animateNumbers(); }
   _undoClearAll() { const a = this.state.lastClearedAll; if (!a) return; clearTimeout(this._undoAllT); this._saveTrades(a); this.setState({ lastClearedAll: null }); this.animateNumbers(); }
   _acctToPick(key) { return (!key || key === 'Live') ? 'Live' : 'Challenge'; }
-  _saveRules(list) { this.setState({ tradeRules: list }); try { localStorage.setItem('phntm-rules-v1', JSON.stringify(list)); } catch (e) {} }
+  _saveRules(list) { this.setState({ tradeRules: list }); this._persist('phntm-rules-v1', JSON.stringify(list)); }
   _addRule() { const n = (this.state.newRule || '').trim(); if (!n) return; this._saveRules([...(this.state.tradeRules || []), n]); this.setState({ newRule: '' }); }
   _removeRule(i) { const l = [...(this.state.tradeRules || [])]; l.splice(i, 1); const ch = { ...(this.state.draftChecks || {}) }; delete ch[i]; this._saveRules(l); this.setState({ draftChecks: ch }); }
   _toggleRuleCheck(i) { this.setState((s) => ({ draftChecks: { ...(s.draftChecks || {}), [i]: !((s.draftChecks || {})[i]) } })); }
@@ -1255,17 +1256,17 @@ class Component extends DCLogic {
     const rec = { id: Date.now() + Math.random(), name: c.name, market: c.market, size: c.size, phase: c.phase, outcome, ts: Date.now() };
     const list = [rec].concat(this.state.challengeHistory || []).slice(0, 50);
     this.setState({ challengeHistory: list });
-    try { localStorage.setItem('phntm-history-v1', JSON.stringify(list)); } catch (e) {}
+    this._persist('phntm-history-v1', JSON.stringify(list));
   }
   _acctConsist() {
     const q = window.PHNTM_CONSIST_QUOTES || ['Target met — but one day carries too much of it. Balance, and the pass is yours.'];
     this.setState({ consistOpen: true, consistQuote: q[Math.floor(Math.random() * q.length)] });
   }
-  _saveAccount(cfg) { try { localStorage.setItem('phntm-account-v2', JSON.stringify({ acctType: this.state.acctType, acctFirm: this.state.acctFirm, acctSize: this.state.acctSize, acctPhase: this.state.acctPhase, acctCfg: cfg || this.state.acctCfg })); } catch (e) {} }
+  _saveAccount(cfg) { this._persist('phntm-account-v2', JSON.stringify({ acctType: this.state.acctType, acctFirm: this.state.acctFirm, acctSize: this.state.acctSize, acctPhase: this.state.acctPhase, acctCfg: cfg || this.state.acctCfg })); }
   _saveBody(patch) { this.setState(patch); }
   saveTargets() {
     const b = { sex: this.state.sex, htCm: this.state.htCm, wtKg: this.state.wtKg, goal: this.state.goal };
-    try { localStorage.setItem('phntm-body-v1', JSON.stringify(b)); } catch (e) {}
+    this._persist('phntm-body-v1', JSON.stringify(b));
     this.setState({ bodySaved: true });
     clearTimeout(this._bs); this._bs = setTimeout(() => this.setState({ bodySaved: false }), 2200);
   }
@@ -1292,10 +1293,10 @@ class Component extends DCLogic {
   }
   _saveTrades(list) {
     this.setState({ myTrades: list });
-    try { localStorage.setItem('phntm-my-trades-v1', JSON.stringify(list)); }
-    catch (e) { try { localStorage.setItem('phntm-my-trades-v1', JSON.stringify(list.map((t) => ({ ...t, pics: [] })))); } catch (e2) {} }
+    try { this._persist('phntm-my-trades-v1', JSON.stringify(list)); }
+    catch (e) { try { this._persist('phntm-my-trades-v1', JSON.stringify(list.map((t) => ({ ...t, pics: [] })))); } catch (e2) {} }
   }
-  _saveFoods(foods) { this.setState({ foods }); try { localStorage.setItem('phntm-food-v2', JSON.stringify(foods)); } catch (e) {} this._syncToday(foods); }
+  _saveFoods(foods) { this.setState({ foods }); this._persist('phntm-food-v2', JSON.stringify(foods)); this._syncToday(foods); }
   _dayKey(d) { d = d || new Date(); const p = (n) => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
   _syncToday(foodsArg, sleepArg, bedArg) {
     const foods = foodsArg || this.state.foods || [];
@@ -1305,7 +1306,7 @@ class Component extends DCLogic {
     let days = {}; try { days = JSON.parse(localStorage.getItem('phntm-days-v1') || '{}'); } catch (e) {}
     const key = this._dayKey();
     days[key] = { ...(days[key] || {}), kcal: t.kcal, p: t.p, c: t.c, f: t.f, sleepMin: sm, bedMin: bm };
-    try { localStorage.setItem('phntm-days-v1', JSON.stringify(days)); } catch (e) {}
+    this._persist('phntm-days-v1', JSON.stringify(days));
   }
   _bedMin() { const [h, m] = String(this.state.bedTime || '22:30').split(':').map(Number); return ((h || 0) * 60 + (m || 0)); }
   _foodSystemPrompt() {
@@ -1433,6 +1434,41 @@ class Component extends DCLogic {
       this.setState({ foodLoading: false, foodErr: 'Couldn\'t estimate that — try rewording, e.g. "2 scrambled eggs" or "1 slice pepperoni pizza".' });
     }
   }
+  _persist(key, val) {
+    try { localStorage.setItem(key, val); } catch (e) {}
+    try { if (window.PHNTM && window.PHNTM.cloud) window.PHNTM.cloud.set(key, val); } catch (e) {}
+  }
+  async _cloudSync() {
+    try {
+      const C = window.PHNTM && window.PHNTM.cloud; if (!C) return;
+      const client = await C.ready(); if (!client) return;            // offline → stay on local data
+      const user = await C.currentUser();
+      if (!user) { window.location.href = 'PHNTM Login.dc.html'; return; }  // not signed in
+      const data = await C.loadAll(); if (!data) return;
+      const keys = Object.keys(data);
+      if (!keys.length) { await this._migrateLocalToCloud(); return; }     // fresh cloud → push this device's data up
+      const raw = { 'phntm-name': 1 };
+      let changed = false;
+      keys.forEach((k) => {
+        try {
+          const next = raw[k] ? String(data[k]) : JSON.stringify(data[k]);
+          if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
+        } catch (e) {}
+      });
+      if (changed && !sessionStorage.getItem('phntm-cloud-pulled')) {
+        try { sessionStorage.setItem('phntm-cloud-pulled', '1'); } catch (e) {}
+        window.location.reload();
+      }
+    } catch (e) { console.warn('[PHNTM] cloud sync error', e); }
+  }
+  async _migrateLocalToCloud() {
+    const C = window.PHNTM && window.PHNTM.cloud; if (!C) return;
+    const keys = ['phntm-my-trades-v1','phntm-challenges-v1','phntm-notes-v1','phntm-note-cats-v1','phntm-rules-v1','phntm-routines-v1','phntm-history-v1','phntm-body-v1','phntm-sleep-v1','phntm-days-v1','phntm-account-v2','phntm-food-v2','phntm-name'];
+    for (let i = 0; i < keys.length; i++) {
+      let rawv = null; try { rawv = localStorage.getItem(keys[i]); } catch (e) {}
+      if (rawv != null) { try { await C.set(keys[i], rawv); } catch (e) {} }
+    }
+  }
   componentDidMount() {
     const tick = () => {
       const d = new Date();
@@ -1477,6 +1513,7 @@ class Component extends DCLogic {
     this.setState({ meal: h < 11 ? 'Breakfast' : h < 15 ? 'Lunch' : h < 21 ? 'Dinner' : 'Snacks' });
     setTimeout(() => this.animateNumbers(), 1900); // start after intro veil lifts
     setTimeout(() => this.setState({ rolled: true }), 1650); // odometer digits roll in
+    this._cloudSync();
   }
   componentWillUnmount() { clearInterval(this._ck); cancelAnimationFrame(this._nr); }
   animateNumbers() {
@@ -1528,7 +1565,7 @@ class Component extends DCLogic {
     const sleepPct = Math.min(100, Math.round((sleepMin / sleepGoalMin) * 100));
     const sleepMet = sleepMin >= sleepGoalMin - 30;
     const persistSleep = (patch) => { const next = { sleepManualMin: this.state.sleepManualMin, sleepGoalMin: this.state.sleepGoalMin, bedTime: this.state.bedTime, ...patch };
-      try { localStorage.setItem('phntm-sleep-v1', JSON.stringify(next)); } catch (e) {} };
+      this._persist('phntm-sleep-v1', JSON.stringify(next)); };
     const setSleepMin = (mins) => { const v = Math.max(0, Math.min(720, mins)); this.setState({ sleepManualMin: v }); persistSleep({ sleepManualMin: v }); this._syncToday(null, v); };
     const setSleepGoal = (mins) => { const v = Math.max(240, Math.min(720, mins)); this.setState({ sleepGoalMin: v }); persistSleep({ sleepGoalMin: v }); };
     const bedTime = this.state.bedTime || '22:30';
@@ -1749,7 +1786,7 @@ class Component extends DCLogic {
       nameModalOpen: !!this.state.nameModalOpen,
       nameDraft: this.state.nameDraft || '',
       setNameDraft: (e) => this.setState({ nameDraft: e.target.value }),
-      saveName: () => { const n = (this.state.nameDraft || '').trim(); if (!n) return; try { localStorage.setItem('phntm-name', n); } catch (e) {} this.setState({ userName: n, nameModalOpen: false, welcomeOpen: true }); clearTimeout(this._welT); this._welT = setTimeout(() => this.setState({ welcomeOpen: false }), 7000); },
+      saveName: () => { const n = (this.state.nameDraft || '').trim(); if (!n) return; this._persist('phntm-name', n); this.setState({ userName: n, nameModalOpen: false, welcomeOpen: true }); clearTimeout(this._welT); this._welT = setTimeout(() => this.setState({ welcomeOpen: false }), 7000); },
       nameReady: !!(this.state.nameDraft || '').trim(),
       welcomeOpen: !!this.state.welcomeOpen,
       closeWelcome: () => { clearTimeout(this._welT); this.setState({ welcomeOpen: false }); },
