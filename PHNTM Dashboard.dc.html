@@ -886,13 +886,23 @@ input,select,textarea{outline:none}
             <sc-if value="{{ g.empty }}" hint-placeholder-val="{{ false }}">
               <div style="padding:13px 0;font-size:13px;color:#5c5c5c">Nothing logged yet.</div>
             </sc-if>
+            <sc-if value="{{ g.notEmpty }}" hint-placeholder-val="{{ false }}">
+              <div data-m="rowhead" style="display:grid;grid-template-columns:1fr 110px 90px 90px 90px 36px;gap:12px;padding:10px 0 7px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#5c5c5c">
+                <span>ITEM</span>
+                <span style="text-align:right;padding-right:10px">KCAL</span>
+                <span style="text-align:right;padding-right:10px">P</span>
+                <span style="text-align:right;padding-right:10px">C</span>
+                <span style="text-align:right">F</span>
+                <span></span>
+              </div>
+            </sc-if>
             <sc-for list="{{ g.rows }}" as="f" hint-placeholder-count="1">
               <div data-m="row" style="display:grid;grid-template-columns:1fr 110px 90px 90px 90px 36px;gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px;transition:background .3s;cursor:pointer" style-hover="background:rgba(255,255,255,.02)" onClick="{{ f.edit }}">
-                <span style="color:#eaeaea">{{ f.name }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#fff;text-align:right">{{ f.kcal }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7a7a7a;text-align:right">{{ f.p }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7a7a7a;text-align:right">{{ f.c }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#7a7a7a;text-align:right">{{ f.fat }}</span>
+                <span style="color:#fff">{{ f.name }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;text-align:right;padding-right:10px;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.kcalN }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c4c4c4;text-align:right;padding-right:10px;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.pN }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c4c4c4;text-align:right;padding-right:10px;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.cN }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c4c4c4;text-align:right;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.fatN }}</span>
                 <button onClick="{{ f.remove }}" style="background:none;border:none;color:#5c5c5c;font-size:16px;cursor:pointer;justify-self:end;transition:color .3s;line-height:1" style-hover="color:#fff">×</button>
               </div>
             </sc-for>
@@ -906,7 +916,10 @@ input,select,textarea{outline:none}
     <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .9s .38s cubic-bezier(.16,1,.3,1) both">
       <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px">
         <span style="font-size:15px;color:#fff">Sleep — last night</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ sleepMetColor }}">{{ sleepDuration }}</span>
+        <span style="display:flex;align-items:center;gap:14px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ sleepMetColor }}">{{ sleepDuration }}</span>
+          <button onClick="{{ saveSleep }}" style="{{ sleepSaveStyle }}">{{ sleepSaveLabel }}</button>
+        </span>
       </div>
       <div style="display:flex;gap:44px;align-items:center;flex-wrap:wrap">
         <div style="flex:1;min-width:300px;display:flex;flex-direction:column;gap:16px">
@@ -949,7 +962,7 @@ input,select,textarea{outline:none}
       </div>
       <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px">
         <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
-          <div style="{{ c.cellStyle }}">{{ c.node }}</div>
+          <div onClick="{{ c.open }}" style="{{ c.cellStyle }}" style-hover="border-color:rgba(255,255,255,.3)">{{ c.node }}</div>
         </sc-for>
       </div>
       <div style="display:flex;gap:22px;margin-top:20px;font-size:11.5px;color:#5c5c5c">
@@ -1196,6 +1209,33 @@ input,select,textarea{outline:none}
         </div>
       </div>
       <button onClick="{{ commitTrade }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;gap:10px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:14.5px;font-weight:500;padding:16px;border-radius:99px;cursor:pointer;transition:opacity .3s,gap .3s" style-hover="opacity:.85;gap:16px" style-active="opacity:.7">{{ commitLabel }} <span>→</span></button>
+    </div>
+  </sc-if>
+  <sc-if value="{{ dayEditOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDayEdit }}" style="position:fixed;inset:0;z-index:298;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
+      <div onClick="{{ stop }}" style="max-width:420px;width:100%;box-sizing:border-box;background:linear-gradient(180deg,#161616,#0e0e0e);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:32px 34px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .45s cubic-bezier(.16,1,.3,1) both">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;color:#7a7a7a">DAY RECORD</div>
+            <div style="margin-top:9px;font-size:20px;font-weight:300;color:#fff">{{ dayEditLabel }}</div>
+          </div>
+          <button onClick="{{ closeDayEdit }}" style="border:none;background:none;color:#7a7a7a;font-size:20px;line-height:1;cursor:pointer;transition:color .3s" style-hover="color:#fff">×</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:9px;margin-top:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 15px">
+            <span style="font-size:13.5px;color:#c4c4c4">{{ dayEditKcal }}</span>
+            <sc-if value="{{ dayHasFood }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearDayFood }}" style="border:1px solid rgba(255,255,255,.18);background:none;color:#9a9a9a;font-family:'Archivo',sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#f08a8a;border-color:rgba(240,138,138,.5)">Delete</button></sc-if>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 15px">
+            <span style="font-size:13.5px;color:#c4c4c4">{{ dayEditSleep }}</span>
+            <sc-if value="{{ dayHasSleep }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearDaySleep }}" style="border:1px solid rgba(255,255,255,.18);background:none;color:#9a9a9a;font-family:'Archivo',sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#f08a8a;border-color:rgba(240,138,138,.5)">Delete</button></sc-if>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:14px;margin-top:26px">
+          <button onClick="{{ clearDayAll }}" style="border:none;background:#f08a8a;color:#160707;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;padding:12px 24px;border-radius:99px;cursor:pointer;transition:opacity .3s,transform .35s cubic-bezier(.32,.72,0,1)" style-hover="opacity:.9" style-active="transform:scale(.97)">Clear whole day</button>
+          <button onClick="{{ closeDayEdit }}" style="border:none;background:none;color:#8a8a8a;font-family:'Archivo',sans-serif;font-size:13px;cursor:pointer;transition:color .3s" style-hover="color:#fff">Cancel</button>
+        </div>
+      </div>
     </div>
   </sc-if>
   <sc-if value="{{ manualOpen }}" hint-placeholder-val="{{ false }}">
@@ -2578,6 +2618,34 @@ class Component extends DCLogic {
     this.animateNumbers();
   }
   _dayKey(d) { d = d || new Date(); const p = (n) => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
+  // Clearing a past day: drop its history record and any food logged that date.
+  _clearDay(key, what) {
+    let days = {}; try { days = JSON.parse(localStorage.getItem('phntm-days-v1') || '{}'); } catch (e) {}
+    const rec = days[key];
+    if (rec) {
+      if (what === 'all') delete days[key];
+      else if (what === 'sleep') { const n = { ...rec }; delete n.sleepMin; delete n.bedMin; days[key] = n; }
+      else if (what === 'food') days[key] = { ...rec, kcal: 0, p: 0, c: 0, f: 0 };
+      this._persist('phntm-days-v1', JSON.stringify(days));
+    }
+    if (what === 'all' || what === 'food') {
+      const keep = (this.state.foods || []).filter((f) => this._dayKey(new Date(f.id)) !== key);
+      if (keep.length !== (this.state.foods || []).length) { this.setState({ foods: keep }); this._persist('phntm-food-v2', JSON.stringify(keep)); }
+    }
+    // today's row is derived from live state, so re-sync it after a clear
+    if (key === this._dayKey()) {
+      if (what === 'all' || what === 'sleep') this.setState({ sleepManualMin: null });
+      setTimeout(() => this._syncToday(), 0);
+    }
+    this.setState({ dayEdit: null });
+    this.animateNumbers();
+  }
+  _saveSleep() {
+    this._syncToday();
+    this.setState({ sleepSaved: true });
+    clearTimeout(this._slT);
+    this._slT = setTimeout(() => this.setState({ sleepSaved: false }), 2200);
+  }
   _syncToday(foodsArg, sleepArg, bedArg) {
     const foods = foodsArg || this.state.foods || [];
     const t = foods.reduce((a, f) => ({ kcal: a.kcal + f.kcal, p: a.p + f.protein, c: a.c + f.carbs, f: a.f + f.fat }), { kcal: 0, p: 0, c: 0, f: 0 });
@@ -2590,10 +2658,68 @@ class Component extends DCLogic {
   }
   _bedMin() { const [h, m] = String(this.state.bedTime || '22:30').split(':').map(Number); return ((h || 0) * 60 + (m || 0)); }
   _foodSystemPrompt() {
-    return 'You are a multilingual nutrition estimator. The user may describe a food in ANY language (Korean, Japanese, Spanish, etc.) — including brand/product names like "오뚜기 3분카레" or "Snickers" and composite dishes with listed ingredients like "1 sandwich: 1 ham, 1 cheese, 1 tbsp peanut butter". Sum all listed ingredients into ONE total and reply ONLY with compact JSON like {"name":"Snickers bar — 1 standard (52g)","kcal":250,"protein":4,"carbs":33,"fat":12,"sugar":27}. Keep the original text in the name and add a short English gloss in parentheses. If the input looks misspelled, ALSO include a "suggest" field with the corrected spelling (e.g. {"suggest":"snickers",...}); otherwise omit "suggest". Estimate for the exact quantity described; if no quantity, assume one typical serving and include it in the name. "sugar" is grams of sugar (integer, 0 if none). Integers only. No text outside the JSON.';
+    return 'You are a careful multilingual nutrition estimator. Count the WHOLE item as served: for a sandwich, sub, burger, wrap, taco or burrito that means the bread or tortilla PLUS the filling PLUS any cheese, dressing or sauce — a bread-based item can never have 0 carbs, and a 6-inch sub is typically 330-500 kcal. Respect fractions like "half" (multiply everything by 0.5). Never under-report fat: dressings, mayo, cheese and fried foods carry most of it. The user may describe a food in ANY language (Korean, Japanese, Spanish, etc.) — including brand/product names like "오뚜기 3분카레" or "Snickers" and composite dishes with listed ingredients like "1 sandwich: 1 ham, 1 cheese, 1 tbsp peanut butter". Sum all listed ingredients into ONE total and reply ONLY with compact JSON like {"name":"Snickers bar — 1 standard (52g)","kcal":250,"protein":4,"carbs":33,"fat":12,"sugar":27}. Keep the original text in the name and add a short English gloss in parentheses. If the input looks misspelled, ALSO include a "suggest" field with the corrected spelling (e.g. {"suggest":"snickers",...}); otherwise omit "suggest". Estimate for the exact quantity described; if no quantity, assume one typical serving and include it in the name. "sugar" is grams of sugar (integer, 0 if none). Integers only. No text outside the JSON.';
   }
   _foodDB() {
     return [
+      // --- noodles, rice and staples ----------------------------------------
+      { k: ['instant ramen', 'shin ramyun', 'ramyun', 'ramen', 'instant noodles', 'cup noodles'], n: 'instant ramen (1 pack)', kcal: 500, p: 11, c: 72, f: 19, s: 4 },
+      { k: ['pho', 'noodle soup'], n: 'noodle soup (bowl)', kcal: 420, p: 25, c: 55, f: 9, s: 4 },
+      { k: ['udon'], n: 'udon (bowl)', kcal: 430, p: 14, c: 82, f: 4, s: 5 },
+      { k: ['fried rice'], n: 'fried rice (1 plate)', kcal: 560, p: 14, c: 78, f: 20, s: 3 },
+      { k: ['white rice', 'steamed rice', 'rice'], n: 'rice (1 cup cooked)', kcal: 205, p: 4, c: 45, f: 0, s: 0 },
+      { k: ['spaghetti', 'pasta'], n: 'pasta (1 plate)', kcal: 480, p: 17, c: 72, f: 12, s: 8 },
+      { k: ['kimchi'], n: 'kimchi (side)', kcal: 25, p: 1, c: 4, f: 0, s: 2 },
+      { k: ['dumplings', 'mandu', 'gyoza'], n: 'dumplings (5)', kcal: 280, p: 12, c: 32, f: 11, s: 2 },
+      // --- dairy -------------------------------------------------------------
+      { k: ['low calorie milk', 'skim milk', 'low fat milk'], n: 'low-fat milk (1 tbsp)', kcal: 6, p: 0.5, c: 1, f: 0, s: 1 },
+      { k: ['whole milk', 'milk'], n: 'milk (1 tbsp)', kcal: 9, p: 0.5, c: 1, f: 0.5, s: 1 },
+      { k: ['cheese slice', 'slice of cheese', 'american cheese', 'cheddar', 'cheese'], n: 'cheese (1 slice)', kcal: 70, p: 4, c: 1, f: 6, s: 0 },
+      { k: ['cream cheese'], n: 'cream cheese (1 tbsp)', kcal: 50, p: 1, c: 1, f: 5, s: 1 },
+      { k: ['butter'], n: 'butter (1 tbsp)', kcal: 102, p: 0, c: 0, f: 12, s: 0 },
+      // --- drinks ------------------------------------------------------------
+      { k: ['coca cola', 'coke', 'cola', 'pepsi'], n: 'cola (1 can, 355ml)', kcal: 140, p: 0, c: 39, f: 0, s: 39 },
+      { k: ['diet coke', 'coke zero', 'zero sugar'], n: 'diet cola (1 can)', kcal: 0, p: 0, c: 0, f: 0, s: 0 },
+      { k: ['sprite', 'lemonade', 'soda'], n: 'soda (1 can)', kcal: 140, p: 0, c: 38, f: 0, s: 38 },
+      { k: ['orange juice', 'apple juice', 'juice'], n: 'juice (1 glass)', kcal: 110, p: 1, c: 26, f: 0, s: 22 },
+      { k: ['iced americano', 'americano', 'black coffee', 'coffee'], n: 'coffee (black)', kcal: 5, p: 0, c: 1, f: 0, s: 0 },
+      { k: ['latte', 'cafe latte'], n: 'latte (medium)', kcal: 190, p: 12, c: 18, f: 7, s: 17 },
+      { k: ['beer'], n: 'beer (1 can)', kcal: 150, p: 2, c: 13, f: 0, s: 0 },
+      { k: ['soju'], n: 'soju (1 bottle)', kcal: 400, p: 0, c: 0, f: 0, s: 0 },
+      { k: ['energy drink', 'monster', 'red bull'], n: 'energy drink (1 can)', kcal: 160, p: 0, c: 39, f: 0, s: 38 },
+      // --- snacks ------------------------------------------------------------
+      { k: ['lays', "lay's", 'potato chips', 'chips', 'crisps'], n: 'potato chips (small bag, 40g)', kcal: 215, p: 3, c: 20, f: 14, s: 0 },
+      { k: ['doritos', 'tortilla chips', 'nachos'], n: 'tortilla chips (small bag)', kcal: 230, p: 3, c: 26, f: 12, s: 1 },
+      { k: ['popcorn'], n: 'popcorn (1 bag)', kcal: 150, p: 3, c: 22, f: 6, s: 0 },
+      { k: ['chocolate bar', 'chocolate'], n: 'chocolate bar', kcal: 230, p: 3, c: 26, f: 13, s: 24 },
+      { k: ['protein bar'], n: 'protein bar', kcal: 210, p: 20, c: 22, f: 7, s: 5 },
+      { k: ['salt', 'extra salt'], n: 'salt (pinch)', kcal: 0, p: 0, c: 0, f: 0, s: 0 },
+      { k: ['sugar'], n: 'sugar (1 tsp)', kcal: 16, p: 0, c: 4, f: 0, s: 4 },
+      { k: ['honey'], n: 'honey (1 tbsp)', kcal: 64, p: 0, c: 17, f: 0, s: 17 },
+      { k: ['olive oil', 'cooking oil', 'oil'], n: 'oil (1 tbsp)', kcal: 119, p: 0, c: 0, f: 14, s: 0 },
+      // --- subs, sandwiches and the things that go in them -------------------
+      { k: ['footlong sub', 'footlong'], n: 'footlong sub (12in)', kcal: 760, p: 46, c: 92, f: 24, s: 12 },
+      { k: ['chicken sub', 'chicken teriyaki sub'], n: 'chicken sub (6in)', kcal: 380, p: 26, c: 47, f: 10, s: 8 },
+      { k: ['steak sub', 'steak and cheese sub'], n: 'steak & cheese sub (6in)', kcal: 430, p: 26, c: 45, f: 17, s: 8 },
+      { k: ['turkey sub'], n: 'turkey sub (6in)', kcal: 330, p: 20, c: 46, f: 6, s: 7 },
+      { k: ['tuna sub'], n: 'tuna sub (6in)', kcal: 480, p: 21, c: 45, f: 25, s: 7 },
+      { k: ['veggie sub'], n: 'veggie sub (6in)', kcal: 250, p: 9, c: 45, f: 4, s: 7 },
+      { k: ['sub sandwich', 'hoagie', 'submarine sandwich', 'sub'], n: 'sub sandwich (6in)', kcal: 390, p: 22, c: 47, f: 12, s: 8 },
+      { k: ['sub roll', 'baguette', 'hoagie roll'], n: 'sub roll (6in)', kcal: 200, p: 8, c: 38, f: 2, s: 4 },
+      { k: ['burger bun', 'hamburger bun', 'bun'], n: 'burger bun', kcal: 150, p: 5, c: 27, f: 2, s: 4 },
+      { k: ['tortilla wrap', 'wrap', 'tortilla'], n: 'flour tortilla (large)', kcal: 190, p: 5, c: 32, f: 5, s: 1 },
+      { k: ['sweet onion sauce', 'onion sauce'], n: 'sweet onion sauce (1 tbsp)', kcal: 40, p: 0, c: 9, f: 0, s: 8 },
+      { k: ['chipotle sauce', 'chipotle southwest'], n: 'chipotle sauce (1 tbsp)', kcal: 90, p: 0, c: 1, f: 10, s: 1 },
+      { k: ['ranch dressing', 'ranch'], n: 'ranch (1 tbsp)', kcal: 73, p: 0, c: 1, f: 8, s: 1 },
+      { k: ['mayonnaise', 'mayo'], n: 'mayonnaise (1 tbsp)', kcal: 94, p: 0, c: 0, f: 10, s: 0 },
+      { k: ['ketchup'], n: 'ketchup (1 tbsp)', kcal: 19, p: 0, c: 5, f: 0, s: 4 },
+      { k: ['mustard'], n: 'mustard (1 tsp)', kcal: 3, p: 0, c: 0, f: 0, s: 0 },
+      { k: ['bbq sauce', 'barbecue sauce'], n: 'BBQ sauce (1 tbsp)', kcal: 29, p: 0, c: 7, f: 0, s: 6 },
+      { k: ['sriracha', 'hot sauce'], n: 'hot sauce (1 tsp)', kcal: 5, p: 0, c: 1, f: 0, s: 1 },
+      { k: ['lettuce'], n: 'lettuce (handful)', kcal: 5, p: 0, c: 1, f: 0, s: 0 },
+      { k: ['tomato'], n: 'tomato (2 slices)', kcal: 8, p: 0, c: 2, f: 0, s: 1 },
+      { k: ['red onion', 'onion'], n: 'onion (slices)', kcal: 10, p: 0, c: 2, f: 0, s: 1 },
+      { k: ['pickles', 'pickle'], n: 'pickles', kcal: 5, p: 0, c: 1, f: 0, s: 0 },
       { k: ['peanut butter'], n: 'peanut butter (1 tbsp)', kcal: 95, p: 4, c: 3, f: 8, s: 1 },
       { k: ['almond butter'], n: 'almond butter (1 tbsp)', kcal: 98, p: 3, c: 3, f: 9, s: 1 },
       { k: ['greek yogurt'], n: 'Greek yogurt (1 cup)', kcal: 150, p: 15, c: 8, f: 4, s: 7 },
@@ -2658,12 +2784,25 @@ class Component extends DCLogic {
         if (idx < 0) continue;
         const pre = s.slice(0, idx + 1).trim().split(' ').filter(Boolean);
         let qy = 1;
-        for (let b = 1; b <= 2 && pre.length - b >= 0; b++) {
+        const FILLER = { a: 1, an: 1, of: 1, the: 1, slice: 1, slices: 1, piece: 1, pieces: 1, my: 1, some: 1,
+          spoon: 1, spoons: 1, spoonful: 1, spoonfuls: 1, tbsp: 1, tablespoon: 1, tablespoons: 1,
+          tsp: 1, teaspoon: 1, teaspoons: 1, cup: 1, cups: 1, glass: 1, glasses: 1, bowl: 1, bowls: 1,
+          can: 1, cans: 1, bottle: 1, bottles: 1, bag: 1, bags: 1, pack: 1, packet: 1, packs: 1,
+          plate: 1, plates: 1, serving: 1, servings: 1, small: 1, medium: 1, large: 1, big: 1,
+          extra: 1, with: 1, and: 1, plus: 1, sprinkled: 1, sprinkle: 1, on: 1, top: 1, side: 1 };
+        // size words scale the serving
+        const SIZE = { small: 0.7, mini: 0.6, medium: 1, regular: 1, large: 1.4, big: 1.4, jumbo: 1.7 };
+        let sizeMul = 1;
+        for (let b = 1; b <= 4 && pre.length - b >= 0; b++) { const tk = pre[pre.length - b]; if (SIZE[tk] != null) { sizeMul = SIZE[tk]; break; } }
+        for (let b = 1; b <= 4 && pre.length - b >= 0; b++) {
           const tk = pre[pre.length - b];
           if (/^\d+(\.\d+)?$/.test(tk)) { qy = parseFloat(tk); break; }
           if (/^\d+\/\d+$/.test(tk)) { const [a, c] = tk.split('/'); qy = (+a) / (+c); break; }
-          if (w2n[tk] != null) { qy = w2n[tk]; break; }
+          if (tk === 'half' || tk === 'halves') { qy = 0.5; break; }
+          if (w2n[tk] != null && !FILLER[tk]) { qy = w2n[tk]; break; }
+          if (!FILLER[tk]) break;   // a real word that is not a quantity — stop looking
         }
+        qy = qy * sizeMul;
         tot.kcal += e.kcal * qy; tot.p += e.p * qy; tot.c += e.c * qy; tot.f += e.f * qy; tot.s += e.s * qy;
         items.push((qy !== 1 ? qy + ' ' : '') + e.n);
         s = s.slice(0, idx + 1) + ' '.repeat(kw.length) + s.slice(idx + 1 + kw.length); // consume so 'butter' doesn't re-hit 'peanut butter'
@@ -2678,13 +2817,18 @@ class Component extends DCLogic {
     const NUTRITION_API = '/api/nutrition'; // your deployed Vercel backend
     if (NUTRITION_API) {
       try {
-        const r = await fetch(NUTRITION_API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q }) });
+        const ctl = new AbortController();
+        const bail = setTimeout(() => ctl.abort(), 7000);
+        const r = await fetch(NUTRITION_API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q }), signal: ctl.signal }).finally(() => clearTimeout(bail));
         if (r.ok) { const j = await r.json(); if (j && !j.error) return j; }
       } catch (e) { /* backend not reachable (e.g. local preview) — fall through */ }
     }
     if (window.claude && window.claude.complete) {
       try {
-        const res = await window.claude.complete({ system: this._foodSystemPrompt(), messages: [{ role: 'user', content: q }] });
+        const res = await Promise.race([
+          window.claude.complete({ system: this._foodSystemPrompt(), messages: [{ role: 'user', content: q }] }),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 12000)),
+        ]);
         const m = res.match(/\{[\s\S]*\}/); if (m) return JSON.parse(m[0]);
       } catch (e) { /* AI unavailable — fall through to offline DB */ }
     }
@@ -2974,8 +3118,9 @@ class Component extends DCLogic {
         hrs ? h('div', { key: 's', style: { display: 'flex', alignItems: 'center', gap: '4px', fontSize: '10px', color: '#8a8a8a', marginTop: '2px' } }, '\u263e ' + hrs + ' sleep') : null,
       ]);
       calCells.push({
-        cellStyle: 'min-height:70px;padding:8px 9px;border-radius:10px;box-sizing:border-box;border:1px solid ' + (isToday ? '#fff' : 'rgba(255,255,255,.08)') + ';background:' + (has ? 'rgba(255,255,255,.045)' : 'transparent'),
+        cellStyle: 'min-height:70px;padding:8px 9px;border-radius:10px;box-sizing:border-box;transition:background .3s,border-color .3s;border:1px solid ' + (isToday ? '#fff' : 'rgba(255,255,255,.08)') + ';background:' + (has ? 'rgba(255,255,255,.045)' : 'transparent') + (has ? ';cursor:pointer' : ''),
         node,
+        open: has ? () => this.setState({ dayEdit: { key, label: new Date(yr, mon, d).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }), kcal: kcal, sleep: hrs } }) : null,
       });
     }
     const foods = this.state.foods || [];
@@ -3662,11 +3807,13 @@ class Component extends DCLogic {
         const rows = foods.filter((f) => (f.meal || 'Breakfast') === mm);
         const gt = rows.reduce((a, f) => ({ kcal: a.kcal + f.kcal, p: a.p + f.protein }), { kcal: 0, p: 0 });
         return {
-          label: mm, empty: rows.length === 0,
+          label: mm, empty: rows.length === 0, notEmpty: rows.length > 0,
           total: rows.length ? gt.kcal.toLocaleString() + ' kcal · ' + gt.p + 'g P' : '—',
           rows: rows.map((f) => ({
             name: f.name,
             kcal: f.kcal + ' kcal', p: f.protein + 'g P', c: f.carbs + 'g C', fat: f.fat + 'g F',
+            // bare figures — the units live in the column headers now
+            kcalN: String(f.kcal), pN: String(f.protein), cN: String(f.carbs), fatN: String(f.fat),
             edit: () => this._openFoodEdit(f),
             remove: () => this._saveFoods((this.state.foods || []).filter((x) => x.id !== f.id)),
           })),
@@ -3803,6 +3950,20 @@ class Component extends DCLogic {
         pick: () => this.setState({ healthRange: r }),
       })),
       sleepDuration,
+      saveSleep: () => this._saveSleep(),
+      sleepSaveLabel: this.state.sleepSaved ? 'Saved ✓' : 'Save sleep',
+      sleepSaveStyle: 'border:none;font-family:Archivo,sans-serif;font-size:12px;font-weight:500;padding:8px 16px;border-radius:99px;cursor:pointer;transition:background .45s cubic-bezier(.32,.72,0,1),color .45s,transform .35s cubic-bezier(.32,.72,0,1);' +
+        (this.state.sleepSaved ? 'background:#5fbf83;color:#04120a;transform:scale(1.04)' : 'background:#fff;color:#000;transform:scale(1)'),
+      dayEditOpen: !!this.state.dayEdit,
+      dayEditLabel: (this.state.dayEdit || {}).label || '',
+      dayEditKcal: (this.state.dayEdit || {}).kcal ? (this.state.dayEdit.kcal.toLocaleString() + ' kcal logged') : 'No food logged',
+      dayEditSleep: (this.state.dayEdit || {}).sleep ? ((this.state.dayEdit || {}).sleep + ' of sleep') : 'No sleep recorded',
+      dayHasFood: !!((this.state.dayEdit || {}).kcal),
+      dayHasSleep: !!((this.state.dayEdit || {}).sleep),
+      closeDayEdit: () => this.setState({ dayEdit: null }),
+      clearDayFood: () => this._clearDay((this.state.dayEdit || {}).key, 'food'),
+      clearDaySleep: () => this._clearDay((this.state.dayEdit || {}).key, 'sleep'),
+      clearDayAll: () => this._clearDay((this.state.dayEdit || {}).key, 'all'),
       sleepVsGoal: sleepMet ? 'goal met' : (Math.round((sleepGoalMin - sleepMin) / 60 * 10) / 10) + 'h under goal',
       sleepMetColor: sleepMet ? '#eaeaea' : '#8a8a8a',
       sleepDotStyle: 'width:8px;height:8px;transform:rotate(45deg);flex:none;background:' + (sleepMet ? '#fff' : 'rgba(255,255,255,.3)'),
