@@ -5,7 +5,7 @@
 (function () {
   class PhntmCore extends HTMLElement {
     connectedCallback() {
-      if (this._i) { if (this._ro) this._ro.observe(this); return; }
+      if (this._i) { if (this._ro) this._ro.observe(this); if (this._mo) this._mo.observe(this, { attributes: true, attributeFilter: ['start', 'goal', 'fail', 'eq', 'goallabel', 'faillabel'] }); if (this._replay) this._replay(); return; }
       this._i = 1; this.style.display = 'block'; this.style.width = '100%'; this.style.height = '100%'; this._start();
     }
     _start() {
@@ -15,7 +15,7 @@
       const ctx = cv.getContext('2d');
       const DPR = Math.min(devicePixelRatio, 2);
       let W = 0, H = 0;
-      const fit = () => { W = this.clientWidth || 600; H = this.clientHeight || 400; cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); this._dirty = true; };
+      const fit = () => { W = this.clientWidth || 600; H = this.clientHeight || 400; cv.width = W * DPR; cv.height = H * DPR; ctx.setTransform(DPR, 0, 0, DPR, 0, 0); this._dirty = true; if (this._run) this._run(); };
       this._ro = new ResizeObserver(fit); this._ro.observe(this); fit();
 
       const mono = (px) => px + "px 'JetBrains Mono', monospace";
@@ -48,7 +48,14 @@
         const eqs = PTS.map((d) => d.eq);
 
         let yMax, yMin;
-        if (!isLive) { yMax = GOAL; yMin = FAIL; }
+        // Prop accounts anchor on FAIL..GOAL, but a funded account in profit can sit
+        // ABOVE goal (and a breach below fail) — widen to the data or the line draws
+        // off the top of the plot.
+        if (!isLive) {
+          const hi = Math.max.apply(null, eqs), lo = Math.min.apply(null, eqs);
+          const pad = Math.max((hi - lo) * 0.12, Math.abs(START) * 0.01, 1);
+          yMax = Math.max(GOAL, hi + pad); yMin = Math.min(FAIL, lo - pad);
+        }
         else { const hi = Math.max.apply(null, eqs), lo = Math.min.apply(null, eqs); const pad = Math.max((hi - lo) * 0.18, Math.abs(START) * 0.04, 1); yMax = hi + pad; yMin = lo - pad; }
         if (!(yMax > yMin)) { yMax = START + Math.max(1, Math.abs(START) * 0.1); yMin = START - Math.max(1, Math.abs(START) * 0.1); }
         const y = (v) => botY - ((v - yMin) / (yMax - yMin)) * plotH;
@@ -73,7 +80,7 @@
         // GOAL / FAIL levels (prop only)
         const level = (v, col, line, label) => { if (v > yMax || v < yMin) return; const yy = y(v); ctx.strokeStyle = line; ctx.setLineDash([4, 6]); ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(W - padR, yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.font = '600 ' + mono(9); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(label, W - padR, yy - 5); ctx.textBaseline = 'middle'; };
         const metGoal = !isLive && eqs.length && eqs[eqs.length - 1] >= GOAL;
-        if (!isLive) { level(GOAL, 'rgba(127,209,139,.95)', 'rgba(127,209,139,.3)', (this.getAttribute('goallabel') || 'GOAL') + (metGoal ? '  ✓ MET' : '')); level(FAIL, 'rgba(201,138,106,.95)', 'rgba(201,138,106,.3)', (this.getAttribute('faillabel') || 'FAIL')); }
+        if (!isLive) { level(GOAL, 'rgba(95,191,131,.95)', 'rgba(95,191,131,.3)', (this.getAttribute('goallabel') || 'GOAL') + (metGoal ? '  ✓ MET' : '')); level(FAIL, 'rgba(224,90,90,.95)', 'rgba(224,90,90,.3)', (this.getAttribute('faillabel') || 'FAIL')); }
 
         // axis titles
         ctx.fillStyle = '#4c4c4c'; ctx.font = mono(8.5); ctx.textAlign = 'left';
@@ -127,14 +134,30 @@
         }
       };
 
+      // The reveal animation runs for ~950ms and then STOPS. Previously this kept a
+      // requestAnimationFrame loop alive for the life of the page — burning a frame
+      // every 16ms on a static chart, even on other tabs and after disconnect.
       const tick = (now) => {
-        if (!this.isConnected) { this._raf = requestAnimationFrame(tick); return; }
         const key = [this.getAttribute('start'), this.getAttribute('goal'), this.getAttribute('fail'), this.getAttribute('eq'), W, H].join('|');
         if (key !== this._key || this._dirty) { this._key = key; this._dirty = false; parse(); this._p = 0; this._pStart = now || performance.now(); }
-        if (this._p < 1) { const el = ((now || performance.now()) - this._pStart) / 950; this._p = el >= 1 ? 1 : (1 - Math.pow(1 - el, 3)); draw(); }
-        this._raf = requestAnimationFrame(tick);
+        if (this._p < 1) {
+          const el = ((now || performance.now()) - this._pStart) / 950;
+          this._p = el >= 1 ? 1 : (1 - Math.pow(1 - el, 3));
+          draw();
+          this._raf = requestAnimationFrame(tick);
+        } else { this._raf = null; }
       };
-      this._raf = requestAnimationFrame(tick);
+      this._run = () => { if (!this._raf) this._raf = requestAnimationFrame(tick); };
+      this._replay = () => { this._p = 0; this._pStart = performance.now(); this._run(); };
+      // restart the reveal whenever the data or the box changes
+      this._mo = new MutationObserver(() => this._replay());
+      this._mo.observe(this, { attributes: true, attributeFilter: ['start', 'goal', 'fail', 'eq', 'goallabel', 'faillabel'] });
+      this._run();
+    }
+    disconnectedCallback() {
+      if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
+      if (this._ro) this._ro.disconnect();
+      if (this._mo) this._mo.disconnect();
     }
   }
   if (!customElements.get('phntm-core')) customElements.define('phntm-core', PhntmCore);

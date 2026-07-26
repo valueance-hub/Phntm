@@ -9,6 +9,17 @@
 <body>
 <x-dc>
 <helmet>
+<title>PHNTM — Sign in</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060606">
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="PHNTM">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 html,body{margin:0;padding:0;background:#060606;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
@@ -28,6 +39,10 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 @keyframes holoLogoIn{0%{opacity:0;text-shadow:5px 0 rgba(255,255,255,.6),-5px 0 rgba(255,255,255,.4)}55%{opacity:1}100%{opacity:1;text-shadow:0 0 rgba(255,255,255,0)}}
 @keyframes holoFlickerIn{0%{opacity:0}10%{opacity:1}15%{opacity:.4}20%{opacity:.85}26%{opacity:1}100%{opacity:1}}
 @keyframes holoIn{from{opacity:0;transform:translateY(10px);filter:blur(4px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@media (max-width:900px){
+  [data-m~="card"]{width:100% !important;max-width:400px;padding:34px 22px !important}
+  [data-m~="card"] input{font-size:16px !important}
+}
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001ms !important;animation-delay:0ms !important}
   [style*="riseUp"],[style*="fadeUp"]{animation:fadeIn .2s ease both !important}
@@ -39,7 +54,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   <div style="position:absolute;inset:0;background:radial-gradient(120% 55% at 50% 108%,rgba(150,152,162,.18),transparent 60%);zIndex:0"></div>
   <div style="position:absolute;inset:0;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%223%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');background-size:200px 200px;mix-blend-mode:overlay;opacity:.6;pointer-events:none;zIndex:0"></div>
   <sc-if value="{{ loaderPresent }}" hint-placeholder-val="{{ true }}">
-    <div style="position:absolute;inset:0;z-index:5;background:#0b0b0c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;padding:60px 54px;opacity:{{ loaderOpacity }};transition:opacity .55s cubic-bezier(.16,1,.3,1)">
+    <div style="position:absolute;inset:0;z-index:5;background:#17171a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;padding:60px 54px;opacity:{{ loaderOpacity }};transition:opacity .55s cubic-bezier(.16,1,.3,1)">
       <div style="text-align:center">
         <span style="font-family:'Michroma',sans-serif;font-size:30px;letter-spacing:.02em;color:#fff">phntm<span style="display:inline-block;color:#fff;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
       </div>
@@ -56,14 +71,14 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   <div style="display:contents">
   <div style="position:relative;zIndex:1;height:40px"></div>
   <div style="position:relative;zIndex:1;flex:1;display:flex;align-items:center;justify-content:center;padding:24px">
-    <div style="position:relative;width:396px;box-sizing:border-box;padding:46px 42px;display:flex;flex-direction:column;gap:28px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.1);border-radius:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5);backdrop-filter:blur(14px);animation:fadeUp .5s cubic-bezier(.23,1,.32,1) both,holoFlickerIn .7s both">
+    <div data-m="card" style="position:relative;width:396px;box-sizing:border-box;padding:46px 42px;display:flex;flex-direction:column;gap:28px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.015));border:1px solid rgba(255,255,255,.1);border-radius:24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5);backdrop-filter:blur(14px);animation:fadeUp .5s cubic-bezier(.23,1,.32,1) both,holoFlickerIn .7s both">
       <div style="text-align:center">
         <span style="font-family:'Michroma',sans-serif;font-size:32px;letter-spacing:.01em;color:#fff;display:inline-block;animation:holoLogoIn .5s .06s cubic-bezier(.23,1,.32,1) both">phntm<span style="display:inline-block;color:#fff;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
       </div>
       <div style="display:flex;flex-direction:column;gap:24px;animation:holoIn .5s .16s cubic-bezier(.23,1,.32,1) both">
         <div>
           <label style="font-size:12px;color:#8a8a8a">Email</label>
-          <input type="email" placeholder="ghost@phntm.io" value="{{ email }}" onChange="{{ setEmail }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
+          <input type="email" name="email" autocomplete="email" inputmode="email" spellcheck="false" placeholder="ghost@phntm.io" value="{{ email }}" onChange="{{ setEmail }}" onKeyDown="{{ onPassKey }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
         </div>
         <div>
           <div style="display:flex;justify-content:space-between;align-items:baseline">
@@ -71,7 +86,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
             <a href="#" onClick="{{ openForgot }}" style="font-size:12px;color:#6a6a6a;transition:color .3s" style-hover="color:#fff">Forgot?</a>
           </div>
           <div style="position:relative">
-            <input type="{{ passType }}" placeholder="••••••••••" value="{{ password }}" onChange="{{ setPassword }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 32px 10px 0;transition:border-color .3s" style-focus="border-color:#fff">
+            <input type="{{ passType }}" name="password" autocomplete="current-password" placeholder="••••••••••" value="{{ password }}" onChange="{{ setPassword }}" onKeyDown="{{ onPassKey }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 32px 10px 0;transition:border-color .3s" style-focus="border-color:#fff">
             <button type="button" onClick="{{ togglePass }}" aria-label="Show or hide password" style="position:absolute;right:0;bottom:9px;background:none;border:none;padding:2px;margin:0;cursor:pointer;color:#8a8a8a;display:flex;align-items:center;transition:color .25s" style-hover="color:#fff">
               <sc-if value="{{ notShowPass }}" hint-placeholder-val="{{ true }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -89,7 +104,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
           <span>Signing in…</span>
         </sc-if>
         <sc-if value="{{ notLoading }}" hint-placeholder-val="{{ true }}">
-          <span>Continue</span><span>→</span>
+          <span>Login</span><span>→</span>
         </sc-if>
       </button>
       <sc-if value="{{ hasAuthErr }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;font-size:12.5px;color:#e0736b;margin-top:-14px">{{ authErr }}</div></sc-if>
@@ -99,8 +114,8 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         <div style="flex:1;height:1px;background:rgba(255,255,255,.12)"></div>
       </div>
       <div style="display:flex;gap:12px;animation:riseUp .42s .3s cubic-bezier(.23,1,.32,1) both">
-        <button style="flex:1;background:none;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:13px;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;cursor:pointer;transition:border-color .3s,background .3s,transform .16s ease-out" style-hover="border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)" style-active="transform:scale(.97)">Google</button>
-        <button style="flex:1;background:none;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:13px;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;cursor:pointer;transition:border-color .3s,background .3s,transform .16s ease-out" style-hover="border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)" style-active="transform:scale(.97)">Apple</button>
+        <button type="button" onClick="{{ googleIn }}" style="flex:1;background:none;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:13px;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;cursor:pointer;transition:border-color .3s,background .3s,transform .16s ease-out" style-hover="border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)" style-active="transform:scale(.97)">Google</button>
+        <button type="button" onClick="{{ appleIn }}" style="flex:1;background:none;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:13px;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;cursor:pointer;transition:border-color .3s,background .3s,transform .16s ease-out" style-hover="border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)" style-active="transform:scale(.97)">Apple</button>
       </div>
       <div style="text-align:center;font-size:13px;color:#8a8a8a;animation:riseUp .42s .36s cubic-bezier(.23,1,.32,1) both">New to PHNTM? <a href="#" onClick="{{ openSignup }}" style="color:#eaeaea;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;padding-bottom:3px;transition:background-size .45s cubic-bezier(.16,1,.3,1)" style-hover="background-size:100% 1px">Sign up</a></div>
     </div>
@@ -132,7 +147,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:18px">
           <input placeholder="Name" value="{{ suName }}" onInput="{{ setSuName }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
           <input type="email" placeholder="Email" value="{{ suEmail }}" onInput="{{ setSuEmail }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
-          <input type="password" placeholder="Password" value="{{ suPass }}" onInput="{{ setSuPass }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
+          <input type="password" name="new-password" autocomplete="new-password" placeholder="Password" value="{{ suPass }}" onInput="{{ setSuPass }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
         </div>
         <sc-if value="{{ hasSuErr }}" hint-placeholder-val="{{ false }}">
           <div style="font-size:12.5px;color:#d99a82;line-height:1.5;margin:0 0 18px">{{ suErr }}</div>
@@ -144,7 +159,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2e2e2e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#0e0e0e&quot;,&quot;#161616&quot;,&quot;#1e1e1e&quot;,&quot;#242424&quot;,&quot;#2e2e2e&quot;],&quot;section&quot;:&quot;Note editor&quot;}}">
 class Component extends DCLogic {
   state = { name: '', email: '', password: '', loading: false, phase: 'load', pct: 0, forgotLabel: 'Forgot?', forgotOpen: false, forgotEmail: '', forgotSent: false, signupOpen: false, suName: '', suEmail: '', suPass: '' };
   _authMsg(err) {
@@ -157,10 +172,50 @@ class Component extends DCLogic {
     return m;
   }
   _validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim()); }
+  async _oauth(provider) {
+    if (this.state.loading) return;
+    this.setState({ loading: true, authErr: '' });
+    try {
+      const A = window.PHNTM && window.PHNTM.auth;
+      if (!A || !A.signInWithProvider) throw new Error('Auth unavailable.');
+      await A.signInWithProvider(provider); // navigates away on success
+    } catch (err) {
+      const m = (err && err.message) || '';
+      const off = provider === 'google' ? 'Google sign-in isn\u2019t switched on yet \u2014 use your email for now.' : 'Apple sign-in isn\u2019t switched on yet \u2014 use your email for now.';
+      this.setState({ loading: false, authErr: /not enabled|unsupported|provider/i.test(m) ? off : this._authMsg(err) });
+    }
+  }
+  async _submit() {
+    if (this.state.loading) return;
+    const em = (this.state.email || '').trim().toLowerCase(), pw = (this.state.password || '').trim();
+    if (!em || !pw) { this.setState({ authErr: 'Enter your email and password.' }); return; }
+    if (!this._validEmail(em)) { this.setState({ authErr: 'Please check your email — enter a valid address like you@gmail.com.' }); return; }
+    this.setState({ authErr: '', loading: true });
+    try {
+      const A = window.PHNTM && window.PHNTM.auth; if (!A) throw new Error('Auth unavailable.');
+      const data = await A.signIn(em, pw);
+      const nm = (data && data.user && data.user.user_metadata && data.user.user_metadata.name) || '';
+      try { localStorage.setItem('phntm_email', em); if (nm) localStorage.setItem('phntm-name', nm); } catch (e) {}
+      window.location.href = 'PHNTM Dashboard.dc.html';
+    } catch (err) {
+      this.setState({ loading: false, authErr: this._authMsg(err) });
+    }
+  }
   componentDidMount() {
     try { const sn = localStorage.getItem('phntm-name'); if (sn) this.setState({ name: sn }); } catch (e) {}
     try { const saved = localStorage.getItem('phntm_email'); if (saved) this.setState({ email: saved }); } catch (e) {}
-    const dur = 2000, t0 = performance.now();
+    // Already signed in? Don't make them log in again — Supabase persists the session.
+    (async () => {
+      try {
+        const A = window.PHNTM && window.PHNTM.auth; if (!A) return;
+        const u = await A.currentUser();
+        if (u) { this._skipReveal = true; window.location.replace('PHNTM Dashboard.dc.html'); }
+      } catch (e) {}
+    })();
+    // Full intro on a first visit; brief on every later one in the same session.
+    let seen = false; try { seen = sessionStorage.getItem('phntm-intro') === '1'; } catch (e) {}
+    try { sessionStorage.setItem('phntm-intro', '1'); } catch (e) {}
+    const dur = seen ? 650 : 2000, t0 = performance.now();
     const tick = (now) => {
       const p = Math.min(1, (now - t0) / dur);
       const eased = 1 - Math.pow(1 - p, 3);
@@ -222,7 +277,7 @@ class Component extends DCLogic {
           const data = await A.signUp(em, pw, nm);
           try { localStorage.setItem('phntm-name', nm); localStorage.setItem('phntm_email', em); } catch (e) {}
           if (data && data.session) {
-            try { sessionStorage.setItem('phntm-welcome', '1'); } catch (e) {}
+            try { sessionStorage.setItem('phntm-welcome', '1'); sessionStorage.setItem('phntm-fresh', '1'); } catch (e) {}
             this.setState({ signupOpen: false });
             window.location.href = 'PHNTM Dashboard.dc.html';
           } else {
@@ -232,35 +287,17 @@ class Component extends DCLogic {
           this.setState({ loading: false, suErr: this._authMsg(err) });
         }
       },
-      forgot: (e) => {
-        e.preventDefault();
-        const em = (this.state.email || '').trim();
-        this.setState({ forgotLabel: em ? 'Reset link sent →' : 'Enter your email first' });
-        clearTimeout(this._tf);
-        this._tf = setTimeout(() => this.setState({ forgotLabel: 'Forgot?' }), 2600);
-      },
+
       loading: this.state.loading,
       notLoading: !this.state.loading,
       loaderPresent: this.state.phase !== 'done',
       loginMounted: this.state.phase !== 'load',
       loaderOpacity: this.state.phase === 'load' ? 1 : 0,
       pctLabel: this.state.pct + '%',
-      submit: async () => {
-        if (this.state.loading) return;
-        const em = (this.state.email || '').trim().toLowerCase(), pw = (this.state.password || '').trim();
-        if (!em || !pw) { this.setState({ authErr: 'Enter your email and password.' }); return; }
-        if (!this._validEmail(em)) { this.setState({ authErr: 'Please check your email — enter a valid address like you@gmail.com.' }); return; }
-        this.setState({ authErr: '', loading: true });
-        try {
-          const A = window.PHNTM && window.PHNTM.auth; if (!A) throw new Error('Auth unavailable.');
-          const data = await A.signIn(em, pw);
-          const nm = (data && data.user && data.user.user_metadata && data.user.user_metadata.name) || '';
-          try { localStorage.setItem('phntm_email', em); if (nm) localStorage.setItem('phntm-name', nm); } catch (e) {}
-          window.location.href = 'PHNTM Dashboard.dc.html';
-        } catch (err) {
-          this.setState({ loading: false, authErr: this._authMsg(err) });
-        }
-      },
+      submit: () => this._submit(),
+      googleIn: this._g || (this._g = (e) => { if (e && e.preventDefault) e.preventDefault(); this._oauth('google'); }),
+      appleIn: this._a || (this._a = (e) => { if (e && e.preventDefault) e.preventDefault(); this._oauth('apple'); }),
+      onPassKey: (e) => { if (e.key === 'Enter') { e.preventDefault(); this._submit(); } },
       authErr: this.state.authErr || '',
       hasAuthErr: !!this.state.authErr,
     };

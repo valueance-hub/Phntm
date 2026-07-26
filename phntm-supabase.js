@@ -10,7 +10,9 @@
   var _client = null;
   var _readyP = (async function () {
     try {
-      var mod = await import('https://esm.sh/@supabase/supabase-js@2');
+      // Pinned deliberately: a floating "@2" has shipped breaking patches before
+      // (e.g. 2.84.0), and auth breaking silently would lock every user out.
+      var mod = await import('https://esm.sh/@supabase/supabase-js@2.110.8');
       _client = mod.createClient(SUPABASE_URL, SUPABASE_KEY, {
         auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true, storageKey: 'phntm-sb-auth' }
       });
@@ -44,6 +46,16 @@
       if (r.error) throw r.error;
       try { if (r.data && r.data.session) await cloud.set('phntm-name', name || ''); } catch (e) {}
       return r.data; // r.data.session is null when email confirmation is required
+    },
+    // Google / Apple. The provider must be enabled in Supabase → Authentication →
+    // Providers; if it isn't, Supabase returns a clear error we surface to the user.
+    async signInWithProvider(provider) {
+      var c = await ready(); if (!c) throw new Error('Auth unavailable.');
+      var base = location.href.split('#')[0].split('?')[0];
+      var redirect = base.replace(/[^/]*$/, 'PHNTM%20Dashboard.dc.html');
+      var r = await c.auth.signInWithOAuth({ provider: provider, options: { redirectTo: redirect } });
+      if (r.error) throw r.error;
+      return r.data;
     },
     async resetPassword(email) {
       var c = await ready(); if (!c) throw new Error('Auth unavailable.');
@@ -82,7 +94,53 @@
     }
   };
 
+  // ---- image storage -------------------------------------------------------
+  // Note/trade images live in a public Storage bucket instead of being embedded
+  // as base64 in the note row, so rows stay small and sync stays fast.
+  var BUCKET = 'phntm-media';
+
+  function dataUrlToBlob(u) {
+    var parts = String(u).split(',');
+    var mime = (/:(.*?);/.exec(parts[0]) || [])[1] || 'image/jpeg';
+    var bin = atob(parts[1] || ''), n = bin.length, arr = new Uint8Array(n);
+    while (n--) arr[n] = bin.charCodeAt(n);
+    return new Blob([arr], { type: mime });
+  }
+
+  var storage = {
+    ready: ready,
+    bucket: BUCKET,
+    // data: a data: URL or a Blob/File. Returns a public URL, or null on failure.
+    async upload(data, ext) {
+      var c = await ready(); if (!c) return null;
+      var u = await currentUser(); if (!u) return null;
+      try {
+        var blob = typeof data === 'string' ? dataUrlToBlob(data) : data;
+        if (!blob || !blob.size) return null;
+        var name = u.id + '/' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) + '.' + (ext || 'jpg');
+        var r = await c.storage.from(BUCKET).upload(name, blob, { contentType: blob.type || 'image/jpeg', cacheControl: '31536000', upsert: false });
+        if (r.error) { console.warn('[PHNTM] image upload failed', r.error); return null; }
+        var pub = c.storage.from(BUCKET).getPublicUrl(name);
+        return (pub && pub.data && pub.data.publicUrl) || null;
+      } catch (e) { console.warn('[PHNTM] image upload failed', e); return null; }
+    },
+    // Replaces every inline base64 image in an HTML string with an uploaded URL.
+    async liftHtml(html) {
+      var s = String(html || '');
+      if (s.indexOf('data:image') < 0) return s;
+      var seen = {}, matches = s.match(/data:image\/[a-z+]+;base64,[^"')\s]+/gi) || [];
+      for (var i = 0; i < matches.length; i++) {
+        var d = matches[i];
+        if (seen[d]) continue;
+        var url = await storage.upload(d, (/data:image\/(png|jpe?g|webp|gif)/i.exec(d) || [])[1] === 'png' ? 'png' : 'jpg');
+        if (url) { seen[d] = url; s = s.split(d).join(url); }
+      }
+      return s;
+    }
+  };
+
   window.PHNTM = window.PHNTM || {};
   window.PHNTM.auth = auth;
   window.PHNTM.cloud = cloud;
+  window.PHNTM.storage = storage;
 })();
