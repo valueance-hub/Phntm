@@ -857,7 +857,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
         </div>
         <input placeholder="Describe it — '1 sandwich: 1 ham, 1 cheese, 1 tbsp peanut butter'" value="{{ foodInput }}" onChange="{{ setFoodInput }}" onKeyDown="{{ foodKey }}" style="flex:1 1 240px;min-width:240px;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
         <button onClick="{{ addFood }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:8px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:500;padding:11px 22px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="opacity:.7">
-          <sc-if value="{{ foodLoading }}" hint-placeholder-val="{{ false }}"><span style="width:13px;height:13px;border-radius:50%;border:2px solid rgba(0,0,0,.2);border-top-color:#000;animation:spinRing .7s linear infinite"></span><span>Estimating…</span></sc-if>
+          <sc-if value="{{ foodLoading }}" hint-placeholder-val="{{ false }}"><span style="width:13px;height:13px;border-radius:50%;border:2px solid rgba(0,0,0,.2);border-top-color:#000;animation:spinRing .7s linear infinite"></span><span>{{ foodStageLabel }}</span></sc-if>
           <sc-if value="{{ foodNotLoading }}" hint-placeholder-val="{{ true }}"><span>Add to {{ mealLabel }}</span><span>+</span></sc-if>
         </button>
         <button onClick="{{ openManual }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.22);background:none;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;padding:11px 20px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:background .4s cubic-bezier(.32,.72,0,1),border-color .4s,color .4s" style-hover="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4);color:#fff">Enter it myself</button>
@@ -2970,7 +2970,7 @@ class Component extends DCLogic {
     if (NUTRITION_API) {
       try {
         const ctl = new AbortController();
-        const bail = setTimeout(() => ctl.abort(), 7000);
+        const bail = setTimeout(() => ctl.abort(), 18000);   // 3 searches lands in ~5-9s; 18s is the safety net
         const r = await fetch(NUTRITION_API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q }), signal: ctl.signal }).finally(() => clearTimeout(bail));
         if (r.ok) { const j = await r.json(); if (j && !j.error) return j; }
       } catch (e) { /* backend not reachable (e.g. local preview) — fall through */ }
@@ -2991,10 +2991,13 @@ class Component extends DCLogic {
   async addFood() {
     const q = (this.state.foodInput || '').trim();
     if (!q || this.state.foodLoading) return;
-    this.setState({ foodLoading: true, foodErr: '', foodSuggest: '' });
+    this.setState({ foodLoading: true, foodErr: '', foodSuggest: '', foodStage: '' });
+    clearTimeout(this._stage1); clearTimeout(this._stage2);
+    this._stage1 = setTimeout(() => { if (this.state.foodLoading) this.setState({ foodStage: 'Reading the label…' }); }, 2500);
+    this._stage2 = setTimeout(() => { if (this.state.foodLoading) this.setState({ foodStage: 'Checking local stores…' }); }, 7000);
     try {
       const cacheKey = 'phntm-food-cache-v2';
-      const norm = q.toLowerCase().replace(/\s+/g, ' ').trim();
+      const norm = q.toLowerCase().replace(/\s+/g, '').trim();   // spacing never splits the cache
       let cache = {}; try { cache = JSON.parse(localStorage.getItem(cacheKey) || '{}'); } catch (e) {}
       let j = cache[norm];
       if (!j) {
@@ -3007,16 +3010,19 @@ class Component extends DCLogic {
         } catch (e) {}
       }
       if (j.suggest && String(j.suggest).trim().toLowerCase() !== norm) {
-        this.setState({ foodLoading: false, foodSuggest: String(j.suggest).trim() });
+        clearTimeout(this._stage1); clearTimeout(this._stage2);
+        this.setState({ foodLoading: false, foodStage: '', foodSuggest: String(j.suggest).trim() });
         return;
       }
       const f = { id: Date.now(), name: String(j.name || q), kcal: Math.round(j.kcal) || 0, protein: Math.round(j.protein) || 0, carbs: Math.round(j.carbs) || 0, fat: Math.round(j.fat) || 0, sugar: Math.round(j.sugar) || 0, meal: this.state.meal };
       this._saveFoods([...(this.state.foods || []), f]);
       this._rememberUsual(f);
-      this.setState({ foodInput: '', foodLoading: false });
+      clearTimeout(this._stage1); clearTimeout(this._stage2);
+      this.setState({ foodInput: '', foodLoading: false, foodStage: '' });
       this.animateNumbers();
     } catch (e) {
-      this.setState({ foodLoading: false, foodErr: 'Couldn\'t estimate that — try rewording, e.g. "2 scrambled eggs" or "1 slice pepperoni pizza".' });
+      clearTimeout(this._stage1); clearTimeout(this._stage2);
+      this.setState({ foodLoading: false, foodStage: '', foodErr: 'Couldn\'t estimate that — try rewording, e.g. "2 scrambled eggs" or "1 slice pepperoni pizza".' });
     }
   }
   _persist(key, val) {
@@ -3963,6 +3969,7 @@ class Component extends DCLogic {
       addFood: () => this.addFood(),
       foodLoading: this.state.foodLoading,
       foodNotLoading: !this.state.foodLoading,
+      foodStageLabel: this.state.foodStage || 'Estimating…',
       foodErr: this.state.foodErr,
       hasFoodErr: !!this.state.foodErr,
       hasFoodSuggest: !!this.state.foodSuggest,
