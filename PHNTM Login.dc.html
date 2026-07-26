@@ -47,11 +47,11 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   *{animation-duration:.001ms !important;animation-delay:0ms !important}
   [style*="riseUp"],[style*="fadeUp"]{animation:fadeIn .2s ease both !important}
 }
-@keyframes cardGlow{0%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 0 rgba(255,255,255,0)}30%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 34px rgba(180,182,192,.22)}100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 0 rgba(255,255,255,0)}}
+@keyframes cardGlow{0%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 0 rgba(255,255,255,0)}30%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 34px rgba(229,192,123,.26)}100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 0 rgba(255,255,255,0)}}
 </style>
 </helmet>
 <div style="position:relative;display:flex;flex-direction:column;min-height:100vh;background:#060606;overflow:hidden">
-  <div style="position:absolute;inset:0;background:radial-gradient(120% 55% at 50% 108%,rgba(150,152,162,.18),transparent 60%);zIndex:0"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(120% 55% at 50% 108%,rgba(229,192,123,.16),transparent 60%);zIndex:0"></div>
   <div style="position:absolute;inset:0;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%223%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');background-size:200px 200px;mix-blend-mode:overlay;opacity:.6;pointer-events:none;zIndex:0"></div>
   <sc-if value="{{ loaderPresent }}" hint-placeholder-val="{{ true }}">
     <div style="position:absolute;inset:0;z-index:5;background:#17171a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;padding:60px 54px;opacity:{{ loaderOpacity }};transition:opacity .55s cubic-bezier(.16,1,.3,1)">
@@ -59,7 +59,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         <span style="font-family:'Michroma',sans-serif;font-size:30px;letter-spacing:.02em;color:#fff">phntm<span style="display:inline-block;color:#fff;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
       </div>
       <div style="display:flex;align-items:center;gap:14px;line-height:1">
-        <span style="font-family:'Archivo',sans-serif;font-size:16px;color:#8a8a8a">Loading..</span>
+        <span style="font-family:'Archivo',sans-serif;font-size:16px;color:#8a8a8a">Loading</span>
         <div style="font-family:'Archivo',sans-serif;font-size:16px;color:#fff;font-variant-numeric:tabular-nums">{{ pctLabel }}</div>
         <svg width="20" height="20" viewBox="0 0 60 60" style="display:block;animation:spinRing 1.4s linear infinite;overflow:visible">
           <circle cx="30" cy="30" r="27" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="3" stroke-linecap="round" stroke-dasharray="60 25 60 25"></circle>
@@ -83,7 +83,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         <div>
           <div style="display:flex;justify-content:space-between;align-items:baseline">
             <label style="font-size:12px;color:#8a8a8a">Password</label>
-            <a href="#" onClick="{{ openForgot }}" style="font-size:12px;color:#6a6a6a;transition:color .3s" style-hover="color:#fff">Forgot?</a>
+            <a href="#" onClick="{{ openForgot }}" style="font-size:12px;color:#9a9a9a;transition:color .3s" style-hover="color:#fff">Forgot?</a>
           </div>
           <div style="position:relative">
             <input type="{{ passType }}" name="password" autocomplete="current-password" placeholder="••••••••••" value="{{ password }}" onChange="{{ setPassword }}" onKeyDown="{{ onPassKey }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 32px 10px 0;transition:border-color .3s" style-focus="border-color:#fff">
@@ -107,17 +107,17 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
           <span>Login</span><span>→</span>
         </sc-if>
       </button>
-      <sc-if value="{{ hasAuthErr }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;font-size:12.5px;color:#e0736b;margin-top:-14px">{{ authErr }}</div></sc-if>
+      <sc-if value="{{ hasAuthErr }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;font-size:12.5px;color:#e0a05a;margin-top:-14px">{{ authErr }}</div></sc-if>
       <div style="display:flex;align-items:center;gap:16px;animation:riseUp .42s .24s cubic-bezier(.23,1,.32,1) both">
         <div style="flex:1;height:1px;background:rgba(255,255,255,.12)"></div>
-        <span style="font-size:12px;color:#6a6a6a">or</span>
+        <span style="font-size:12px;color:#9a9a9a">or</span>
         <div style="flex:1;height:1px;background:rgba(255,255,255,.12)"></div>
       </div>
       <div style="display:flex;gap:12px;animation:riseUp .42s .3s cubic-bezier(.23,1,.32,1) both">
         <button type="button" onClick="{{ googleIn }}" style="flex:1;background:none;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:13px;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;cursor:pointer;transition:border-color .3s,background .3s,transform .16s ease-out" style-hover="border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)" style-active="transform:scale(.97)">Google</button>
         <button type="button" onClick="{{ appleIn }}" style="flex:1;background:none;border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:13px;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;cursor:pointer;transition:border-color .3s,background .3s,transform .16s ease-out" style-hover="border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.04)" style-active="transform:scale(.97)">Apple</button>
       </div>
-      <div style="text-align:center;font-size:13px;color:#8a8a8a;animation:riseUp .42s .36s cubic-bezier(.23,1,.32,1) both">New to PHNTM? <a href="#" onClick="{{ openSignup }}" style="color:#eaeaea;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;padding-bottom:3px;transition:background-size .45s cubic-bezier(.16,1,.3,1)" style-hover="background-size:100% 1px">Sign up</a></div>
+      <div style="text-align:center;font-size:13px;color:#8a8a8a;animation:riseUp .42s .36s cubic-bezier(.23,1,.32,1) both">No account yet? <a href="#" onClick="{{ openSignup }}" style="color:#eaeaea;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;background-size:0% 1px;padding-bottom:3px;transition:background-size .45s cubic-bezier(.16,1,.3,1)" style-hover="background-size:100% 1px">Sign up</a></div>
     </div>
   </div>
   <div style="position:relative;zIndex:1;height:36px"></div>
@@ -127,7 +127,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
     <div onClick="{{ closeForgot }}" style="position:fixed;inset:0;z-index:20;background:rgba(4,4,4,.72);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .25s ease both">
       <div onClick="{{ stop }}" style="width:400px;max-width:100%;box-sizing:border-box;padding:38px 36px;background:linear-gradient(180deg,#161618,#101012);border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
         <div style="font-family:'Michroma',sans-serif;font-size:16px;color:#fff;margin-bottom:6px">Reset password</div>
-        <div style="font-size:13px;color:#8a8a8a;line-height:1.55;margin-bottom:22px">Enter your account email and we’ll send a reset link.</div>
+        <div style="font-size:13px;color:#8a8a8a;line-height:1.55;margin-bottom:22px">Enter your account email. We will send a reset link.</div>
         <sc-if value="{{ forgotSent }}" hint-placeholder-val="{{ false }}">
           <div style="font-size:14px;color:#eaeaea;padding:10px 0 22px">✓ Link sent to <span style="color:#fff">{{ forgotEmail }}</span>. Check your inbox.</div>
         </sc-if>
@@ -143,14 +143,14 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
     <div onClick="{{ closeSignup }}" style="position:fixed;inset:0;z-index:20;background:rgba(4,4,4,.72);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .25s ease both">
       <div onClick="{{ stop }}" style="width:400px;max-width:100%;box-sizing:border-box;padding:38px 36px;background:linear-gradient(180deg,#161618,#101012);border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
         <div style="font-family:'Michroma',sans-serif;font-size:16px;color:#fff;margin-bottom:6px">Create account</div>
-        <div style="font-size:13px;color:#8a8a8a;line-height:1.55;margin-bottom:22px">Start your journal. It takes a second.</div>
+        <div style="font-size:13px;color:#8a8a8a;line-height:1.55;margin-bottom:22px">One account. Every device.</div>
         <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:18px">
           <input placeholder="Name" value="{{ suName }}" onInput="{{ setSuName }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
           <input type="email" placeholder="Email" value="{{ suEmail }}" onInput="{{ setSuEmail }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
           <input type="password" name="new-password" autocomplete="new-password" placeholder="Password" value="{{ suPass }}" onInput="{{ setSuPass }}" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
         </div>
         <sc-if value="{{ hasSuErr }}" hint-placeholder-val="{{ false }}">
-          <div style="font-size:12.5px;color:#d99a82;line-height:1.5;margin:0 0 18px">{{ suErr }}</div>
+          <div style="font-size:12.5px;color:#e8ab6a;line-height:1.5;margin:0 0 18px">{{ suErr }}</div>
         </sc-if>
         <button onClick="{{ createAccount }}" style="width:100%;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:14px;font-weight:500;padding:14px;border-radius:99px;cursor:pointer;opacity:{{ suReadyOpacity }};transition:opacity .3s,transform .16s ease-out" style-active="transform:scale(.98)">{{ suBtnLabel }}</button>
         <button onClick="{{ closeSignup }}" style="width:100%;margin-top:10px;border:none;background:none;color:#8a8a8a;font-family:'Archivo',sans-serif;font-size:13px;padding:10px;cursor:pointer;transition:color .3s" style-hover="color:#fff">Close</button>
@@ -164,11 +164,13 @@ class Component extends DCLogic {
   state = { name: '', email: '', password: '', loading: false, phase: 'load', pct: 0, forgotLabel: 'Forgot?', forgotOpen: false, forgotEmail: '', forgotSent: false, signupOpen: false, suName: '', suEmail: '', suPass: '' };
   _authMsg(err) {
     const m = (err && err.message) || 'Something went wrong.';
-    if (/invalid login credentials/i.test(m)) return 'Incorrect email or password.';
-    if (/email not confirmed/i.test(m)) return 'Confirm your email first \u2014 check your inbox.';
-    if (/already registered|already exists/i.test(m)) return 'That email already has an account \u2014 sign in.';
+    if (/invalid login credentials|invalid credentials|bad credential/i.test(m)) return 'Incorrect email or password.';
+    if (/invalid.*(email|password)/i.test(m)) return 'Incorrect email or password.';
+    if (/rate|too many/i.test(m)) return 'Too many attempts. Wait a moment.';
+    if (/email not confirmed/i.test(m)) return 'Confirm your email first. Check your inbox.';
+    if (/already registered|already exists/i.test(m)) return 'That email already has an account. Sign in instead.';
     if (/password/i.test(m) && /6|short|least/i.test(m)) return 'Password must be at least 6 characters.';
-    if (/offline|unavailable|failed to fetch|network/i.test(m)) return 'Can\u2019t reach the server. Check your connection.';
+    if (/failed to fetch|networkerror|network request failed|offline|load failed/i.test(m)) return 'No connection to the server.';
     return m;
   }
   _validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(v || '').trim()); }
@@ -188,12 +190,20 @@ class Component extends DCLogic {
   async _submit() {
     if (this.state.loading) return;
     const em = (this.state.email || '').trim().toLowerCase(), pw = (this.state.password || '').trim();
-    if (!em || !pw) { this.setState({ authErr: 'Enter your email and password.' }); return; }
-    if (!this._validEmail(em)) { this.setState({ authErr: 'Please check your email — enter a valid address like you@gmail.com.' }); return; }
+    if (!em || !pw) { this.setState({ authErr: 'Email and password are required.' }); return; }
+    if (!this._validEmail(em)) { this.setState({ authErr: 'Enter a valid email address.' }); return; }
     this.setState({ authErr: '', loading: true });
     try {
       const A = window.PHNTM && window.PHNTM.auth; if (!A) throw new Error('Auth unavailable.');
-      const data = await A.signIn(em, pw);
+      let data;
+      try { data = await A.signIn(em, pw); }
+      catch (e1) {
+        const m1 = (e1 && e1.message) || '';
+        // wrong password / unconfirmed email are final — never retry those
+        if (/invalid login credentials|email not confirmed|password/i.test(m1)) throw e1;
+        await new Promise((r) => setTimeout(r, 700));
+        data = await A.signIn(em, pw);
+      }
       const nm = (data && data.user && data.user.user_metadata && data.user.user_metadata.name) || '';
       try { localStorage.setItem('phntm_email', em); if (nm) localStorage.setItem('phntm-name', nm); } catch (e) {}
       window.location.href = 'PHNTM Dashboard.dc.html';
@@ -271,8 +281,8 @@ class Component extends DCLogic {
       closeSignup: () => this.setState({ signupOpen: false, loading: false }),
       createAccount: async () => {
         const nm = (this.state.suName || '').trim(), em = (this.state.suEmail || '').trim().toLowerCase(), pw = (this.state.suPass || '').trim();
-        if (!nm || !em || !pw) { this.setState({ suErr: 'Fill in your name, email, and password.' }); return; }
-        if (!this._validEmail(em)) { this.setState({ suErr: 'Please check your email — enter a valid address like you@gmail.com.' }); return; }
+        if (!nm || !em || !pw) { this.setState({ suErr: 'Name, email and password are required.' }); return; }
+        if (!this._validEmail(em)) { this.setState({ suErr: 'Enter a valid email address.' }); return; }
         if (pw.length < 6) { this.setState({ suErr: 'Password must be at least 6 characters.' }); return; }
         if (this.state.loading) return;
         this.setState({ loading: true, suErr: '' });
@@ -285,7 +295,7 @@ class Component extends DCLogic {
             this.setState({ signupOpen: false });
             window.location.href = 'PHNTM Dashboard.dc.html';
           } else {
-            this.setState({ loading: false, suErr: 'Account created — check your email to confirm, then sign in.' });
+            this.setState({ loading: false, suErr: 'Account created. Confirm your email, then sign in.' });
           }
         } catch (err) {
           this.setState({ loading: false, suErr: this._authMsg(err) });
