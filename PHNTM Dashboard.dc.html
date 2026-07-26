@@ -41,7 +41,7 @@ input,select,textarea{outline:none}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideIn{from{transform:translateX(105%)}to{transform:translateX(0)}}
 @keyframes rowIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes introMark{0%{opacity:0;letter-spacing:.1em}35%{opacity:1}70%{opacity:1;letter-spacing:.6em}100%{opacity:0;letter-spacing:.7em}}
+@keyframes introMark{0%{opacity:0;transform:scaleX(.94)}35%{opacity:1;transform:scaleX(1)}70%{opacity:1;transform:scaleX(1.08)}100%{opacity:0;transform:scaleX(1.12)}}
 @keyframes introVeil{0%,72%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
 @keyframes growBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes spinRing{to{transform:rotate(360deg)}}
@@ -54,10 +54,12 @@ input,select,textarea{outline:none}
 @keyframes bladeSweep{0%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
 @keyframes glowPulse{0%,100%{opacity:.5}50%{opacity:1}}
 @keyframes tabVeil{0%{opacity:0}22%{opacity:.62}100%{opacity:0}}
+@keyframes acctScan{0%{transform:translate3d(-16vw,0,0)}100%{transform:translate3d(112vw,0,0)}}
+@keyframes acctHaze{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes certIn{0%{opacity:0;transform:translateY(26px) scale(.97)}100%{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes sealTurn{0%{opacity:0;transform:rotate(-24deg) scale(.7)}100%{opacity:1;transform:rotate(0) scale(1)}}
-@keyframes noteHeadIn{0%{opacity:0;filter:blur(10px);letter-spacing:.08em}100%{opacity:1;filter:blur(0);letter-spacing:-.02em}}
+@keyframes noteHeadIn{0%{opacity:0;transform:translate3d(0,12px,0) scale(.99)}100%{opacity:1;transform:translate3d(0,0,0) scale(1)}}
 @keyframes caretBlink{0%,45%{opacity:1}50%,100%{opacity:0}}
 @keyframes fmtBlink{0%,100%{opacity:1}50%{opacity:.5}}
 [contenteditable][data-ph]:empty:before{content:attr(data-ph);color:#8a8a8a;pointer-events:none}
@@ -296,6 +298,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </div>
   </sc-if>
   {{ tabWipe }}
+  {{ acctScan }}
   <header data-m="mobtop" style="position:sticky;top:0;z-index:60;display:none;align-items:center;justify-content:space-between;gap:14px;padding:calc(14px + env(safe-area-inset-top)) 16px 14px;background:rgba(42,42,42,.86);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.09)">
     <span style="font-family:'Michroma',sans-serif;font-size:16px;color:#fff">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
     <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;color:#8a8a8a">{{ tabLabel }}</span>
@@ -872,12 +875,12 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
             <span style="font-size:13.5px;color:#fff">Your usuals</span>
             <span style="font-size:11.5px;color:#8a8a8a">Saved automatically · select one, choose a meal</span>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
             <sc-for list="{{ usuals }}" as="u" hint-placeholder-count="5">
               <div style="position:relative">
                 <div onClick="{{ u.pick }}" style="{{ u.st }}" style-hover="background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.2)">
-                  <span style="font-size:13px;color:#eaeaea;white-space:nowrap">{{ u.name }}</span>
-                  <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#8f8f8f">{{ u.meta }}</span>
+                  <span style="font-size:12.5px;color:#eaeaea;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">{{ u.name }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#8f8f8f;flex:none">{{ u.meta }}</span>
                 </div>
                 <sc-if value="{{ u.open }}" hint-placeholder-val="{{ false }}">
                   <div style="position:absolute;top:calc(100% + 8px);left:0;z-index:6;display:flex;flex-direction:column;min-width:170px;background:linear-gradient(180deg,#1a1a1a,#111);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:7px;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:popIn .32s cubic-bezier(.32,.72,0,1) both">
@@ -1094,7 +1097,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   <section data-m="pad stack hdr" style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;padding:64px 48px 28px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
     <div>
       <div style="font-size:14px;color:#8f8f8f">Field notes</div>
-      <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-top:10px;animation:noteHeadIn 1s cubic-bezier(.16,1,.3,1) both">What are you learning?</div>
+      <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-top:10px;animation:noteHeadIn .7s cubic-bezier(.16,1,.3,1) both;will-change:transform,opacity">What are you learning?</div>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <sc-if value="{{ notesDelAllConfirm }}" hint-placeholder-val="{{ false }}">
@@ -2990,14 +2993,14 @@ class Component extends DCLogic {
     if (!q || this.state.foodLoading) return;
     this.setState({ foodLoading: true, foodErr: '', foodSuggest: '' });
     try {
-      const cacheKey = 'phntm-food-cache-v1';
+      const cacheKey = 'phntm-food-cache-v2';
       const norm = q.toLowerCase().replace(/\s+/g, ' ').trim();
       let cache = {}; try { cache = JSON.parse(localStorage.getItem(cacheKey) || '{}'); } catch (e) {}
       let j = cache[norm];
       if (!j) {
         j = await this._estimateFood(q);
         try {
-          cache[norm] = j;
+          if (j && j.kcal > 0) cache[norm] = j;   // never cache a failed or empty estimate
           const keys = Object.keys(cache);
           if (keys.length > 400) keys.slice(0, keys.length - 400).forEach((k) => { delete cache[k]; }); // keep the cache from growing forever
           localStorage.setItem(cacheKey, JSON.stringify(cache));
@@ -3210,6 +3213,28 @@ class Component extends DCLogic {
       pick: () => { this.setState({ tab: t, wipeN: (this.state.wipeN || 0) + 1, moreOpen: false }); this.animateTab(t); },
     }));
     const rc = React.createElement;
+    const acctScan = !this.state.scanN ? null : rc('div', {
+      key: 'scan' + this.state.scanN,
+      style: { position: 'fixed', inset: 0, zIndex: 191, pointerEvents: 'none', overflow: 'hidden' },
+    }, [
+      rc('div', {
+        key: 'haze',
+        style: {
+          position: 'absolute', inset: 0,
+          background: 'radial-gradient(120% 90% at 50% 50%,rgba(229,192,123,.10),transparent 70%)',
+          animation: 'acctHaze .62s cubic-bezier(.32,.72,0,1) both',
+        },
+      }),
+      rc('div', {
+        key: 'line',
+        style: {
+          position: 'absolute', top: 0, bottom: 0, left: 0, width: '14vw',
+          background: 'linear-gradient(90deg,transparent,rgba(229,192,123,.16) 55%,rgba(255,255,255,.85) 88%,rgba(255,255,255,.95))',
+          boxShadow: '0 0 40px 10px rgba(229,192,123,.28)',
+          animation: 'acctScan .62s cubic-bezier(.32,.72,0,1) both',
+        },
+      }),
+    ]);
     const tabWipe = !this.state.wipeN ? null : rc('div', {
       key: 'wipe' + this.state.wipeN,
       style: {
@@ -3409,7 +3434,7 @@ class Component extends DCLogic {
         label, val,
         wrapStyle: 'background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 26px;animation:fadeUp .9s ' + delay + ' cubic-bezier(.16,1,.3,1) both',
       })),
-      trades, setups, tabs, tabWipe,
+      trades, setups, tabs, tabWipe, acctScan,
       mobTabs, mobMore, moreItems,
       moreOpen: !!this.state.moreOpen,
       closeMore: () => this.setState({ moreOpen: false }),
@@ -3418,7 +3443,7 @@ class Component extends DCLogic {
       viewTopButtons: [['Live', 'Live'], ['Challenge', 'Challenge']].map(([label, mode]) => {
         const on = mode === 'Live' ? (this.state.viewAcct || 'Live') === 'Live' : (this.state.viewAcct || 'Live') !== 'Live';
         return { label, st: 'background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 16px;border-radius:99px;transition:background .3s,color .3s;' + (on ? 'background:#fff;color:#000;font-weight:500' : 'color:#8a8a8a'),
-          pick: () => { const nx = mode === 'Live' ? 'Live' : (this.state.acctPhase || 'Eval 1'); if (nx === (this.state.viewAcct || 'Live')) return; this.setState({ viewAcct: nx, wipeN: (this.state.wipeN || 0) + 1 }); this.animateNumbers(); } };
+          pick: () => { const nx = mode === 'Live' ? 'Live' : (this.state.acctPhase || 'Eval 1'); if (nx === (this.state.viewAcct || 'Live')) return; this.setState({ viewAcct: nx, scanN: (this.state.scanN || 0) + 1 }); this.animateNumbers(); } };
       }),
       viewPhaseButtons: ['Eval 1', 'Eval 2', 'Funded'].map((v) => ({
         label: v,
@@ -3485,7 +3510,7 @@ class Component extends DCLogic {
       activeAcctButtons: [['Live', 'Live'], ['Challenge', 'Challenge']].map(([v, l]) => ({
         label: l,
         st: 'font-family:Archivo,sans-serif;font-size:12px;padding:7px 14px;border-radius:99px;cursor:pointer;transition:background .3s,color .3s;' + (v === (this.state.activeAcct || 'Live') ? 'background:#fff;color:#000;font-weight:500' : 'background:none;color:#8a8a8a'),
-        pick: () => { if (v === (this.state.activeAcct || 'Live')) return; this.setState({ activeAcct: v, wipeN: (this.state.wipeN || 0) + 1 }); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); },
+        pick: () => { if (v === (this.state.activeAcct || 'Live')) return; this.setState({ activeAcct: v, scanN: (this.state.scanN || 0) + 1 }); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); },
       })),
       ovAccountName: actCtx.type === 'Prop' ? this._sizeLabel(this._firmLabel(this.state.acctFirm), this.state.acctSize, this.state.acctPhase) : ((this.state.activeAcct || 'Live') + ' account'),
       ovIsProp: actCtx.type === 'Prop',
@@ -4003,11 +4028,11 @@ class Component extends DCLogic {
       hasUsuals: ((this.state.usuals || []).length > 0),
       usuals: (this.state.usuals || []).slice()
         .sort((a, b) => (b.n || 1) - (a.n || 1) || (b.last || 0) - (a.last || 0))
-        .slice(0, 14)
+        .slice(0, 12)
         .map((u) => ({
           name: u.name,
           meta: u.kcal + ' kcal · ×' + (u.n || 1),
-          st: 'display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;background:' + (this.state.usualPick === u.id ? 'rgba(255,255,255,.1)' : 'rgba(255,255,255,.035)') + ';border:1px solid rgba(255,255,255,' + (this.state.usualPick === u.id ? '.22' : '.09') + ');border-radius:14px;padding:11px 15px;cursor:pointer;transition:background .4s cubic-bezier(.32,.72,0,1),border-color .4s,transform .4s cubic-bezier(.32,.72,0,1)',
+          st: 'display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;background:' + (this.state.usualPick === u.id ? 'rgba(255,255,255,.1)' : 'rgba(255,255,255,.035)') + ';border:1px solid rgba(255,255,255,' + (this.state.usualPick === u.id ? '.22' : '.09') + ');border-radius:11px;padding:9px 12px;cursor:pointer;min-width:0;transition:background .4s cubic-bezier(.32,.72,0,1),border-color .4s',
           open: this.state.usualPick === u.id,
           pick: () => this.setState({ usualPick: this.state.usualPick === u.id ? null : u.id }),
           drop: ['Breakfast', 'Lunch', 'Dinner'].map((mm) => ({
