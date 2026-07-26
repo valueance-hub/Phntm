@@ -25,15 +25,38 @@
 
   async function ready() { return _readyP; }
 
-  async function currentUser() {
+  // getSession() reads the session Supabase persisted locally (refreshing the token
+  // if needed). getUser() hits the network, so a slow or flaky connection made it
+  // answer "signed out" for a signed-in user — which bounced the dashboard back to
+  // the login page mid-login.
+  async function currentSession() {
     var c = await ready(); if (!c) return null;
-    try { var r = await c.auth.getUser(); return (r && r.data && r.data.user) || null; }
+    try { var r = await c.auth.getSession(); return (r && r.data && r.data.session) || null; }
     catch (e) { return null; }
+  }
+
+  async function currentUser() {
+    var s = await currentSession();
+    return (s && s.user) || null;
+  }
+
+  // Right after sign-in (or a fresh page load) the client may still be restoring the
+  // session from storage. Give it a moment before concluding nobody is signed in.
+  async function sessionReady(ms) {
+    var deadline = Date.now() + (ms || 1800);
+    var s = await currentSession();
+    while (!s && Date.now() < deadline) {
+      await new Promise(function (r) { setTimeout(r, 150); });
+      s = await currentSession();
+    }
+    return s;
   }
 
   var auth = {
     ready: ready,
     currentUser: currentUser,
+    currentSession: currentSession,
+    sessionReady: sessionReady,
     async signIn(email, password) {
       var c = await ready(); if (!c) throw new Error('Auth unavailable.');
       var r = await c.auth.signInWithPassword({ email: email, password: password });
@@ -69,6 +92,7 @@
   var cloud = {
     ready: ready,
     currentUser: currentUser,
+    sessionReady: sessionReady,
     // value may be a JSON string (as passed to localStorage.setItem) or a raw value.
     async set(key, value) {
       var c = await ready(); if (!c) return false;

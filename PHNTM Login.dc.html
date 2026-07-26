@@ -20,7 +20,7 @@
 <link rel="icon" href="./icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600;700&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 html,body{margin:0;padding:0;background:#060606;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
@@ -208,8 +208,12 @@ class Component extends DCLogic {
     (async () => {
       try {
         const A = window.PHNTM && window.PHNTM.auth; if (!A) return;
-        const u = await A.currentUser();
-        if (u) { this._skipReveal = true; window.location.replace('PHNTM Dashboard.dc.html'); }
+        // If the dashboard just sent us here, it already decided there's no session —
+        // don't bounce straight back and start a loop.
+        let bounced = false; try { bounced = sessionStorage.getItem('phntm-bounce') === '1'; } catch (e) {}
+        if (bounced) { try { sessionStorage.removeItem('phntm-bounce'); } catch (e) {} return; }
+        const s = A.sessionReady ? await A.sessionReady(1200) : await A.currentUser();
+        if (s) window.location.replace('PHNTM Dashboard.dc.html');
       } catch (e) {}
     })();
     // Full intro on a first visit; brief on every later one in the same session.

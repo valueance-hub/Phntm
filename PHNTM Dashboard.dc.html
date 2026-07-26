@@ -29,12 +29,14 @@
 <link rel="icon" href="./icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500&amp;family=Michroma&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600;700&amp;family=Michroma&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
 html,body{margin:0;padding:0;background:#060606;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
 ::selection{background:rgba(255,255,255,.2)}
 input,select,textarea{outline:none}
+[contenteditable]{outline:none !important}
+[contenteditable]:focus,[contenteditable]:focus-visible{outline:none !important;box-shadow:none !important}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideIn{from{transform:translateX(105%)}to{transform:translateX(0)}}
@@ -64,6 +66,8 @@ input,select,textarea{outline:none}
 [contenteditable] h1{font-size:26px;font-weight:600;margin:10px 0 4px;line-height:1.25;color:#fff}
 [contenteditable] h2{font-size:20px;font-weight:600;margin:8px 0 4px;line-height:1.3;color:#f0f0f0}
 [contenteditable] p{margin:6px 0}
+[contenteditable] a{color:#9cc4e8;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+[contenteditable] a:hover{color:#c3dcf2}
 [contenteditable] img{content-visibility:auto}
 /* ---- Phone & tablet layer -------------------------------------------------
    Desktop styling is untouched. These rules only fire below 900px and re-flow
@@ -293,18 +297,18 @@ input,select,textarea{outline:none}
         <div style="width:38px;height:4px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px"></div>
         <div style="display:flex;flex-direction:column;gap:4px">
           <sc-for list="{{ moreItems }}" as="mi" hint-placeholder-count="3">
-            <button onClick="{{ mi.pick }}" style="{{ mi.st }}"><span style="width:22px;text-align:center;font-size:14px;color:#8a8a8a">{{ mi.glyph }}</span>{{ mi.label }}</button>
+            <button onClick="{{ mi.pick }}" style="{{ mi.st }}">{{ mi.label }}</button>
           </sc-for>
-          <a href="PHNTM Login.dc.html" style="display:flex;align-items:center;gap:14px;min-height:52px;padding:14px 16px;border-radius:14px;color:#8a8a8a;font-size:15px"><span style="width:22px;text-align:center;font-size:14px">→</span>Sign out</a>
+          <a href="PHNTM Login.dc.html" style="display:flex;align-items:center;min-height:52px;padding:14px 16px;border-radius:14px;color:#8a8a8a;font-size:15px">Sign out</a>
         </div>
       </div>
     </div>
   </sc-if>
   <nav data-m="mobnav" style="position:fixed;left:0;right:0;bottom:0;z-index:110;display:none;grid-template-columns:repeat(5,1fr);align-items:stretch;padding:6px 4px calc(6px + env(safe-area-inset-bottom));background:rgba(24,24,26,.92);backdrop-filter:blur(18px);border-top:1px solid rgba(255,255,255,.1)">
     <sc-for list="{{ mobTabs }}" as="mb" hint-placeholder-count="4">
-      <button onClick="{{ mb.pick }}" style="{{ mb.st }}"><span style="{{ mb.glyphSt }}">{{ mb.glyph }}</span>{{ mb.label }}</button>
+      <button onClick="{{ mb.pick }}" style="{{ mb.st }}"><span style="{{ mb.ruleSt }}"></span>{{ mb.label }}</button>
     </sc-for>
-    <button onClick="{{ mobMore.open }}" style="{{ mobMore.st }}"><span style="font-size:15px;line-height:1">{{ mobMore.glyph }}</span>{{ mobMore.label }}</button>
+    <button onClick="{{ mobMore.open }}" style="{{ mobMore.st }}"><span style="{{ mobMore.ruleSt }}"></span>{{ mobMore.label }}</button>
   </nav>
   <nav data-m="desknav" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:26px 48px;border-bottom:1px solid rgba(255,255,255,.08);animation:fadeIn .8s 1.5s ease both">
     <div style="display:flex;align-items:center;gap:56px">
@@ -364,7 +368,7 @@ input,select,textarea{outline:none}
   <section data-m="pad chart" style="position:relative;z-index:1;height:640px;margin:0 48px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.01));border:1px solid rgba(255,255,255,.09);border-radius:22px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;animation:fadeIn 1.2s .15s ease both">
     <x-import component-from-global-scope="phntm-core" from="./phntm-core.js" eq="{{ eqJson }}" start="{{ acctStart }}" goal="{{ acctGoal }}" fail="{{ acctFail }}" faillabel="{{ acctFailLabel }}" goallabel="{{ acctGoalLabel }}" speed="1" style="position:absolute;inset:14px 16px" hint-size="100%,640px"></x-import>
   </section>
-  <section data-m="pad" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:44px 48px 8px;animation:fadeUp .55s .12s cubic-bezier(.16,1,.3,1) both">
+  <section data-m="pad col2" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:44px 48px 8px;animation:fadeUp .55s .12s cubic-bezier(.16,1,.3,1) both">
     <sc-for list="{{ vitalsBig }}" as="v" hint-placeholder-count="3">
       <div style="{{ v.wrapStyle }}">
         <div style="font-size:12.5px;color:#7a7a7a">{{ v.label }}</div>
@@ -572,11 +576,6 @@ input,select,textarea{outline:none}
       <div style="display:flex;flex-direction:column;gap:7px">
         <span style="font-size:11.5px;color:#7a7a7a">Fail line</span>
         <span style="font-family:'JetBrains Mono',monospace;font-size:20px;color:{{ mllColor }};padding:7px 0">{{ mllText }}</span>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:8px;min-width:200px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:11.5px;color:#7a7a7a">Room to fail line</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5c5c5c">−{{ ddFromPeakText }} from peak</span></div>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:20px;color:{{ ddBufferColor }}">{{ ddBufferText }}</span>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:{{ ddZoneColor }}">{{ ddZoneLabel }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#5c5c5c">{{ ddBufferPct }}% cushion left</span></div>
       </div>
       <button onClick="{{ saveChallenge }}" style="margin-left:auto;display:flex;align-items:center;gap:9px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:500;padding:13px 26px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="transform:scale(.96)">{{ challSaveLabel }}</button>
     </div>
@@ -1025,7 +1024,7 @@ input,select,textarea{outline:none}
       <span style="font-size:14px;color:#9a9a9a">current streak — every ritual, every day</span>
     </div>
   </section>
-  <section data-m="pad" style="position:relative;z-index:1;display:grid;grid-template-columns:1.3fr 1fr;gap:22px;padding:8px 48px 72px;align-items:start">
+  <section data-m="pad col1" style="position:relative;z-index:1;display:grid;grid-template-columns:1.3fr 1fr;gap:22px;padding:8px 48px 72px;align-items:stretch">
     <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .9s .1s cubic-bezier(.16,1,.3,1) both">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
         <span style="font-size:15px;color:#fff">Today</span>
@@ -1064,7 +1063,7 @@ input,select,textarea{outline:none}
   <section data-m="pad stack" style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;padding:64px 48px 28px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
     <div>
       <div style="font-size:14px;color:#7a7a7a">Field notes</div>
-      <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-top:10px;animation:noteHeadIn 1s cubic-bezier(.16,1,.3,1) both">What are you learning?<span style="display:inline-block;width:3px;height:38px;margin-left:6px;transform:translateY(6px);background:#fff;animation:caretBlink 1.1s step-end 1s infinite"></span></div>
+      <div style="font-size:44px;font-weight:200;letter-spacing:-.02em;line-height:1.1;color:#fff;margin-top:10px;animation:noteHeadIn 1s cubic-bezier(.16,1,.3,1) both">What are you learning?</div>
     </div>
     <div style="display:flex;align-items:center;gap:12px">
       <sc-if value="{{ notesDelAllConfirm }}" hint-placeholder-val="{{ false }}">
@@ -1103,7 +1102,6 @@ input,select,textarea{outline:none}
             <span style="font-family:'Archivo',sans-serif;font-size:16px;font-weight:500;color:#fff">{{ n.dateMain }}</span>
             <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#5c5c5c">{{ n.dateSub }}</span>
           </div>
-          <sc-if value="{{ n.hasThumb }}" hint-placeholder-val="{{ false }}"><div style="flex:none;width:132px;position:relative;border-right:1px solid rgba(255,255,255,.08)">{{ n.thumbImg }}<sc-if value="{{ n.hasYt }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center"><span style="width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px">▶</span></span></sc-if></div></sc-if>
           <div style="flex:1;min-width:0;padding:18px 22px;display:flex;flex-direction:column;justify-content:center;gap:7px">
             <div style="display:flex;align-items:center;gap:10px">
               <sc-if value="{{ n.hasCategory }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:#9a9a9a;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);padding:3px 9px;border-radius:99px;flex:none">{{ n.category }}</span></sc-if>
@@ -1266,7 +1264,7 @@ input,select,textarea{outline:none}
     <div style="position:fixed;inset:0;z-index:295;background:{{ noteEditorBg }};overflow-y:auto;animation:fadeIn .25s ease both">
       <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;background:{{ noteHeaderBg }};backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)">
         <button onClick="{{ closeEditor }}" style="display:flex;align-items:center;gap:9px;border:none;background:none;color:#c4c4c4;font-family:'Archivo',sans-serif;font-size:14px;cursor:pointer;padding:8px 12px;border-radius:10px;transition:color .3s,background .3s" style-hover="color:#fff;background:rgba(255,255,255,.06)"><span style="font-size:17px;line-height:1">←</span> Back to notes</button>
-        <span style="display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;color:#7a7a7a">{{ edTitleLabel }}<span style="display:inline-block;width:2px;height:12px;background:#fff;animation:caretBlink 1.1s step-end infinite"></span></span>
+        <span style="display:flex;align-items:center;gap:9px;font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;color:#7a7a7a">{{ edTitleLabel }}</span>
         <button onClick="{{ saveEditor }}" style="border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:500;padding:10px 22px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="transform:scale(.96)">Done</button>
       </div>
       <div onClick="{{ stop }}" style="max-width:1100px;margin:0 auto;padding:44px 56px 120px;animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
@@ -1300,23 +1298,32 @@ input,select,textarea{outline:none}
           <button onClick="{{ openSketch }}" style="height:32px;padding:0 14px;border:1px solid rgba(255,255,255,.2);background:none;color:#c8c8c8;border-radius:8px;cursor:pointer;font-family:'Archivo',sans-serif;font-size:12.5px;transition:color .3s,border-color .3s" style-hover="color:#fff;border-color:#fff">✎ Sketch</button>
         </div>
         <sc-if value="{{ annoOn }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding:8px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;row-gap:8px;margin-top:14px;padding:8px 10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:10px">
             <span style="font-size:10px;color:#8a8a8a;font-family:'JetBrains Mono',monospace;letter-spacing:.1em">DRAW</span>
             <sc-for list="{{ penSwatches }}" as="p" hint-placeholder-count="4"><span onClick="{{ p.pick }}" style="{{ p.st }}"></span></sc-for>
             <input type="color" value="{{ penColorVal }}" onInput="{{ setPenColor }}" title="Pen color" style="width:22px;height:22px;padding:0;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:none;cursor:pointer;margin-right:auto">
+            <button onClick="{{ annoUndo }}" title="Undo last stroke" style="height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#c8c8c8;border-radius:8px;cursor:pointer;font-size:12px;transition:color .3s,border-color .3s" style-hover="color:#fff;border-color:#fff">↩ Undo</button>
             <button onClick="{{ toggleErase }}" style="{{ eraseBtnStyle }}">Eraser</button>
-            <button onClick="{{ annoClear }}" style="height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#9a9a9a;border-radius:8px;cursor:pointer;font-size:12px">Clear</button>
+            <button onClick="{{ annoClear }}" style="height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#9a9a9a;border-radius:8px;cursor:pointer;font-size:12px;transition:color .3s" style-hover="color:#e05a5a">Clear</button>
             <button onClick="{{ toggleAnno }}" style="height:30px;padding:0 14px;border:none;background:#fff;color:#000;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500">Done</button>
           </div>
         </sc-if>
         <div style="position:relative;margin-top:14px" ref="{{ bodyWrapRef }}">
           <div contenteditable="true" ref="{{ bodyRef }}" onKeyUp="{{ syncFmt }}" onMouseUp="{{ syncFmt }}" onClick="{{ edBodyClick }}" onPointerDown="{{ edImgDown }}" style="min-height:150px;font-size:15px;line-height:1.7;color:#d8d8d8;font-family:'Archivo',sans-serif;outline:none;padding:4px 2px" data-ph="Write freely — timestamps, takeaways, ideas…"></div>
           <canvas ref="{{ annoRef }}" onPointerDown="{{ annoStart }}" onPointerMove="{{ annoMove }}" onPointerUp="{{ annoEnd }}" onPointerLeave="{{ annoEnd }}" style="{{ annoCanvasStyle }}"></canvas>
+          <sc-if value="{{ annoSelOpen }}" hint-placeholder-val="{{ false }}">
+            <div data-anno-chip="1" onClick="{{ stop }}" style="{{ annoSelStyle }}">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;color:#8a8a8a">STROKE</span>
+              <button onClick="{{ annoDeleteSel }}" style="height:26px;padding:0 12px;border:1px solid rgba(224,90,90,.5);background:rgba(224,90,90,.12);color:#f08a8a;border-radius:8px;cursor:pointer;font-family:'Archivo',sans-serif;font-size:12px;transition:background .3s" style-hover="background:rgba(224,90,90,.24)">Delete</button>
+              <button onClick="{{ annoDeselect }}" style="height:26px;width:26px;border:none;background:none;color:#7a7a7a;font-size:16px;line-height:1;cursor:pointer;transition:color .3s" style-hover="color:#fff">×</button>
+            </div>
+          </sc-if>
           <sc-if value="{{ imgToolShow }}" hint-placeholder-val="{{ false }}">
             <div style="{{ imgToolStyle }}">
-              <button onMouseDown="{{ tbDown }}" onClick="{{ imgMoveUp }}" title="Move image up" style="width:26px;height:26px;border:none;background:rgba(255,255,255,.08);color:#eaeaea;border-radius:6px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s" style-hover="background:rgba(255,255,255,.18)">↑</button>
-              <button onMouseDown="{{ tbDown }}" onClick="{{ imgMoveDown }}" title="Move image down" style="width:26px;height:26px;border:none;background:rgba(255,255,255,.08);color:#eaeaea;border-radius:6px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s" style-hover="background:rgba(255,255,255,.18)">↓</button>
-              <button onMouseDown="{{ tbDown }}" onClick="{{ imgRemove }}" title="Remove image" style="width:26px;height:26px;border:none;background:rgba(255,255,255,.08);color:#e0a08a;border-radius:6px;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s" style-hover="background:rgba(224,90,90,.25)">✕</button>
+              <span onPointerDown="{{ imgGrab }}" title="Drag to resize" style="min-width:22px;height:20px;padding:0 5px;border-radius:6px;cursor:ew-resize;touch-action:none;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#eaeaea">⤢</span>
+              <span style="{{ imgPctStyle }}">{{ imgPct }}</span>
+              <span style="width:1px;align-self:stretch;background:rgba(255,255,255,.16);margin:0 2px"></span>
+              <button onMouseDown="{{ tbDown }}" onClick="{{ imgRemove }}" title="Remove image" style="width:20px;height:20px;border:none;background:rgba(255,255,255,.08);color:#e0a08a;border-radius:6px;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s" style-hover="background:rgba(224,90,90,.25)">✕</button>
             </div>
           </sc-if>
         </div>
@@ -1328,12 +1335,14 @@ input,select,textarea{outline:none}
           <div contenteditable="true" ref="{{ lessonRef }}" onKeyUp="{{ syncFmt }}" onMouseUp="{{ syncFmt }}" onPointerDown="{{ edImgDown }}" style="min-height:66px;font-size:14.5px;line-height:1.6;color:#eaeaea;font-family:'Archivo',sans-serif;outline:none;padding:8px 12px;background:rgba(229,192,123,.05);border:1px solid rgba(229,192,123,.18);border-radius:12px" data-ph=""></div>
         </div>
         <sc-if value="{{ sketching }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:16px;padding:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:14px">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="margin-top:28px;padding:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1);border-radius:14px">
+          <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;row-gap:8px;margin-bottom:10px">
             <span style="font-size:11px;color:#7a7a7a;font-family:'JetBrains Mono',monospace">PEN</span>
             <sc-for list="{{ penSwatches }}" as="p" hint-placeholder-count="4"><span onClick="{{ p.pick }}" style="{{ p.st }}"></span></sc-for>
             <input type="color" value="{{ penColorVal }}" onInput="{{ setPenColor }}" title="Custom pen color" style="width:24px;height:24px;padding:0;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:none;cursor:pointer">
-            <button onClick="{{ skClear }}" style="margin-left:auto;height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#9a9a9a;border-radius:8px;cursor:pointer;font-size:12px;transition:color .3s" style-hover="color:#fff">Clear</button>
+            <button onClick="{{ skUndo }}" title="Undo last stroke" style="margin-left:auto;height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#c8c8c8;border-radius:8px;cursor:pointer;font-size:12px;transition:color .3s,border-color .3s" style-hover="color:#fff;border-color:#fff">↩ Undo</button>
+            <button onClick="{{ toggleSkErase }}" style="{{ skEraseBtnStyle }}">Eraser</button>
+            <button onClick="{{ skClear }}" style="height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#9a9a9a;border-radius:8px;cursor:pointer;font-size:12px;transition:color .3s" style-hover="color:#fff">Clear</button>
             <button onClick="{{ skAttach }}" style="height:30px;padding:0 14px;border:none;background:#fff;color:#000;border-radius:8px;cursor:pointer;font-size:12px;font-weight:500">Attach</button>
             <button onClick="{{ closeSketch }}" style="height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);background:none;color:#9a9a9a;border-radius:8px;cursor:pointer;font-size:12px;transition:color .3s" style-hover="color:#fff">Close</button>
           </div>
@@ -1341,14 +1350,16 @@ input,select,textarea{outline:none}
         </div>
         </sc-if>
         <sc-if value="{{ hasEdPics }}" hint-placeholder-val="{{ false }}">
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:16px;margin-top:30px">
           <sc-for list="{{ edPics }}" as="p" hint-placeholder-count="0">
-            <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="{{ p.itemStyle }}">
               <div draggable="{{ true }}" onDragStart="{{ p.dragStart }}" onDragOver="{{ p.dragOver }}" onDrop="{{ p.drop }}" onDragEnd="{{ p.dragEnd }}" style="{{ p.wrapStyle }}">
                 <div onClick="{{ p.open }}" style="width:100%;height:100%;cursor:zoom-in">{{ p.img }}</div>
+                <span onPointerDown="{{ p.resizeStart }}" title="Drag to resize" style="position:absolute;bottom:0;right:0;z-index:3;width:30px;height:30px;padding:5px;box-sizing:border-box;cursor:nwse-resize;touch-action:none;display:flex;align-items:flex-end;justify-content:flex-end;background:linear-gradient(315deg,rgba(0,0,0,.7) 48%,rgba(0,0,0,0) 49%)"><span style="width:11px;height:11px;border-right:2px solid rgba(255,255,255,.9);border-bottom:2px solid rgba(255,255,255,.9)"></span></span>
+                <span style="{{ p.sizeBadge }}">{{ p.wLabel }}</span>
                 <div style="position:absolute;top:6px;right:6px;display:flex;gap:6px">
-                  <span title="Drag to reorder" style="width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.62);color:#fff;font-size:12px;cursor:grab;display:flex;align-items:center;justify-content:center;line-height:1">⠿</span>
-                  <button onClick="{{ p.remove }}" style="width:24px;height:24px;border:none;border-radius:50%;background:rgba(0,0,0,.62);color:#fff;font-size:15px;cursor:pointer;line-height:1">×</button>
+                  <span title="Drag to reorder" style="width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.62);color:#fff;font-size:11px;cursor:grab;display:flex;align-items:center;justify-content:center;line-height:1">⠿</span>
+                  <button onClick="{{ p.remove }}" title="Remove" style="width:20px;height:20px;border:none;border-radius:50%;background:rgba(0,0,0,.62);color:#fff;font-size:12px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center">×</button>
                 </div>
               </div>
               <input value="{{ p.cap }}" onInput="{{ p.setCap }}" placeholder="Add a title…" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.16);color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13px;padding:6px 2px;outline:none;transition:border-color .3s" style-focus="border-color:#fff">
@@ -1399,6 +1410,10 @@ class Component extends DCLogic {
   _saveNotes(list) { this.setState({ notes: list }); this._persist('phntm-notes-v1', JSON.stringify(list)); }
   _openEditor(note) {
     this._edKey = Date.now();
+    // fresh drawing session per note: strokes reset, saved artwork becomes the base layer
+    if (note && Array.isArray(note.pics)) note = { ...note, pics: note.pics.map((p) => (p && (p.w == null || p.w === 60)) ? { ...p, w: 32 } : p) };
+    this._annoStrokes = (note && Array.isArray(note.annoStrokes)) ? note.annoStrokes.map((k) => ({ ...k, pts: (k.pts || []).slice() })) : [];
+    this._annoBase = null; this._annoLegacy = !!(note && note.anno && !(note.annoStrokes || []).length);
     const ed = note
       ? { open: true, id: note.id, title: note.title || '', cat: note.category || '', source: note.source || '', bodyHtml: note.bodyHtml || (note.body ? note.body.replace(/\n/g, '<br>') : ''), lessonHtml: note.lessonHtml || '', pics: (note.pics || []).map((p) => typeof p === 'string' ? { src: p, cap: '' } : { src: p.src, cap: p.cap || '' }), anno: note.anno || '', sketching: false }
       : { open: true, id: null, title: '', cat: this.state.noteFilter !== 'All' ? this.state.noteFilter : '', source: '', bodyHtml: '', lessonHtml: '', pics: [], anno: '', sketching: false };
@@ -1406,20 +1421,306 @@ class Component extends DCLogic {
   }
   _closeEditor() { this.setState({ edDelConfirm: false, ed: { ...(this.state.ed || {}), open: false, sketching: false } }); }
   _edSet(field, val) { this.setState({ ed: { ...this.state.ed, [field]: val } }); }
-  _edBlock(tag) { const t = this._activeEditable || this._bodyEl; if (!t) return; t.focus(); const sel = window.getSelection(); if (!sel.rangeCount || !t.contains(sel.getRangeAt(0).commonAncestorContainer)) { const r = document.createRange(); r.selectNodeContents(t); r.collapse(false); sel.removeAllRanges(); sel.addRange(r); }
+  _edBlock(tag) { const t = this._activeEditable || this._bodyEl; if (!t) return; t.focus(); { const s0 = window.getSelection(); if (!s0 || !s0.rangeCount || !t.contains(s0.getRangeAt(0).commonAncestorContainer)) this._restoreSel(); } const sel = window.getSelection(); if (!sel.rangeCount || !t.contains(sel.getRangeAt(0).commonAncestorContainer)) { const r = document.createRange(); r.selectNodeContents(t); r.collapse(false); sel.removeAllRanges(); sel.addRange(r); }
     if (sel.isCollapsed && tag !== 'p') { const node = sel.getRangeAt(0).startContainer; let el = node.nodeType === 3 ? node.parentElement : node; let blockEl = (el && el.closest) ? el.closest('div,p,h1,h2,h3,li') : null; if (!blockEl || blockEl === t) blockEl = t; const hasText = (blockEl.textContent || '').trim().length > 0; if (hasText) { const r = document.createRange(); r.selectNodeContents(blockEl === t ? t : blockEl); r.collapse(false); sel.removeAllRanges(); sel.addRange(r); document.execCommand('insertParagraph'); } }
     try { document.execCommand('formatBlock', false, tag); } catch (e) {} setTimeout(() => this._syncFmt(), 0); }
   _edFontSize(scale) { if (!scale) return; const t = this._activeEditable || this._bodyEl; if (!t) return; t.focus(); try { document.execCommand('styleWithCSS', false, false); } catch (e) {} try { document.execCommand('fontSize', false, scale); } catch (e) {} }
-  _edExec(cmd, val) { const t = this._activeEditable || this._bodyEl; if (t) { t.focus(); try { document.execCommand('styleWithCSS', false, true); } catch (e) {} document.execCommand(cmd, false, val || null); setTimeout(() => this._syncFmt(), 0); } }
+  _edExec(cmd, val) {
+    const t = this._activeEditable || this._bodyEl; if (!t) return;
+    t.focus();
+    // put the user's selection back if focus or a re-render collapsed it
+    const sel = window.getSelection();
+    const lost = !sel || !sel.rangeCount || !t.contains(sel.getRangeAt(0).commonAncestorContainer);
+    if (lost) this._restoreSel();
+    try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
+    document.execCommand(cmd, false, val || null);
+    setTimeout(() => this._syncFmt(), 0);
+  }
   _edHighlight(col) { const t = this._activeEditable || this._bodyEl; if (!t) return; t.focus(); try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
     const cur = (() => { try { return document.queryCommandValue('hiliteColor') || document.queryCommandValue('backColor') || ''; } catch (e) { return ''; } })();
     const toRgb = (h) => { const m = h.replace('#', ''); const n = parseInt(m.length === 3 ? m.split('').map((x) => x + x).join('') : m, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
     const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(cur); const b = m ? [+m[1], +m[2], +m[3]] : null; const a = toRgb(col);
     const same = b && Math.abs(a[0] - b[0]) <= 6 && Math.abs(a[1] - b[1]) <= 6 && Math.abs(a[2] - b[2]) <= 6;
-    if (same) { document.execCommand('hiliteColor', false, 'transparent'); document.execCommand('foreColor', false, '#eaeaea'); }
-    else { document.execCommand('hiliteColor', false, col); document.execCommand('foreColor', false, '#141414'); }
+    if (same) { this._stripHi(); }
+    else {
+      document.execCommand('hiliteColor', false, col);
+      // white and other pale highlights need dark text; deep ones keep it light
+      const lum = (a[0] * 299 + a[1] * 587 + a[2] * 114) / 1000;
+      document.execCommand('foreColor', false, lum > 140 ? '#141414' : '#ffffff');
+    }
     setTimeout(() => this._syncFmt(), 0); }
-  _edClearHi() { const t = this._activeEditable || this._bodyEl; if (!t) return; t.focus(); try { document.execCommand('styleWithCSS', false, true); } catch (e) {} document.execCommand('hiliteColor', false, 'transparent'); document.execCommand('foreColor', false, '#eaeaea'); setTimeout(() => this._syncFmt(), 0); }
+  // Removing a highlight can't be done with execCommand — Chrome ignores
+  // hiliteColor:'transparent', which left the background painted while the text
+  // colour reset to white (white-on-green). Strip the styles off the DOM instead:
+  // paint a sentinel colour first so the browser splits spans exactly at the
+  // selection edges, then clear those spans and any coloured ancestor.
+  _stripHi() {
+    const t = this._activeEditable || this._bodyEl; if (!t) return;
+    t.focus();
+    try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
+    const SENTINEL = 'rgb(1, 2, 3)';
+    const clearOne = (el) => {
+      if (!el || el === t || el.nodeType !== 1) return;
+      el.style.backgroundColor = '';
+      el.style.color = '';
+      if ((el.tagName === 'SPAN' || el.tagName === 'FONT') && !(el.getAttribute('style') || '').trim()) {
+        const p = el.parentNode;
+        if (p) { while (el.firstChild) p.insertBefore(el.firstChild, el); p.removeChild(el); }
+      }
+    };
+    const sel0 = window.getSelection();
+    const collapsed = !sel0 || !sel0.rangeCount || sel0.getRangeAt(0).collapsed;
+    // With nothing selected there is no range to split, so the sentinel would become
+    // the pending typing style — that is what made the next typed text come out with
+    // a black highlight. Strip the run the caret sits in instead.
+    if (collapsed) {
+      const r0 = sel0.getRangeAt(0);
+      let node = r0.startContainer;
+      let el = node && node.nodeType === 3 ? node.parentElement : node;
+      let hit = null;
+      while (el && el !== t) { if (el.style && el.style.backgroundColor) hit = el; el = el.parentElement; }
+      if (hit && hit.parentNode) {
+        // Turning the highlight off with no selection means "stop highlighting from
+        // here", not "un-highlight what I already wrote". Split the run at the caret
+        // and park the caret between the halves, outside the highlighted span, so
+        // existing text keeps its colour and new text comes out plain.
+        let clone = null;
+        try {
+          const tail = document.createRange();
+          tail.setStart(r0.startContainer, r0.startOffset);
+          tail.setEndAfter(hit.lastChild || hit);
+          const frag = tail.extractContents();
+          if (frag && (frag.textContent || '').length) { clone = hit.cloneNode(false); clone.appendChild(frag); }
+        } catch (e) {}
+        const gap = document.createTextNode('\u200B');
+        const parent = hit.parentNode;
+        parent.insertBefore(gap, hit.nextSibling);
+        if (clone) parent.insertBefore(clone, gap.nextSibling);
+        if (!(hit.textContent || '').length) parent.removeChild(hit);
+        const r2 = document.createRange(); r2.setStart(gap, 1); r2.collapse(true);
+        sel0.removeAllRanges(); sel0.addRange(r2);
+      } else {
+        // no highlighted run — just clear what the next keystroke would inherit
+        try { document.execCommand('removeFormat'); } catch (e) {}
+        try { document.execCommand('foreColor', false, '#eaeaea'); } catch (e) {}
+      }
+      setTimeout(() => this._syncFmt(), 0);
+      return;
+    }
+    document.execCommand('hiliteColor', false, 'rgb(1,2,3)');
+    const clear = (el) => {
+      if (!el || el === t || el.nodeType !== 1) return;
+      el.style.backgroundColor = '';
+      el.style.color = '';
+      if ((el.tagName === 'SPAN' || el.tagName === 'FONT') && !(el.getAttribute('style') || '').trim()) {
+        const p = el.parentNode;
+        if (p) { while (el.firstChild) p.insertBefore(el.firstChild, el); p.removeChild(el); }
+      }
+    };
+    Array.from(t.querySelectorAll('*')).forEach((el) => {
+      const bg = (el.style && el.style.backgroundColor) || '';
+      if (bg.replace(/\s+/g, '') !== SENTINEL.replace(/\s+/g, '')) return;
+      // walk up first: an outer span may still be holding the old colour
+      let a = el.parentNode;
+      while (a && a !== t) { const nx = a.parentNode; if (a.style && a.style.backgroundColor) clear(a); a = nx; }
+      clear(el);
+    });
+    // reset what the next keystroke inherits, so typing after un-highlighting is
+    // the normal body colour rather than the old dark-on-highlight pair
+    try { document.execCommand('foreColor', false, '#eaeaea'); } catch (e) {}
+    setTimeout(() => this._syncFmt(), 0);
+  }
+  _edClearHi() { this._stripHi(); }
+  // Text colour behaves like the highlight: clicking the colour that is already
+  // applied turns it off. With a selection that means back to the body colour; with
+  // just a caret it means "stop colouring from here" — text already written keeps it.
+  _edTextColor(col) {
+    const t = this._activeEditable || this._bodyEl; if (!t) return;
+    t.focus();
+    try { document.execCommand('styleWithCSS', false, true); } catch (e) {}
+    const toRgb = (h) => { const m = String(h).replace('#', ''); const n = parseInt(m.length === 3 ? m.split('').map((x) => x + x).join('') : m, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; };
+    let cur = ''; try { cur = document.queryCommandValue('foreColor') || ''; } catch (e) {}
+    const m = /rgba?\((\d+),\s*(\d+),\s*(\d+)/.exec(cur);
+    const b = m ? [+m[1], +m[2], +m[3]] : null, a = toRgb(col);
+    const same = b && Math.abs(a[0] - b[0]) <= 6 && Math.abs(a[1] - b[1]) <= 6 && Math.abs(a[2] - b[2]) <= 6;
+    if (!same) { document.execCommand('foreColor', false, col); setTimeout(() => this._syncFmt(), 0); return; }
+    const sel = window.getSelection();
+    const collapsed = !sel || !sel.rangeCount || sel.getRangeAt(0).collapsed;
+    if (!collapsed) { document.execCommand('foreColor', false, '#eaeaea'); setTimeout(() => this._syncFmt(), 0); return; }
+    // park the caret just outside the coloured run
+    const r0 = sel.getRangeAt(0);
+    let node = r0.startContainer;
+    let el = node && node.nodeType === 3 ? node.parentElement : node;
+    let hit = null;
+    while (el && el !== t) { if (el.style && el.style.color) hit = el; el = el.parentElement; }
+    if (hit && hit.parentNode) {
+      let clone = null;
+      try {
+        const tail = document.createRange();
+        tail.setStart(r0.startContainer, r0.startOffset);
+        tail.setEndAfter(hit.lastChild || hit);
+        const frag = tail.extractContents();
+        if (frag && (frag.textContent || '').length) { clone = hit.cloneNode(false); clone.appendChild(frag); }
+      } catch (e) {}
+      const gap = document.createTextNode('\u200B');
+      const parent = hit.parentNode;
+      parent.insertBefore(gap, hit.nextSibling);
+      if (clone) parent.insertBefore(clone, gap.nextSibling);
+      if (!(hit.textContent || '').length) parent.removeChild(hit);
+      const r2 = document.createRange(); r2.setStart(gap, 1); r2.collapse(true);
+      sel.removeAllRanges(); sel.addRange(r2);
+    }
+    setTimeout(() => this._syncFmt(), 0);
+  }
+  // Double-click = select the word, triple-click = select the paragraph, the way a
+  // document editor behaves. Handled explicitly because the native gesture can be
+  // swallowed by whatever is hosting the page.
+  // The drawing canvas overlays the text, so caretRangeFromPoint can hand back the
+  // canvas instead of a text node. Fall back to locating the character under the
+  // pointer from the text nodes' own client rects.
+  _charAt(x, y) {
+    const t = this._activeEditable || this._bodyEl; if (!t) return null;
+    const walker = document.createTreeWalker(t, NodeFilter.SHOW_TEXT, null);
+    while (walker.nextNode()) {
+      const n = walker.currentNode;
+      const len = (n.nodeValue || '').length; if (!len) continue;
+      const whole = document.createRange(); whole.selectNodeContents(n);
+      const boxes = whole.getClientRects();
+      let inLine = false;
+      for (let i = 0; i < boxes.length; i++) {
+        const b = boxes[i];
+        if (x >= b.left - 2 && x <= b.right + 2 && y >= b.top - 2 && y <= b.bottom + 2) { inLine = true; break; }
+      }
+      if (!inLine) continue;
+      for (let k = 0; k < len; k++) {
+        const r = document.createRange(); r.setStart(n, k); r.setEnd(n, k + 1);
+        const b = r.getBoundingClientRect();
+        if (x >= b.left - 1 && x <= b.right + 1 && y >= b.top - 1 && y <= b.bottom + 1) return { node: n, offset: k };
+      }
+      return { node: n, offset: Math.min(len, 1) };
+    }
+    return null;
+  }
+  _wordAt(x, y) {
+    const t = this._activeEditable || this._bodyEl; if (!t) return;
+    let range = null;
+    if (document.caretRangeFromPoint) range = document.caretRangeFromPoint(x, y);
+    else if (document.caretPositionFromPoint) {
+      const p = document.caretPositionFromPoint(x, y);
+      if (p) { range = document.createRange(); range.setStart(p.offsetNode, p.offset); range.collapse(true); }
+    }
+    let node = range && range.startContainer;
+    let startOffset = range ? range.startOffset : 0;
+    if (!node || node.nodeType !== 3 || !t.contains(node)) {
+      const hit = this._charAt(x, y);
+      if (!hit) return;
+      node = hit.node; startOffset = hit.offset;
+    }
+    // A word can be split across several text nodes once part of it is bold,
+    // coloured or highlighted. Walk the whole block as one string so the selection
+    // doesn't stop at a <span> boundary — that was the "selects half of it" case.
+    let block = node.parentElement;
+    const BLOCKS = /^(P|DIV|LI|H1|H2|H3|H4|BLOCKQUOTE|TD)$/;
+    while (block && block !== t && !BLOCKS.test(block.tagName)) block = block.parentElement;
+    const scope = (block && block !== t) ? block : t;
+    const spans = [];
+    let combined = '', caret = -1;
+    const walk = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, null);
+    while (walk.nextNode()) {
+      const n = walk.currentNode, len = (n.nodeValue || '').length;
+      if (n === node) caret = combined.length + Math.min(startOffset, len);
+      spans.push({ node: n, start: combined.length, len });
+      combined += n.nodeValue || '';
+    }
+    if (caret < 0) return;
+    const isWord = (c) => c && /[^\s\u00a0.,;:!?()[\]{}"“”]/.test(c);
+    let a = caret, b = caret;
+    while (a > 0 && isWord(combined[a - 1])) a--;
+    while (b < combined.length && isWord(combined[b])) b++;
+    if (a === b) return;
+    const locate = (idx) => {
+      for (let k = 0; k < spans.length; k++) {
+        const sp = spans[k];
+        if (idx >= sp.start && idx <= sp.start + sp.len) return { node: sp.node, offset: idx - sp.start };
+      }
+      const last = spans[spans.length - 1];
+      return { node: last.node, offset: last.len };
+    };
+    const A = locate(a), B = locate(b);
+    const r2 = document.createRange();
+    r2.setStart(A.node, A.offset); r2.setEnd(B.node, B.offset);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r2);
+    this._saveSel(); this._syncFmt();
+  }
+  _blockAt(x, y) {
+    const t = this._activeEditable || this._bodyEl; if (!t) return;
+    let range = null;
+    if (document.caretRangeFromPoint) range = document.caretRangeFromPoint(x, y);
+    else if (document.caretPositionFromPoint) {
+      const p = document.caretPositionFromPoint(x, y);
+      if (p) { range = document.createRange(); range.setStart(p.offsetNode, p.offset); range.collapse(true); }
+    }
+    const node = range && range.startContainer;
+    if (!node || !t.contains(node)) return;
+    let el = node.nodeType === 3 ? node.parentElement : node;
+    while (el && el !== t && el.parentElement && el.parentElement !== t) el = el.parentElement;
+    // bare text sitting straight inside the editor has no block wrapper — take the line
+    const target = (el && el !== t) ? el : node;
+    const r = document.createRange(); r.selectNodeContents(target);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+    this._saveSel(); this._syncFmt();
+  }
+  // Cleaning on save was too late: the browser runs an <img onerror> the instant
+  // pasted markup lands in the editable, before anything is stored. Intercept the
+  // paste, sanitise the HTML, and insert that instead.
+  // Drop image files (or drag an attached picture / sketch) straight into the text.
+  _edDragOver(ev) {
+    const dt = ev.dataTransfer; if (!dt) return;
+    ev.preventDefault();
+    try { dt.dropEffect = 'copy'; } catch (e) {}
+    const el = this._bodyEl;
+    if (el) { el.style.outline = ''; el.style.background = 'rgba(255,255,255,.05)'; }
+  }
+  _edDragLeave() { const el = this._bodyEl; if (el) { el.style.outline = ''; el.style.background = ''; } }
+  async _edDrop(ev) {
+    const dt = ev.dataTransfer; if (!dt) return;
+    const el = this._bodyEl;
+    if (el) { el.style.outline = ''; el.style.background = ''; }
+    const files = Array.from(dt.files || []).filter((f) => /^image\//.test(f.type));
+    const inner = dt.getData('text/phntm-image');       // an attached pic or sketch
+    if (!files.length && !inner) return;                // let normal text drops be
+    ev.preventDefault();
+    // put the caret where it was dropped so the image lands there
+    try {
+      let range = document.caretRangeFromPoint ? document.caretRangeFromPoint(ev.clientX, ev.clientY) : null;
+      if (!range) { const hit = this._charAt(ev.clientX, ev.clientY); if (hit) { range = document.createRange(); range.setStart(hit.node, hit.offset); range.collapse(true); } }
+      if (range && el && el.contains(range.startContainer)) { el.focus(); const s = window.getSelection(); s.removeAllRanges(); s.addRange(range); }
+      else if (el) { el.focus(); const s = window.getSelection(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); s.removeAllRanges(); s.addRange(r); }
+    } catch (e) {}
+    const insert = (src) => document.execCommand('insertHTML', false, '<img src="' + src + '" style="width:60%" loading="lazy" decoding="async">');
+    if (inner) { insert(inner); this._syncFmt(); return; }
+    for (const f of files) {
+      const local = await this._shrinkFile(f);
+      if (!local) continue;
+      insert(local);
+      const url = await this._cloudImg(local);
+      if (url && url !== local && this._bodyEl) {
+        Array.from(this._bodyEl.querySelectorAll('img')).forEach((im) => { if (im.getAttribute('src') === local) im.setAttribute('src', url); });
+      }
+    }
+    this._syncFmt();
+  }
+  _edPaste(ev) {
+    try {
+      const dt = ev.clipboardData || (window.event && window.event.clipboardData);
+      if (!dt) return;
+      const html = dt.getData('text/html');
+      if (!html) return; // plain text and image files are handled safely by default
+      ev.preventDefault();
+      const safe = this._clean(html);
+      document.execCommand('insertHTML', false, safe);
+    } catch (e) { /* fall back to the browser's own paste */ }
+  }
   _syncFmt() { try { let block = ''; try { block = (document.queryCommandValue('formatBlock') || '').toLowerCase().replace(/[<>]/g, ''); } catch (e) {} this.setState({ fmtActive: { bold: document.queryCommandState('bold'), underline: document.queryCommandState('underline'), insertUnorderedList: document.queryCommandState('insertUnorderedList'), block } }); } catch (e) {} }
   _shrinkFile(f, max) {
     return new Promise((res) => {
@@ -1448,7 +1749,7 @@ class Component extends DCLogic {
     const files = Array.from(fileList || []); if (!files.length) return;
     files.forEach(async (f) => {
       const local = await this._shrinkFile(f); if (!local) return;
-      this.setState((s) => ({ ed: { ...s.ed, pics: [...((s.ed && s.ed.pics) || []), { src: local, cap: '', w: 60 }] } }));
+      this.setState((s) => ({ ed: { ...s.ed, pics: [...((s.ed && s.ed.pics) || []), { src: local, cap: '', w: 32 }] } }));
       const url = await this._cloudImg(local);
       if (url && url !== local) this.setState((s) => ({ ed: { ...s.ed, pics: ((s.ed && s.ed.pics) || []).map((p) => p.src === local ? { ...p, src: url } : p) } }));
     });
@@ -1457,9 +1758,46 @@ class Component extends DCLogic {
   _edPicRemove(i) { this.setState((s) => { const pics = s.ed.pics.slice(); pics.splice(i, 1); return { ed: { ...s.ed, pics } }; }); }
   _edPicMove(from, to) { if (from == null || to == null || from === to) return; this.setState((s) => { const pics = (s.ed.pics || []).slice(); if (from < 0 || from >= pics.length) return {}; const m = pics.splice(from, 1)[0]; pics.splice(to, 0, m); return { ed: { ...s.ed, pics } }; }); }
   _edImgTap(ev) { const img = ev.target; if (!img || img.tagName !== 'IMG') return; ev.preventDefault(); const order = ['100%', '66%', '40%']; const cur = img.style.width || '100%'; const idx = order.indexOf(cur); img.style.width = order[(idx + 1) % order.length]; img.style.height = 'auto'; }
-  _edImgDown(ev) { const img = ev.target; if (!img || img.tagName !== 'IMG') return; ev.preventDefault(); const startX = ev.clientX; const startW = img.getBoundingClientRect().width; const parentW = (img.parentElement ? img.parentElement.getBoundingClientRect().width : startW) || startW; let moved = false; const move = (e) => { const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX; if (Math.abs(x - startX) > 2) moved = true; const w = Math.max(60, Math.min(parentW, startW + (x - startX))); img.style.width = w + 'px'; img.style.height = 'auto'; }; const up = () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); if (!moved) { const order = ['100%', '66%', '40%']; const cur = img.style.width || '100%'; const idx = order.indexOf(cur); if (idx !== -1) { img.style.width = order[(idx + 1) % order.length]; img.style.height = 'auto'; } } }; window.addEventListener('pointermove', move); window.addEventListener('pointerup', up); }
+  // Dragging the image itself resizes it in percent, never raw pixels (that is what
+  // produced widths like 676.381px), and the corner controls are repositioned on
+  // every frame so they stay glued to the image instead of catching up at the end.
+  _edImgDown(ev) {
+    const img = ev.target;
+    if (!img || img.tagName !== 'IMG') return;
+    ev.preventDefault();
+    const startX = ev.clientX;
+    const host = (this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 0) || img.getBoundingClientRect().width || 600;
+    const cur = img.style.width || '';
+    const startPct = /%$/.test(cur) ? parseFloat(cur) : Math.round((img.getBoundingClientRect().width / host) * 100);
+    let moved = false;
+    const move = (e) => {
+      const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      if (Math.abs(x - startX) > 2) moved = true;
+      const pct = Math.max(15, Math.min(100, Math.round(startPct + ((x - startX) / Math.max(200, host)) * 100)));
+      img.style.width = pct + '%';
+      img.style.height = 'auto';
+      this._positionImgTool(img);
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      if (moved) { this._positionImgTool(img); this.forceUpdate(); }
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  }
   _edBodyClick(ev) {
     const t = ev.target;
+    // a plain left click opens the link, the way it would outside the editor
+    const link = t && t.closest ? t.closest('a[href]') : null;
+    if (link && !ev.metaKey && !ev.ctrlKey && !ev.altKey) {
+      ev.preventDefault();
+      const href = link.getAttribute('href') || '';
+      if (/^https?:/i.test(href)) window.open(href, '_blank', 'noopener,noreferrer');
+      return;
+    }
     if (t && t.tagName === 'IMG' && this._bodyEl && this._bodyEl.contains(t)) {
       if (this._selImgEl && this._selImgEl !== t) { this._selImgEl.style.outline = ''; this._selImgEl.style.outlineOffset = ''; }
       this._selImgEl = t; t.style.outline = '2px solid rgba(255,255,255,.75)'; t.style.outlineOffset = '2px';
@@ -1467,8 +1805,40 @@ class Component extends DCLogic {
     } else { this._hideImgTool(); }
   }
   _positionImgTool(img) { const wrap = this._bodyWrap; if (!img || !wrap) return; this.setState({ imgTool: { top: img.offsetTop, left: img.offsetLeft + img.offsetWidth, show: true } }); }
+  // (top/left describe the image's top-right corner; the toolbar is anchored there)
   _hideImgTool() { if (this._selImgEl) { this._selImgEl.style.outline = ''; this._selImgEl.style.outlineOffset = ''; } this._selImgEl = null; if (this.state.imgTool) this.setState({ imgTool: null }); }
   _edImgMoveInText(dir) { const img = this._selImgEl, root = this._bodyEl; if (!img || !root) return; let node = img; while (node.parentNode && node.parentNode !== root) node = node.parentNode; if (node.parentNode !== root) return; if (dir < 0) { const prev = node.previousElementSibling; if (prev) root.insertBefore(node, prev); } else { const nxt = node.nextElementSibling; if (nxt) root.insertBefore(nxt, node); } setTimeout(() => this._positionImgTool(img), 0); }
+  _edImgSize(pct) {
+    const img = this._selImgEl; if (!img) return;
+    img.style.width = pct; img.style.height = 'auto';
+    this._positionImgTool(img);
+    this.forceUpdate();
+  }
+  // drag the grip left or right to scale the selected in-text image
+  _edImgGrab(ev) {
+    const img = this._selImgEl; if (!img) return;
+    ev.preventDefault(); ev.stopPropagation();
+    const host = this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 600;
+    const startX = ev.clientX;
+    const cur = img.style.width || '100%';
+    const startPct = /%$/.test(cur) ? parseFloat(cur) : Math.round((img.getBoundingClientRect().width / Math.max(1, host)) * 100);
+    this.setState({ imgResizing: true });
+    const move = (e) => {
+      const pct = Math.max(15, Math.min(100, Math.round(startPct + ((e.clientX - startX) / Math.max(200, host)) * 100)));
+      img.style.width = pct + '%'; img.style.height = 'auto';
+      this._positionImgTool(img);
+      this.forceUpdate();
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      this.setState({ imgResizing: false });
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  }
   _edImgRemoveInText() { const img = this._selImgEl; if (!img) return; const p = img.parentNode; if (p) p.removeChild(img); this._hideImgTool(); }
   // Notes accept pasted rich text, which can carry executable markup (img
   // onerror handlers, iframes, javascript: URLs) from any page the user copied
@@ -1493,6 +1863,32 @@ class Component extends DCLogic {
       if (el.tagName === 'IMG') { el.setAttribute('loading', 'lazy'); el.setAttribute('decoding', 'async'); el.setAttribute('referrerpolicy', 'no-referrer'); }
       if (el.tagName === 'A') { el.setAttribute('rel', 'noopener noreferrer'); el.setAttribute('target', '_blank'); }
     });
+    // a URL typed or pasted as plain text becomes a real link, so it is clickable
+    try {
+      const d = root.ownerDocument;
+      const walker = d.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+      const hits = [];
+      while (walker.nextNode()) {
+        const n = walker.currentNode;
+        if (n.parentElement && n.parentElement.closest && n.parentElement.closest('a')) continue;
+        if (/https?:\/\/[^\s<]+/i.test(n.nodeValue || '')) hits.push(n);
+      }
+      hits.forEach((n) => {
+        const parts = String(n.nodeValue).split(/(https?:\/\/[^\s<]+)/i);
+        const frag = d.createDocumentFragment();
+        parts.forEach((p, i) => {
+          if (i % 2 === 1) {
+            const a = d.createElement('a');
+            a.setAttribute('href', p.replace(/[.,;:)\]]+$/, ''));
+            a.setAttribute('rel', 'noopener noreferrer');
+            a.setAttribute('target', '_blank');
+            a.textContent = p;
+            frag.appendChild(a);
+          } else if (p) frag.appendChild(d.createTextNode(p));
+        });
+        if (n.parentNode) n.parentNode.replaceChild(frag, n);
+      });
+    } catch (e) {}
     return root.innerHTML;
   }
   _edSaveNote() {
@@ -1502,7 +1898,7 @@ class Component extends DCLogic {
     const plain = (bodyHtml || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
     if (!(e.title || '').trim() && !plain && !e.pics.length) { this._closeEditor(); return; }
     const cat = (e.cat || '').trim(); if (cat) this._addNoteCat(cat);
-    const rec = { title: (e.title || '').trim(), category: cat, source: (e.source || '').trim(), bodyHtml, lessonHtml, body: plain, pics: e.pics, anno: e.anno || '' };
+    const rec = { title: (e.title || '').trim(), category: cat, source: (e.source || '').trim(), bodyHtml, lessonHtml, body: plain, pics: e.pics, anno: e.anno || '', annoStrokes: (this._annoStrokes || []) };
     const noteId = e.id || Date.now();
     if (e.id) { this._saveNotes((this.state.notes || []).map((n) => n.id === e.id ? { ...n, ...rec } : n)); }
     else { this._saveNotes([{ id: noteId, ts: Date.now(), ...rec }, ...(this.state.notes || [])]); }
@@ -1526,24 +1922,243 @@ class Component extends DCLogic {
     } catch (e) { /* stays inline until the next save */ }
   }
   _removeNote(id) { this._saveNotes((this.state.notes || []).filter((n) => n.id !== id)); if (this.state.ed && this.state.ed.id === id) this._closeEditor(); }
-  _sketchXY(e) { const c = this._sketchEl, b = c.getBoundingClientRect(); return { x: (e.clientX - b.left) * (c.width / b.width), y: (e.clientY - b.top) * (c.height / b.height) }; }
-  _skStart(e) { if (!this._sketchEl) return; const p = this._sketchXY(e); this._skPts = [p]; this._sk = p; this._skDrawing = true; }
-  _skMove(e) { if (!this._skDrawing || !this._sketchEl) return; const ctx = this._sketchEl.getContext('2d'), p = this._sketchXY(e); const pts = this._skPts || (this._skPts = [p]); pts.push(p); ctx.strokeStyle = this.state.penColor || '#fff'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; const n = pts.length; if (n < 3) { ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(p.x, p.y); ctx.stroke(); return; } const p0 = pts[n - 3], p1 = pts[n - 2], p2 = pts[n - 1], m1 = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 }, m2 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }; ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.quadraticCurveTo(p1.x, p1.y, m2.x, m2.y); ctx.stroke(); }
-  _skEnd() { this._skDrawing = false; this._skPts = null; }
-  _annoXY(e) { const c = this._annoEl, b = c.getBoundingClientRect(); return { x: (e.clientX - b.left) * (c.width / b.width), y: (e.clientY - b.top) * (c.height / b.height) }; }
-  _annoStroke(ctx) { if (this.state.annoErase) { ctx.globalCompositeOperation = 'destination-out'; ctx.lineWidth = 22; } else { ctx.globalCompositeOperation = 'source-over'; ctx.strokeStyle = this.state.penColor || '#ffffff'; ctx.lineWidth = 2.5; } ctx.lineJoin = 'round'; ctx.lineCap = 'round'; }
-  _annoStart(e) { if (!this._annoEl) return; e.preventDefault(); this._annoPts = [this._annoXY(e)]; this._annoDrawing = true; try { this._annoEl.setPointerCapture(e.pointerId); } catch (x) {} }
-  _annoMove(e) { if (!this._annoDrawing || !this._annoEl) return; const ctx = this._annoEl.getContext('2d'), p = this._annoXY(e); const pts = this._annoPts || (this._annoPts = [p]); pts.push(p); this._annoStroke(ctx); const n = pts.length; if (n < 3) { const a = pts[0]; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(p.x, p.y); ctx.stroke(); } else { const p0 = pts[n - 3], p1 = pts[n - 2], p2 = pts[n - 1]; const m1 = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 }, m2 = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 }; ctx.beginPath(); ctx.moveTo(m1.x, m1.y); ctx.quadraticCurveTo(p1.x, p1.y, m2.x, m2.y); ctx.stroke(); } }
-  _annoEnd() { if (!this._annoDrawing) return; this._annoDrawing = false; this._annoPts = null; if (this._annoEl) { this._annoEl.getContext('2d').globalCompositeOperation = 'source-over'; this._edSet('anno', this._annoEl.toDataURL('image/png')); } }
-  _annoClear() { if (this._annoEl) this._annoEl.getContext('2d').clearRect(0, 0, this._annoEl.width, this._annoEl.height); this._edSet('anno', ''); }
-  _annoSize() { const c = this._annoEl, b = this._bodyEl; if (!c || !b) return; const w = b.clientWidth, h = Math.max(b.scrollHeight, b.clientHeight, 150); if (c.width !== w || c.height !== h) { c.width = w; c.height = h; const data = this.state.ed && this.state.ed.anno; if (data) { const img = new Image(); img.onload = () => c.getContext('2d').drawImage(img, 0, 0, w, h); img.src = data; } } }
-  _toggleAnno() { const on = !this.state.annoOn; this.setState({ annoOn: on }); if (on) setTimeout(() => this._annoSize(), 0); }
+  // Sketch pad — same stroke model as draw-over-text: device-resolution canvas,
+  // one smooth path per stroke, undo, and an eraser that paints the pad colour
+  // (the pad has an opaque background, so erasing means painting it back).
+  _SK_BG = '#141414';
+  _skDPR() { return Math.min(window.devicePixelRatio || 1, 2); }
+  _sketchXY(e) { const b = this._sketchEl.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
+  _skFit() {
+    const c = this._sketchEl; if (!c) return;
+    const w = c.clientWidth || 600, h = c.clientHeight || 300, dpr = this._skDPR();
+    const pw = Math.round(w * dpr), ph = Math.round(h * dpr);
+    if (c.width !== pw || c.height !== ph) { c.width = pw; c.height = ph; }
+    this._skW = w; this._skH = h;
+    this._skPaint();
+  }
+  _skPaint() {
+    const c = this._sketchEl; if (!c) return;
+    const dpr = this._skDPR(), ctx = c.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.fillStyle = this._SK_BG;
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    (this._skStrokes || []).forEach((st) => this._annoDraw(ctx, st));
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  _skStart(e) {
+    if (!this._sketchEl) return;
+    if (e && e.preventDefault) e.preventDefault();
+    this._skStrokes = this._skStrokes || [];
+    this._skStrokes.push({
+      color: this.state.skErase ? this._SK_BG : (this.state.penColor || '#ffffff'),
+      width: this.state.skErase ? 26 : 2.6,
+      erase: false,
+      pts: [this._sketchXY(e)],
+    });
+    this._skDrawing = true;
+    try { this._sketchEl.setPointerCapture(e.pointerId); } catch (x) {}
+    this._skPaint();
+  }
+  _skMove(e) {
+    if (!this._skDrawing || !this._sketchEl) return;
+    const st = (this._skStrokes || [])[this._skStrokes.length - 1]; if (!st) return;
+    const p = this._sketchXY(e), prev = st.pts[st.pts.length - 1];
+    if (prev && Math.abs(p.x - prev.x) < 1.1 && Math.abs(p.y - prev.y) < 1.1) return;
+    st.pts.push(p);
+    if (this._skRaf) return;
+    this._skRaf = requestAnimationFrame(() => { this._skRaf = null; this._skPaint(); });
+  }
+  _skEnd() {
+    if (!this._skDrawing) return;
+    this._skDrawing = false;
+    if (this._skRaf) { cancelAnimationFrame(this._skRaf); this._skRaf = null; }
+    this._skPaint();
+  }
+  _setSketching(on) {
+    this._edSet('sketching', on);
+    [this._bodyEl, this._lessonEl].forEach((el) => {
+      if (!el) return;
+      el.style.caretColor = on ? 'transparent' : '';
+      if (on) { try { el.blur(); } catch (e) {} }
+    });
+  }
+  _skUndo() { if (!this._skStrokes || !this._skStrokes.length) return; this._skStrokes.pop(); this._skPaint(); }
+  _annoDPR() { return Math.min(window.devicePixelRatio || 1, 2); }
+  _annoXY(e) { const b = this._annoEl.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
+  _annoDraw(ctx, st) {
+    const pts = st.pts; if (!pts || !pts.length) return;
+    ctx.globalCompositeOperation = st.erase ? 'destination-out' : 'source-over';
+    ctx.strokeStyle = st.color; ctx.fillStyle = st.color;
+    ctx.lineWidth = st.width; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (pts.length === 1) { ctx.beginPath(); ctx.arc(pts[0].x, pts[0].y, st.width / 2, 0, Math.PI * 2); ctx.fill(); return; }
+    ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+    for (let k = 1; k < pts.length - 1; k++) {
+      const mx = (pts[k].x + pts[k + 1].x) / 2, my = (pts[k].y + pts[k + 1].y) / 2;
+      ctx.quadraticCurveTo(pts[k].x, pts[k].y, mx, my);
+    }
+    const last = pts[pts.length - 1];
+    ctx.lineTo(last.x, last.y);
+    ctx.stroke();
+  }
+  _annoPaint() {
+    const c = this._annoEl; if (!c) return;
+    const dpr = this._annoDPR(), ctx = c.getContext('2d');
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    if (this._annoBase) { try { ctx.drawImage(this._annoBase, 0, 0, this._annoW, this._annoH); } catch (e) {} }
+    const sel = this.state.annoSel;
+    (this._annoStrokes || []).forEach((st, i) => {
+      if (i === sel && !st.erase) {
+        // selection halo, drawn under the stroke itself
+        this._annoDraw(ctx, { color: 'rgba(255,255,255,.32)', width: (st.width || 2) + 9, erase: false, pts: st.pts });
+      }
+      this._annoDraw(ctx, st);
+    });
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  _annoStart(e) {
+    if (!this._annoEl) return;
+    e.preventDefault();
+    this._annoStrokes = this._annoStrokes || [];
+    this._annoStrokes.push({
+      color: this.state.penColor || '#ffffff',
+      width: this.state.annoErase ? 24 : 2.4,
+      erase: !!this.state.annoErase,
+      pts: [this._annoXY(e)],
+    });
+    this._annoDrawing = true;
+    try { this._annoEl.setPointerCapture(e.pointerId); } catch (x) {}
+    this._annoPaint();
+  }
+  _annoMove(e) {
+    if (!this._annoDrawing || !this._annoEl) return;
+    const st = (this._annoStrokes || [])[this._annoStrokes.length - 1]; if (!st) return;
+    const p = this._annoXY(e), prev = st.pts[st.pts.length - 1];
+    // drop near-duplicate points: less jitter, smoother curve
+    if (prev && Math.abs(p.x - prev.x) < 1.1 && Math.abs(p.y - prev.y) < 1.1) return;
+    st.pts.push(p);
+    if (this._annoRaf) return;
+    this._annoRaf = requestAnimationFrame(() => { this._annoRaf = null; this._annoPaint(); });
+  }
+  _annoEnd() {
+    if (!this._annoDrawing) return;
+    this._annoDrawing = false;
+    if (this._annoRaf) { cancelAnimationFrame(this._annoRaf); this._annoRaf = null; }
+    this._annoPaint();
+    if (this._annoEl) this._edSet('anno', this._annoEl.toDataURL('image/png'));
+  }
+  // Strokes stay selectable after you leave draw mode: they are kept as geometry
+  // (not just a flattened PNG), so a left click can hit-test them and delete one.
+  _segDist(px, py, a, b) {
+    const dx = b.x - a.x, dy = b.y - a.y, L = dx * dx + dy * dy;
+    let t = L ? ((px - a.x) * dx + (py - a.y) * dy) / L : 0;
+    t = Math.max(0, Math.min(1, t));
+    return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy));
+  }
+  _annoHit(x, y) {
+    const strokes = this._annoStrokes || [];
+    for (let i = strokes.length - 1; i >= 0; i--) {
+      const st = strokes[i]; if (st.erase) continue;
+      const pts = st.pts || []; const r = Math.max(9, (st.width || 2) * 2.2);
+      if (pts.length === 1) { if (Math.hypot(pts[0].x - x, pts[0].y - y) <= r) return i; continue; }
+      for (let k = 0; k < pts.length - 1; k++) if (this._segDist(x, y, pts[k], pts[k + 1]) <= r) return i;
+    }
+    return -1;
+  }
+  _annoPick(e) {
+    const c = this._annoEl; if (!c || !(this._annoStrokes || []).length) return;
+    if (this.state.annoOn) return;                       // drawing takes priority
+    // clicks inside the selection chip are the chip's own business — without this the
+    // wrapper handler cleared the selection before Delete could act on it
+    if (e.target && e.target.closest && e.target.closest('[data-anno-chip]')) return;
+    const b = c.getBoundingClientRect();
+    const x = e.clientX - b.left, y = e.clientY - b.top;
+    if (x < 0 || y < 0 || x > b.width || y > b.height) return;
+    const i = this._annoHit(x, y);
+    if (i < 0) { this._annoSelIdx = null; if (this.state.annoSel != null) this.setState({ annoSel: null }, () => this._annoPaint()); return; }
+    this._annoSelIdx = i;   // kept off state so Delete can't race a re-render
+    this.setState({ annoSel: i, annoSelAt: { x, y } }, () => this._annoPaint());
+  }
+  _annoDeleteSel() {
+    const i = this._annoSelIdx != null ? this._annoSelIdx : this.state.annoSel;
+    if (i == null || !this._annoStrokes || !this._annoStrokes[i]) return;
+    this._annoStrokes.splice(i, 1);
+    this._annoSelIdx = null;
+    this.setState({ annoSel: null }, () => {
+      this._annoPaint();
+      if (this._annoEl) this._edSet('anno', this._annoStrokes.length ? this._annoEl.toDataURL('image/png') : '');
+    });
+  }
+  _annoUndo() {
+    if (!this._annoStrokes || !this._annoStrokes.length) return;
+    this._annoStrokes.pop();
+    this._annoPaint();
+    if (this._annoEl) this._edSet('anno', this._annoEl.toDataURL('image/png'));
+  }
+  _annoClear() {
+    this._annoStrokes = []; this._annoBase = null; this._annoLegacy = false;
+    if (this.state.annoSel != null) this.setState({ annoSel: null });
+    this._annoPaint();
+    this._edSet('anno', '');
+  }
+  _annoSize() {
+    const c = this._annoEl, b = this._bodyEl; if (!c || !b) return;
+    const w = b.clientWidth, h = Math.max(b.scrollHeight, b.clientHeight, 150);
+    const dpr = this._annoDPR(), pw = Math.round(w * dpr), ph = Math.round(h * dpr);
+    if (c.width === pw && c.height === ph) return;
+    c.width = pw; c.height = ph;
+    c.style.width = w + 'px'; c.style.height = h + 'px';
+    this._annoW = w; this._annoH = h;
+    const data = this._annoLegacy ? (this.state.ed && this.state.ed.anno) : null;
+    if (data && !this._annoBase) {
+      const img = new Image();
+      img.onload = () => { this._annoBase = img; this._annoPaint(); };
+      img.src = data;
+    } else this._annoPaint();
+  }
+  _toggleAnno() {
+    const on = !this.state.annoOn;
+    this.setState({ annoOn: on });
+    // hide the text cursor while drawing — clicking the button focuses the body and
+    // left a caret blinking as though it were waiting for typing
+    const el = this._bodyEl;
+    if (el) { el.style.caretColor = on ? 'transparent' : ''; if (on) { try { el.blur(); } catch (e) {} } }
+    if (on) setTimeout(() => this._annoSize(), 0);
+  }
   _saveSel() { try { const s = window.getSelection(); if (s && s.rangeCount) { const r = s.getRangeAt(0), t = this._activeEditable || this._bodyEl; if (t && t.contains(r.commonAncestorContainer)) this._savedRange = r.cloneRange(); } } catch (e) {} }
   _restoreSel() { try { const t = this._activeEditable || this._bodyEl; if (t && this._savedRange) { t.focus(); const s = window.getSelection(); s.removeAllRanges(); s.addRange(this._savedRange); } } catch (e) {} }
   _edPicResizeStart(i, ev) { ev.preventDefault(); ev.stopPropagation(); const box = ev.currentTarget.parentElement; const parent = box.parentElement; if (!parent) return; const pw = parent.getBoundingClientRect().width; const left = box.getBoundingClientRect().left; const move = (e) => { const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX; const pct = Math.max(20, Math.min(100, Math.round((x - left) / pw * 100))); this._edPicWidth(i, pct); }; const up = () => { window.removeEventListener('mousemove', move); window.removeEventListener('mouseup', up); window.removeEventListener('touchmove', move); window.removeEventListener('touchend', up); }; window.addEventListener('mousemove', move); window.addEventListener('mouseup', up); window.addEventListener('touchmove', move, { passive: false }); window.addEventListener('touchend', up); }
-  _edPicWidth(i, val) { const w = Math.max(20, Math.min(100, parseInt(val, 10) || 60)); this.setState((s) => { const pics = s.ed.pics.slice(); pics[i] = { ...pics[i], w }; return { ed: { ...s.ed, pics } }; }); }
-  _skClear() { if (this._sketchEl) { const ctx = this._sketchEl.getContext('2d'); ctx.fillStyle = '#141414'; ctx.fillRect(0, 0, this._sketchEl.width, this._sketchEl.height); } }
-  _skAttach() { if (!this._sketchEl) return; const src = this._sketchEl.toDataURL('image/png'); this.setState((s) => ({ ed: { ...s.ed, pics: [...s.ed.pics, { src, cap: 'Sketch', w: 60 }], sketching: false } })); }
+  // Delta-based resize: drag the grip right to grow, left to shrink. The old handler
+  // measured an absolute position against a container that no longer sized the tile.
+  _edPicGrab(i, ev) {
+    ev.preventDefault(); ev.stopPropagation();
+    const startX = (ev.touches && ev.touches[0]) ? ev.touches[0].clientX : ev.clientX;
+    const pics = (this.state.ed && this.state.ed.pics) || [];
+    const startW = (pics[i] || {}).w || 32;
+    const row = ev.currentTarget && ev.currentTarget.closest ? ev.currentTarget.closest('[style*="flex-wrap"]') : null;
+    const rowW = row ? row.getBoundingClientRect().width : 600;
+    this.setState({ picResizing: i });   // reveals the % badge while dragging
+    const move = (e) => {
+      const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
+      const pct = startW + ((x - startX) / Math.max(200, rowW)) * 100;
+      this._edPicWidth(i, Math.max(20, Math.min(100, Math.round(pct))));
+    };
+    const up = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+      this.setState({ picResizing: null });
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  }
+  _edPicWidth(i, val) { const w = Math.max(18, Math.min(100, parseInt(val, 10) || 32)); this.setState((s) => { const pics = s.ed.pics.slice(); pics[i] = { ...pics[i], w }; return { ed: { ...s.ed, pics } }; }); }
+  _skClear() { this._skStrokes = []; this._skPaint(); }
+  _skAttach() { if (!this._sketchEl) return; const src = this._sketchEl.toDataURL('image/png'); this.setState((s) => ({ ed: { ...s.ed, pics: [...s.ed.pics, { src, cap: 'Sketch', w: 32 }], sketching: false } })); }
   _ytId(url) { const m = String(url || '').match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); return m ? m[1] : null; }
   _LUCID = { 25000: { target: 1250, maxDD: 1000, dll: 0 }, 50000: { target: 3000, maxDD: 2000, dll: 1200 }, 100000: { target: 6000, maxDD: 3000, dll: 2000 }, 150000: { target: 9000, maxDD: 4500, dll: 2700 } };
   _MK = {
@@ -1562,7 +2177,16 @@ class Component extends DCLogic {
   _setSetup(patch) { this.setState({ challengeSetup: { ...(this.state.challengeSetup || {}), ...patch } }); }
   _commitSetup() { const su = this.state.challengeSetup; if (!su) return; const id = Date.now(); const c = { id, token: 'C' + id, name: (su.name || 'Challenge').trim() || 'Challenge', market: su.market || 'Futures', size: su.size || 50000, phase: 'Eval 1' }; const list = [...(this.state.challenges || []), c]; this.setState({ challengeSetup: null }); this._saveChallenges(list, id); this._mirror(c); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
   _renameChallenge(id, name) { const list = (this.state.challenges || []).map((c) => c.id === id ? { ...c, name } : c); this._saveChallenges(list); }
-  _setChallengePhase(ph) { const id = this.state.activeChallengeId; const list = (this.state.challenges || []).map((c) => c.id === id ? { ...c, phase: ph } : c); this.setState({ acctPhase: ph, viewAcct: ph }); this._saveChallenges(list); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
+  _setChallengePhase(ph) {
+    const id = this.state.activeChallengeId;
+    // Switching to Funded by hand still has to start the payout clock — without a
+    // fundedAt the 21-day wait was skipped and the account read "payout eligible".
+    const list = (this.state.challenges || []).map((c) => c.id === id
+      ? { ...c, phase: ph, fundedAt: ph === 'Funded' ? (c.fundedAt || Date.now()) : c.fundedAt }
+      : c);
+    this.setState({ acctPhase: ph, viewAcct: ph });
+    this._saveChallenges(list); setTimeout(() => this._saveAccount(), 0); this.animateNumbers();
+  }
   _deleteChallenge(id) { const list = this.state.challenges || []; const removed = list.find((c) => c.id === id); const next = list.filter((c) => c.id !== id); let act = this.state.activeChallengeId; if (act === id) act = next.length ? next[0].id : null; this._saveChallenges(next, act); const c = next.find((x) => x.id === act); if (c) this._mirror(c); if (removed) { this.setState({ lastDeletedChal: removed }); clearTimeout(this._undoCT); this._undoCT = setTimeout(() => this.setState({ lastDeletedChal: null }), 7000); } setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
   _undoDeleteChallenge() { const d = this.state.lastDeletedChal; if (!d) return; clearTimeout(this._undoCT); const list = [...(this.state.challenges || []), d]; this._saveChallenges(list, d.id); this._mirror(d); this.setState({ lastDeletedChal: null }); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
   _cfgKey(ctx) { const c = ctx || this.state; return c.acctType === 'Prop' || c.type === 'Prop' ? 'Prop-' + (c.acctFirm || c.firm || 'Lucid') + '-' + (c.acctSize || c.size) + '-' + (c.acctPhase || c.phase) : (c.acctType || c.type); }
@@ -1642,7 +2266,9 @@ class Component extends DCLogic {
     const minDays = phase === 'Funded' ? (payoutCount > 0 ? 14 : 21) : 0;
     if (phase === 'Funded') eq -= withdrawn;
     const daysHeld = cycleStart ? (Math.floor((_sod(Date.now()) - _sod(cycleStart)) / 864e5) + 1) : 0;
-    const timeOk = phase !== 'Funded' || !cycleStart || daysHeld >= minDays;
+    // No funded date on record means the clock has not started — not that the wait
+    // is satisfied. Treating it as satisfied handed out instant payout eligibility.
+    const timeOk = phase !== 'Funded' ? true : (!!cycleStart && daysHeld >= minDays);
     const payoutReady = phase === 'Funded' && timeOk && eq > startBal;
     const payoutAvail = Math.max(0, eq - startBal);
     const tradingDays = Object.keys(byDay).length;
@@ -1682,7 +2308,16 @@ class Component extends DCLogic {
     const v = (clean === '' || clean === '-') ? 0 : parseInt(clean, 10);
     const ctx = this._viewCtx();
     const key = ctx.type === 'Prop' ? 'Prop-' + ctx.firm + '-' + ctx.size + '-' + ctx.phase : ctx.type;
-    const cfg = { ...(this.state.acctCfg || {}) }; cfg[key] = { ...(cfg[key] || {}), [field]: v };
+    const cfg = { ...(this.state.acctCfg || {}) };
+    const cur = { ...(cfg[key] || {}) };
+    // The goal is derived from the starting balance until it is set explicitly, so
+    // editing the balance used to drag the goal with it on every keystroke. Freeze
+    // whatever the goal reads right now, then it only changes when you change it.
+    if (field === 'start' && cur.goal == null) {
+      try { cur.goal = this._evalAccount(this.state.myTrades || [], ctx).goal; } catch (e) {}
+    }
+    cur[field] = v;
+    cfg[key] = cur;
     const drafts = { ...(this.state.ovDrafts || {}) }; drafts[field] = clean;
     this.setState({ acctCfg: cfg, ovDrafts: drafts }); this._saveAccount(cfg);
   }
@@ -1853,6 +2488,20 @@ class Component extends DCLogic {
     this.setState({ payouts: next });
     this._persist('phntm-payouts-v1', JSON.stringify(next));
   }
+  // Legacy funded challenges saved before the phase setter recorded a date: date
+  // them from their first funded trade so the payout clock has a real start.
+  _backfillFunded() {
+    const list = this.state.challenges || [];
+    const missing = list.filter((c) => c.phase === 'Funded' && !c.fundedAt);
+    if (!missing.length) return;
+    const trades = this.state.myTrades || [];
+    const next = list.map((c) => {
+      if (c.phase !== 'Funded' || c.fundedAt) return c;
+      const mine = trades.filter((t) => this._tradeTok(t.acct) === c.token).map((t) => t.ts);
+      return { ...c, fundedAt: mine.length ? Math.min.apply(null, mine) : Date.now() };
+    });
+    this._saveChallenges(next);
+  }
   _badgeDefs() {
     const P = this.state.payouts || [];
     const hist = this.state.challengeHistory || [];
@@ -1875,11 +2524,23 @@ class Component extends DCLogic {
       { id: 'clean', k: 'Unbreached', d: '40+ trades, never blown', on: trades.length >= 40 && breaches === 0, mark: '∅' },
     ];
   }
+  // Popups are for milestones earned *during this session*. On a fresh device the
+  // local store is empty at mount, so seeding there marked everything as "not yet
+  // earned" — then the cloud pull arrived and every existing badge looked new.
+  // Seeding is now a union (it can never shrink) and runs again once cloud data
+  // lands; nothing pops until a seed has happened with real data.
   _checkBadges(seedOnly) {
     const earned = this._badgeDefs().filter((b) => b.on);
-    let seen = [];
-    try { seen = JSON.parse(localStorage.getItem('phntm-badges-v1') || 'null') || (seedOnly ? null : []); } catch (e) {}
-    if (seen === null) { const ids = earned.map((b) => b.id); this._persist('phntm-badges-v1', JSON.stringify(ids)); return; }
+    let seen = null;
+    try { seen = JSON.parse(localStorage.getItem('phntm-badges-v1') || 'null'); } catch (e) {}
+    if (!Array.isArray(seen)) seen = null;
+    if (seedOnly || seen === null || !this._badgesReady) {
+      const ids = (seen || []).slice();
+      earned.forEach((b) => { if (ids.indexOf(b.id) < 0) ids.push(b.id); });
+      this._persist('phntm-badges-v1', JSON.stringify(ids));
+      this._badgesReady = true;
+      return;
+    }
     const fresh = earned.filter((b) => seen.indexOf(b.id) < 0);
     if (!fresh.length) return;
     this._persist('phntm-badges-v1', JSON.stringify(seen.concat(fresh.map((b) => b.id))));
@@ -2070,8 +2731,19 @@ class Component extends DCLogic {
     try {
       const C = window.PHNTM && window.PHNTM.cloud; if (!C) return;
       const client = await C.ready(); if (!client) return;            // offline → stay on local data
-      const user = await C.currentUser();
-      if (!user) { if (location.hash === '#welcome') return; window.location.href = 'PHNTM Login.dc.html'; return; }  // not signed in
+      // Wait for the persisted session to restore before deciding nobody is signed in,
+      // and never bounce more than once — otherwise the login page sends us back and
+      // the two pages ping-pong (the flicker loop on sign-in).
+      const sess = C.sessionReady ? await C.sessionReady(2200) : await C.currentUser();
+      if (!sess) {
+        if (location.hash === '#welcome') return;
+        let bounced = false; try { bounced = sessionStorage.getItem('phntm-bounce') === '1'; } catch (e) {}
+        if (bounced) return;
+        try { sessionStorage.setItem('phntm-bounce', '1'); } catch (e) {}
+        window.location.replace('PHNTM Login.dc.html');
+        return;
+      }
+      try { sessionStorage.removeItem('phntm-bounce'); } catch (e) {}
       const data = await C.loadAll(); if (!data) return;
       const keys = Object.keys(data);
       if (!keys.length) { await this._migrateLocalToCloud(); return; }     // fresh cloud → push this device's data up
@@ -2083,10 +2755,10 @@ class Component extends DCLogic {
           if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
         } catch (e) {}
       });
-      if (changed && !sessionStorage.getItem('phntm-cloud-pulled')) {
-        try { sessionStorage.setItem('phntm-cloud-pulled', '1'); } catch (e) {}
-        window.location.reload();
-      }
+      if (changed) { this._loadLocal(); this.animateNumbers(); }   // refresh in place — no page reload
+      // re-seed against the data that just arrived, so synced-in milestones don't pop
+      this._badgesReady = false;
+      setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 60);
     } catch (e) { console.warn('[PHNTM] cloud sync error', e); }
   }
   async _migrateLocalToCloud() {
@@ -2097,25 +2769,16 @@ class Component extends DCLogic {
       if (rawv != null) { try { await C.set(keys[i], rawv); } catch (e) {} }
     }
   }
-  componentDidMount() {
-    // A ticking seconds clock meant setState every second, which re-ran the whole
-    // renderVals pass (every trade scan, the equity JSON, all derived stats) 60×
-    // a minute on every tab. Minute precision, checked twice a minute, is plenty
-    // for a footer clock and a day-based payout rule.
-    const tick = () => {
-      const d = new Date();
-      this.setState({ clock: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }) });
-      try { this._checkPayout(); } catch (e) {}
-    };
-    tick(); this._ck = setInterval(tick, 30000);
-    try { if (sessionStorage.getItem('phntm-fresh') === '1') { sessionStorage.removeItem('phntm-fresh'); ['phntm-my-trades-v1','phntm-challenges-v1','phntm-notes-v1','phntm-note-cats-v1','phntm-rules-v1','phntm-routines-v1','phntm-history-v1','phntm-body-v1','phntm-sleep-v1','phntm-days-v1','phntm-account-v2','phntm-food-v2'].forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} }); } } catch (e) {}
+  // Reads every saved key into state. Called on mount, and again after a cloud
+  // pull so fresh data lands without a full page reload (which replayed the intro).
+  _loadLocal() {
     let foods = null; try { foods = JSON.parse(localStorage.getItem('phntm-food-v2') || 'null'); } catch (e) {}
     this.setState({ foods: Array.isArray(foods) ? foods : [] });
     let usuals = null; try { usuals = JSON.parse(localStorage.getItem('phntm-usuals-v1') || 'null'); } catch (e) {}
     this.setState({ usuals: Array.isArray(usuals) ? usuals : [] });
     let pouts = null; try { pouts = JSON.parse(localStorage.getItem('phntm-payouts-v1') || 'null'); } catch (e) {}
     this.setState({ payouts: Array.isArray(pouts) ? pouts : [] });
-    setTimeout(() => { this._backfillPayouts(); setTimeout(() => this._checkBadges(true), 0); }, 0);
+    setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 0);
     let mts = null; try { mts = JSON.parse(localStorage.getItem('phntm-my-trades-v1') || 'null'); } catch (e) {}
     if (Array.isArray(mts)) mts = mts.map((t) => (t.acct ? t : { ...t, acct: 'Live' })); // legacy trades → Live bucket
     if (!Array.isArray(mts)) { mts = []; } // new accounts start empty — no demo trades
@@ -2146,6 +2809,20 @@ class Component extends DCLogic {
     setTimeout(() => this._syncToday(), 0);
     let bd = null; try { bd = JSON.parse(localStorage.getItem('phntm-body-v1') || 'null'); } catch (e) {}
     if (bd) this.setState({ sex: bd.sex || 'male', htCm: bd.htCm || 178, wtKg: bd.wtKg || 78, goal: bd.goal || 'Maintain' });
+  }
+  componentDidMount() {
+    // A ticking seconds clock meant setState every second, which re-ran the whole
+    // renderVals pass (every trade scan, the equity JSON, all derived stats) 60×
+    // a minute on every tab. Minute precision, checked twice a minute, is plenty
+    // for a footer clock and a day-based payout rule.
+    const tick = () => {
+      const d = new Date();
+      this.setState({ clock: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', timeZoneName: 'short' }) });
+      try { this._checkPayout(); } catch (e) {}
+    };
+    tick(); this._ck = setInterval(tick, 30000);
+    try { if (sessionStorage.getItem('phntm-fresh') === '1') { sessionStorage.removeItem('phntm-fresh'); ['phntm-my-trades-v1','phntm-challenges-v1','phntm-notes-v1','phntm-note-cats-v1','phntm-rules-v1','phntm-routines-v1','phntm-history-v1','phntm-body-v1','phntm-sleep-v1','phntm-days-v1','phntm-account-v2','phntm-food-v2'].forEach((k) => { try { localStorage.removeItem(k); } catch (e) {} }); } } catch (e) {}
+    this._loadLocal();
     const h = new Date().getHours();
     this.setState({ meal: h < 11 ? 'Breakfast' : h < 15 ? 'Lunch' : h < 21 ? 'Dinner' : 'Snacks' });
     setTimeout(() => this.animateTab(this.state.tab), 1900); // count up once, after the intro veil lifts
@@ -2214,24 +2891,28 @@ class Component extends DCLogic {
     // Phone navigation: four everyday tabs in a bottom bar, the rest behind More.
     const MOB_MAIN = ['Overview', 'Challenges', 'Trades', 'Health'];
     const MOB_MORE = ['Achievements', 'Routine', 'Notes'];
-    const mobGlyph = { Overview: '◇', Challenges: '◆', Trades: '⇅', Health: '❤', Achievements: '★', Routine: '✓', Notes: '✎' };
+    // No icons: the wordmark is the brand, so the bar is set type — uppercase
+    // Archivo with a hairline rule marking the active tab.
+    const mobLabel = { Overview: 'Home', Challenges: 'Challenge', Trades: 'Trades', Health: 'Health', Achievements: 'Fame', Routine: 'Routine', Notes: 'Notes' };
+    const tabBase = 'position:relative;display:flex;align-items:center;justify-content:center;min-height:56px;padding:10px 2px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color .35s cubic-bezier(.32,.72,0,1);';
     const mobTabs = MOB_MAIN.map((t) => {
       const on = this.state.tab === t;
       return {
-        label: t, glyph: mobGlyph[t],
-        st: 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:56px;padding:8px 4px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:10.5px;letter-spacing:.02em;transition:color .35s cubic-bezier(.32,.72,0,1);' + (on ? 'color:#fff' : 'color:#7a7a7a'),
-        glyphSt: 'font-size:15px;line-height:1;transition:transform .4s cubic-bezier(.32,.72,0,1);' + (on ? 'transform:translateY(-1px)' : ''),
+        label: mobLabel[t],
+        st: tabBase + (on ? 'color:#fff' : 'color:#6e6e6e'),
+        ruleSt: 'position:absolute;top:0;left:22%;right:22%;height:1px;background:#fff;transition:opacity .35s cubic-bezier(.32,.72,0,1);opacity:' + (on ? '1' : '0'),
         pick: () => { if (t === this.state.tab) return; this.setState({ tab: t, wipeN: (this.state.wipeN || 0) + 1, moreOpen: false }); this.animateTab(t); },
       };
     });
     const moreActive = MOB_MORE.indexOf(this.state.tab) >= 0;
     const mobMore = {
-      glyph: '⋯', label: 'More',
-      st: 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:56px;padding:8px 4px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:10.5px;transition:color .35s cubic-bezier(.32,.72,0,1);' + (moreActive || this.state.moreOpen ? 'color:#fff' : 'color:#7a7a7a'),
+      label: 'More',
+      st: tabBase + (moreActive || this.state.moreOpen ? 'color:#fff' : 'color:#6e6e6e'),
+      ruleSt: 'position:absolute;top:0;left:22%;right:22%;height:1px;background:#fff;transition:opacity .35s cubic-bezier(.32,.72,0,1);opacity:' + (moreActive ? '1' : '0'),
       open: () => this.setState({ moreOpen: !this.state.moreOpen }),
     };
     const moreItems = MOB_MORE.map((t) => ({
-      label: t, glyph: mobGlyph[t],
+      label: t,
       st: 'display:flex;align-items:center;gap:14px;width:100%;box-sizing:border-box;min-height:52px;padding:14px 16px;border:none;border-radius:14px;background:' + (this.state.tab === t ? 'rgba(255,255,255,.1)' : 'none') + ';color:' + (this.state.tab === t ? '#fff' : '#c4c4c4') + ';font-family:Archivo,sans-serif;font-size:15px;text-align:left;cursor:pointer;transition:background .35s cubic-bezier(.32,.72,0,1)',
       pick: () => { this.setState({ tab: t, wipeN: (this.state.wipeN || 0) + 1, moreOpen: false }); this.animateTab(t); },
     }));
@@ -2785,7 +3466,7 @@ class Component extends DCLogic {
           st: 'font-family:Archivo,sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;cursor:pointer;transition:background .3s,color .3s;' + (c === (ed.cat || '') ? 'background:#fff;color:#000' : 'background:rgba(255,255,255,.06);color:#9a9a9a'),
           pick: () => this._edSet('cat', c) }));
         const oyt = ed.open ? this._ytId(ed.source) : null;
-        const swatch = (col, cmd) => ({ col, st: 'width:20px;height:20px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:' + col, apply: () => this._edExec(cmd, col) });
+        const swatch = (col, cmd) => ({ col, st: 'width:20px;height:20px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:' + col, apply: () => this._edTextColor(col) });
         return {
           edOpen: !!ed.open,
           noteEditorBg: noteEditorBg, noteHeaderBg: noteHeaderBg,
@@ -2795,19 +3476,32 @@ class Component extends DCLogic {
           setEdCat: (e) => this._edSet('cat', e.target.value),
           setEdSource: (e) => this._edSet('source', e.target.value),
           catPicks, hasCatPicks: catPicks.length > 0,
-          bodyRef: (el) => { this._bodyEl = el; if (el) el.onfocus = () => { this._activeEditable = el; }; if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
-          lessonRef: (el) => { this._lessonEl = el; if (el) el.onfocus = () => { this._activeEditable = el; }; if (el && this._lessonMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.lessonHtml) || ''); this._lessonMountedFor = this._edKey; } },
+          bodyRef: (el) => { this._bodyEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
+          lessonRef: (el) => { this._lessonEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; } if (el && this._lessonMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.lessonHtml) || ''); this._lessonMountedFor = this._edKey; } },
           syncFmt: () => this._syncFmt(),
+          edPaste: (e) => this._edPaste(e),
           edImgTap: (e) => this._edImgTap(e),
           edImgDown: (e) => this._edImgDown(e),
           edBodyClick: (e) => this._edBodyClick(e),
-          bodyWrapRef: (el) => { this._bodyWrap = el; },
+          bodyWrapRef: (el) => { this._bodyWrap = el; if (el) el.onclick = (ev) => this._annoPick(ev); },
           imgToolShow: !!(this.state.imgTool && this.state.imgTool.show && this._selImgEl && this._bodyEl && this._bodyEl.contains(this._selImgEl)),
-          imgToolStyle: (() => { const t = this.state.imgTool || {}; return 'position:absolute;z-index:5;top:' + ((t.top || 0) + 6) + 'px;left:' + ((t.left || 0) - 6) + 'px;transform:translateX(-100%);display:flex;gap:3px;background:rgba(10,10,11,.94);border:1px solid rgba(255,255,255,.18);border-radius:9px;padding:3px;box-shadow:0 6px 20px rgba(0,0,0,.5)'; })(),
+          imgToolStyle: (() => { const t = this.state.imgTool || {}; return 'position:absolute;z-index:5;top:' + ((t.top || 0) + 7) + 'px;left:' + ((t.left || 0) - 7) + 'px;transform:translateX(-100%);display:flex;align-items:center;gap:4px;background:rgba(10,10,11,.9);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:3px 4px;box-shadow:0 6px 20px rgba(0,0,0,.5);backdrop-filter:blur(6px)'; })(),
           imgMoveUp: () => this._edImgMoveInText(-1),
           imgMoveDown: () => this._edImgMoveInText(1),
           imgRemove: () => this._edImgRemoveInText(),
-          tbDown: (e) => e.preventDefault(),
+          imgGrab: (e) => this._edImgGrab(e),
+          imgPct: (() => { const el = this._selImgEl; if (!el) return ''; const w = el.style.width || ''; if (/%$/.test(w)) return Math.round(parseFloat(w)) + '%'; const host = this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 0; return host ? Math.round((el.getBoundingClientRect().width / host) * 100) + '%' : ''; })(),
+          imgPctStyle: 'font-family:"JetBrains Mono",monospace;font-size:10px;color:#9a9a9a;padding:0 3px;align-self:center;transition:opacity .25s;opacity:' + (this.state.imgResizing ? '1' : '.55'),
+          imgSizes: [['S', '40%', 'Small'], ['M', '66%', 'Medium'], ['L', '100%', 'Full width']].map(([label, pct, title]) => {
+            const cur = this._selImgEl ? (this._selImgEl.style.width || '100%') : '';
+            const on = cur === pct;
+            return {
+              label, title,
+              st: 'min-width:22px;height:20px;padding:0 5px;border:none;border-radius:6px;cursor:pointer;font-family:Archivo,sans-serif;font-size:11px;font-weight:500;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .25s,color .25s;' + (on ? 'background:#fff;color:#000' : 'background:rgba(255,255,255,.08);color:#eaeaea'),
+              apply: () => this._edImgSize(pct),
+            };
+          }),
+          tbDown: (e) => { e.preventDefault(); this._saveSel(); },
           saveSel: () => this._saveSel(),
           hiPick: (e) => { this._restoreSel(); this._edHighlight(e.target.value); },
           colPick: (e) => { this._restoreSel(); this._edExec('foreColor', e.target.value); },
@@ -2815,20 +3509,23 @@ class Component extends DCLogic {
           setPenColor: (e) => this.setState({ penColor: e.target.value }),
           blockBtns: [['H1', 'h1'], ['H2', 'h2'], ['Body', 'p']].map(([label, tag]) => { const cur = (this.state.fmtActive || {}).block; const on = cur === tag || (tag === 'p' && (cur === '' || cur === 'div')); return { label, apply: () => this._edBlock(tag), st: 'height:32px;padding:0 11px;border:none;border-radius:8px;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;transition:background .3s,color .3s;background:' + (on ? '#fff' : 'rgba(255,255,255,.08)') + ';color:' + (on ? '#000' : '#c8c8c8') }; }),
           setFontSize: (e) => { this._restoreSel(); this._edFontSize(e.target.value); try { e.target.selectedIndex = 0; } catch (x) {} },
-          fmtBtns: [['B', 'bold', '700'], ['U', 'underline', '400'], ['• List', 'insertUnorderedList', '400']].map(([label, cmd, fw]) => { const on = (this.state.fmtActive || {})[cmd]; return {
+          fmtBtns: [['B', 'bold', '700'], ['U', 'underline', '400'], ['• List', 'insertUnorderedList', '400']].map(([label, cmd, fw]) => { const on = cmd !== 'insertUnorderedList' && (this.state.fmtActive || {})[cmd]; return {
             label, fw, apply: () => this._edExec(cmd),
-            st: 'min-width:34px;height:32px;padding:0 10px;border:none;border-radius:8px;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;font-weight:' + fw + ';transition:background .3s,color .3s;' + (on ? 'background:#fff;color:#000;animation:fmtBlink 1.1s ease-in-out infinite' : 'background:rgba(255,255,255,.06);color:#fff'),
+            st: 'min-width:34px;height:32px;padding:0 10px;border:none;border-radius:8px;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;font-weight:' + fw + ';transition:background .3s,color .3s;' + (on ? 'background:#fff;color:#000' : 'background:rgba(255,255,255,.06);color:#fff'),
           }; }),
           clearHi: () => this._edClearHi(),
-          hiSwatches: ['#e5c07b', '#5fbf83', '#e07ba8', '#5f97d1'].map((c) => ({ col: c, st: 'width:20px;height:20px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:' + c, apply: () => this._edHighlight(c) })),
-          colSwatches: [['#ffffff', 'foreColor'], ['#e5c07b', 'foreColor'], ['#e05a5a', 'foreColor'], ['#5fbf83', 'foreColor']].map(([c, cmd]) => swatch(c, cmd)),
+          hiSwatches: ['#ffffff', '#e5c07b', '#7fc79a', '#8fb3d9', '#e09aa2'].map((c) => ({ col: c, st: 'width:20px;height:20px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:' + c, apply: () => this._edHighlight(c) })),
+          colSwatches: [['#ffffff', 'foreColor'], ['#e5c07b', 'foreColor'], ['#7fd1a0', 'foreColor'], ['#9cc4e8', 'foreColor'], ['#f08a8a', 'foreColor']].map(([c, cmd]) => swatch(c, cmd)),
           edPics: (ed.pics || []).map((p, i) => ({
             img: React.createElement('img', { src: p.src, draggable: false, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' } }),
             cap: p.cap || '', setCap: (e) => this._edPicCap(i, e.target.value),
-            w: p.w || 60, setW: (e) => this._edPicWidth(i, e.target.value), resizeStart: (e) => this._edPicResizeStart(i, e),
+            w: p.w || 32, setW: (e) => this._edPicWidth(i, e.target.value), resizeStart: (e) => this._edPicGrab(i, e),
+            itemStyle: 'display:flex;flex-direction:column;gap:8px;flex:0 0 calc(' + Math.max(18, Math.min(100, p.w || 32)) + '% - 16px);min-width:104px',
+            wLabel: Math.max(18, Math.min(100, p.w || 32)) + '%',
+            sizeBadge: 'position:absolute;bottom:7px;left:8px;z-index:3;font-family:"JetBrains Mono",monospace;font-size:9.5px;letter-spacing:.08em;color:#fff;background:rgba(0,0,0,.62);padding:3px 7px;border-radius:99px;pointer-events:none;transition:opacity .3s;opacity:' + (this.state.picResizing === i ? '1' : '0'),
             boxStyle: 'position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.14);width:' + (p.w || 60) + '%;transition:width .15s ease',
             wrapStyle: 'position:relative;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:1px solid ' + (this.state.dragOverPic === i && this.state.dragPic !== i ? '#fff' : 'rgba(255,255,255,.14)') + ';cursor:grab;transition:opacity .18s,border-color .18s;opacity:' + (this.state.dragPic === i ? '.4' : '1'),
-            dragStart: (e) => { try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)); } catch (_) {} this.setState({ dragPic: i, dragOverPic: i }); },
+            dragStart: (e) => { try { e.dataTransfer.effectAllowed = 'copyMove'; e.dataTransfer.setData('text/plain', String(i)); e.dataTransfer.setData('text/phntm-image', p.src); e.dataTransfer.setData('text/phntm-pic-index', String(i)); } catch (_) {} this.setState({ dragPic: i, dragOverPic: i }); },
             dragOver: (e) => { e.preventDefault(); try { e.dataTransfer.dropEffect = 'move'; } catch (_) {} if (this.state.dragOverPic !== i) this.setState({ dragOverPic: i }); },
             drop: (e) => { e.preventDefault(); this._edPicMove(this.state.dragPic, i); this.setState({ dragPic: null, dragOverPic: null }); },
             dragEnd: () => this.setState({ dragPic: null, dragOverPic: null }),
@@ -2845,18 +3542,28 @@ class Component extends DCLogic {
           notEdDelConfirm: !this.state.edDelConfirm,
           canDeleteEditor: !!ed.id,
           sketching: !!ed.sketching,
-          openSketch: () => this._edSet('sketching', true),
-          closeSketch: () => this._edSet('sketching', false),
-          sketchRef: (el) => { if (el && this._sketchEl !== el) { this._sketchEl = el; const ctx = el.getContext('2d'); ctx.fillStyle = '#141414'; ctx.fillRect(0, 0, el.width, el.height); } },
+          openSketch: () => this._setSketching(true),
+          closeSketch: () => this._setSketching(false),
+          sketchRef: (el) => { if (el && this._sketchEl !== el) { this._sketchEl = el; this._skStrokes = this._skStrokes || []; setTimeout(() => this._skFit(), 0); } },
           skStart: (e) => this._skStart(e), skMove: (e) => this._skMove(e), skEnd: () => this._skEnd(),
           skClear: () => this._skClear(), skAttach: () => this._skAttach(),
+          skUndo: () => this._skUndo(),
+          skErase: !!this.state.skErase,
+          toggleSkErase: () => this.setState({ skErase: !this.state.skErase }),
+          skEraseBtnStyle: 'height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);border-radius:8px;cursor:pointer;font-size:12px;transition:background .3s,color .3s;background:' + (this.state.skErase ? '#fff' : 'none') + ';color:' + (this.state.skErase ? '#000' : '#c8c8c8'),
           annoOn: !!this.state.annoOn, toggleAnno: () => this._toggleAnno(),
           annoErase: !!this.state.annoErase, toggleErase: () => this.setState({ annoErase: !this.state.annoErase }),
           eraseBtnStyle: 'height:30px;padding:0 12px;border:1px solid rgba(255,255,255,.2);border-radius:8px;cursor:pointer;font-size:12px;transition:background .2s,color .2s;background:' + (this.state.annoErase ? '#fff' : 'none') + ';color:' + (this.state.annoErase ? '#000' : '#9a9a9a'),
           annoStart: (e) => this._annoStart(e), annoMove: (e) => this._annoMove(e), annoEnd: () => this._annoEnd(), annoClear: () => this._annoClear(),
+          annoUndo: () => this._annoUndo(),
+          annoSelOpen: this.state.annoSel != null,
+          annoDeleteSel: () => this._annoDeleteSel(),
+          annoDeselect: () => this.setState({ annoSel: null }, () => this._annoPaint()),
+          annoSelStyle: (() => { const a = this.state.annoSelAt || { x: 0, y: 0 }; return 'position:absolute;z-index:6;left:' + Math.round(a.x) + 'px;top:' + Math.round(a.y + 14) + 'px;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;background:linear-gradient(180deg,#1c1c1e,#121213);border:1px solid rgba(255,255,255,.16);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.55);animation:popIn .22s cubic-bezier(.32,.72,0,1) both'; })(),
+          canAnnoUndo: !!(this._annoStrokes && this._annoStrokes.length),
           annoRef: (el) => { if (el && this._annoEl !== el) { this._annoEl = el; setTimeout(() => this._annoSize(), 0); } },
           annoCanvasStyle: 'position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;' + (this.state.annoOn ? 'pointer-events:auto;cursor:crosshair' : 'pointer-events:none'),
-          penSwatches: ['#ffffff', '#e05a5a', '#7aa2c4', '#e5c07b'].map((c) => ({
+          penSwatches: ['#ffffff', '#e5c07b', '#7fd1a0', '#9cc4e8', '#f08a8a'].map((c) => ({
             st: 'width:22px;height:22px;border-radius:50%;cursor:pointer;background:' + c + ';border:2px solid ' + (this.state.penColor === c ? '#fff' : 'transparent') + ';box-shadow:0 0 0 1px rgba(255,255,255,.2)',
             pick: () => this.setState({ penColor: c }),
           })),
