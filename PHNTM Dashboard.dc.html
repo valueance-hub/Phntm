@@ -3459,14 +3459,14 @@ class Component extends DCLogic {
     const acctScan = !this.state.scanN ? null : rc('div', {
       key: 'scan' + this.state.scanN,
       style: {
-        position: 'fixed', inset: 0, z-index: 191, pointerEvents: 'none',
+        position: 'fixed', inset: 0, zIndex: 191, pointerEvents: 'none',
         background: '#2A2A2A', animation: 'tabVeil .46s cubic-bezier(.32,.72,0,1) both',
       },
     });
     const tabWipe = !this.state.wipeN ? null : rc('div', {
       key: 'wipe' + this.state.wipeN,
       style: {
-        position: 'fixed', inset: 0, z-index: 190, pointerEvents: 'none',
+        position: 'fixed', inset: 0, zIndex: 190, pointerEvents: 'none',
         background: '#2A2A2A', animation: 'tabVeil .46s cubic-bezier(.32,.72,0,1) both',
       },
     });
