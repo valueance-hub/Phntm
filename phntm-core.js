@@ -75,7 +75,7 @@
           const yy = y(v);
           ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(W - padR, yy); ctx.stroke();
-          ctx.fillStyle = '#8a8a8a'; ctx.fillText(kLabel(v), padL - 10, yy);
+          ctx.fillStyle = '#9c9c9c'; ctx.fillText(kLabel(v), padL - 10, yy);
         }
         // GOAL / FAIL levels (prop only)
         const level = (v, col, line, label) => { if (v > yMax || v < yMin) return; const yy = y(v); ctx.strokeStyle = line; ctx.setLineDash([4, 6]); ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(W - padR, yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.font = '600 ' + mono(9); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(label, W - padR, yy - 5); ctx.textBaseline = 'middle'; };
@@ -83,7 +83,7 @@
         if (!isLive) { level(GOAL, 'rgba(95,191,131,.95)', 'rgba(95,191,131,.3)', (this.getAttribute('goallabel') || 'TARGET') + (metGoal ? '  ✓ MET' : '')); level(FAIL, 'rgba(224,160,90,.95)', 'rgba(224,160,90,.3)', (this.getAttribute('faillabel') || 'LIMIT')); }
 
         // axis titles
-        ctx.fillStyle = '#7a7a7a'; ctx.font = mono(8.5); ctx.textAlign = 'left';
+        ctx.fillStyle = '#949494'; ctx.font = mono(8.5); ctx.textAlign = 'left';
         ctx.textAlign = 'right'; ctx.fillText(TZ, W - padR, botY + 32);
 
         const p = this._p;
@@ -105,12 +105,12 @@
           ctx.font = mono(9); ctx.textBaseline = 'alphabetic';
           const dayKey = (ts) => { const d = new Date(ts); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); };
           if (dayKey(PTS[0].ts) === dayKey(PTS[n - 1].ts)) {
-            ctx.fillStyle = '#8a8a8a'; ctx.textAlign = 'left'; ctx.fillText(tLabel(PTS[0].ts), x0, botY + 18);
+            ctx.fillStyle = '#9c9c9c'; ctx.textAlign = 'left'; ctx.fillText(tLabel(PTS[0].ts), x0, botY + 18);
             ctx.textAlign = 'right'; ctx.fillText(tLabel(PTS[n - 1].ts), x0 + plotW, botY + 18);
-            ctx.fillStyle = '#7a7a7a'; ctx.textAlign = 'center'; ctx.fillText(dLabel(PTS[0].ts), x0 + plotW / 2, botY + 18);
+            ctx.fillStyle = '#949494'; ctx.textAlign = 'center'; ctx.fillText(dLabel(PTS[0].ts), x0 + plotW / 2, botY + 18);
           } else {
             let prev = null;
-            for (let i = 0; i < n; i++) { const k = dayKey(PTS[i].ts); if (k === prev) continue; prev = k; const xx = x(i); ctx.strokeStyle = 'rgba(255,255,255,.04)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xx, topY); ctx.lineTo(xx, botY); ctx.stroke(); ctx.fillStyle = '#8a8a8a'; ctx.textAlign = i === 0 ? 'left' : (i === n - 1 ? 'right' : 'center'); ctx.fillText(dLabel(PTS[i].ts), xx, botY + 18); }
+            for (let i = 0; i < n; i++) { const k = dayKey(PTS[i].ts); if (k === prev) continue; prev = k; const xx = x(i); ctx.strokeStyle = 'rgba(255,255,255,.04)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xx, topY); ctx.lineTo(xx, botY); ctx.stroke(); ctx.fillStyle = '#9c9c9c'; ctx.textAlign = i === 0 ? 'left' : (i === n - 1 ? 'right' : 'center'); ctx.fillText(dLabel(PTS[i].ts), xx, botY + 18); }
           }
           ctx.textBaseline = 'middle';
 
