@@ -441,7 +441,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <a href="#" onClick="{{ goTrades }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#a0a0a0;cursor:pointer;transition:color .3s,gap .3s" style-hover="color:#fff;gap:14px">View all <span>→</span></a>
     </div>
     <div data-m="rowhead" style="display:grid;grid-template-columns:110px 90px 1fr 130px 110px 90px;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
-      <span>Symbol</span><span>Side</span><span>Setup</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span>
+      <span>Symbol</span><span>Side</span><span>Account</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span>
     </div>
     <sc-if value="{{ noTrades }}" hint-placeholder-val="{{ false }}">
       <div style="padding:26px 0;font-size:14px;color:#9c9c9c">No trades on record. Log one to begin.</div>
@@ -882,7 +882,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 
   <section data-m="pad" style="position:relative;z-index:1;padding:40px 48px 72px">
     <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;padding:0 4px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
-      <span>Symbol</span><span>Date</span><span>Side</span><span>Setup</span><span>R</span><span>P&amp;L</span><span></span>
+      <span>Symbol</span><span>Date</span><span>Side</span><span>Account</span><span>R</span><span>P&amp;L</span><span></span>
     </div>
     <div style="display:flex;flex-direction:column">
       <sc-for list="{{ btRows }}" as="t" hint-placeholder-count="5">
@@ -1650,7 +1650,17 @@ class Component extends DCLogic {
   _renameRoutine(id, name) { this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, name } : r)); }
   _saveNoteCats(list) { this.setState({ noteCats: list }); this._persist('phntm-note-cats-v1', JSON.stringify(list)); }
   _addNoteCat(name) { const n = (name || '').trim(); if (!n) return; const cur = this.state.noteCats || []; if (cur.includes(n)) return; this._saveNoteCats([...cur, n]); }
-  _removeNoteCat(name) { this._saveNoteCats((this.state.noteCats || []).filter((c) => c !== name)); if (this.state.noteFilter === name) this.setState({ noteFilter: 'All' }); }
+  _removeNoteCat(name) {
+    // Removing a category must also clear it from the notes that carried it —
+    // otherwise the tag keeps rendering and those notes are orphaned under a
+    // category no filter can reach.
+    this._saveNoteCats((this.state.noteCats || []).filter((c) => c !== name));
+    const touched = (this.state.notes || []).some((n) => (n.category || '') === name);
+    if (touched) this._saveNotes((this.state.notes || []).map((n) => (n.category || '') === name ? { ...n, category: '' } : n));
+    if (this.state.noteFilter === name) this.setState({ noteFilter: 'All' });
+    // and if the open editor was using it, drop the stale selection too
+    if (this.state.ed && (this.state.ed.cat || '') === name) this.setState({ ed: { ...this.state.ed, cat: '' } });
+  }
   _saveNotes(list) { this.setState({ notes: list }); this._persist('phntm-notes-v1', JSON.stringify(list)); }
   _openEditor(note) {
     this._edKey = Date.now();
@@ -2669,7 +2679,13 @@ class Component extends DCLogic {
   _addRule() { const n = (this.state.newRule || '').trim(); if (!n) return; this._saveRules([...(this.state.tradeRules || []), n]); this.setState({ newRule: '' }); }
   _removeRule(i) { const l = [...(this.state.tradeRules || [])]; l.splice(i, 1); const ch = { ...(this.state.draftChecks || {}) }; delete ch[i]; this._saveRules(l); this.setState({ draftChecks: ch }); }
   _toggleRuleCheck(i) { this.setState((s) => ({ draftChecks: { ...(s.draftChecks || {}), [i]: !((s.draftChecks || {})[i]) } })); }
-  _editTrade(t) { this.setState({ editTradeId: t.id, panelOpen: true, acctMenuOpen: false, fBtDate: t.btDate || '', btDateErr: false, fSym: t.sym, side: t.side || 'Long', setup: t.setup || 'Sweep + FVG', session: t.session || 'NY', fPnl: String(t.pnl != null ? t.pnl : ''), fRR: t.r != null ? String(t.r) : '', fNotes: t.notes || '', draftPics: (t.pics || []).map((p) => typeof p === 'string' ? { src: p, cap: '' } : p), fEntry: '', fStop: '', fExit: '', fAcct: this._acctToPick(t.acct) }); }
+  _editTrade(t) {
+    // rebuild the checkbox state by matching saved labels against the current rules
+    const rules = this.state.tradeRules || [];
+    const saved = Array.isArray(t.rulesChecked) ? t.rulesChecked : null;
+    const checks = {};
+    if (saved) rules.forEach((label, i) => { if (saved.includes(label)) checks[i] = true; });
+    this.setState({ draftChecks: checks, editTradeId: t.id, panelOpen: true, acctMenuOpen: false, fBtDate: t.btDate || '', btDateErr: false, fSym: t.sym, side: t.side || 'Long', setup: t.setup || 'Sweep + FVG', session: t.session || 'NY', fPnl: String(t.pnl != null ? t.pnl : ''), fRR: t.r != null ? String(t.r) : '', fNotes: t.notes || '', draftPics: (t.pics || []).map((p) => typeof p === 'string' ? { src: p, cap: '' } : p), fEntry: '', fStop: '', fExit: '', fAcct: this._acctToPick(t.acct) }); }
   _setActCfgStr(field, val) {
     const ctx = this._actCtx();
     const key = ctx.type === 'Prop' ? 'Prop-' + ctx.firm + '-' + ctx.size + '-' + ctx.phase : ctx.type;
@@ -3562,7 +3578,7 @@ class Component extends DCLogic {
     const fmt$ = (v) => (Math.round(v) === 0 ? '$' : (v < 0 ? '-$' : '+$')) + Math.abs(Math.round(v)).toLocaleString();
     const mkRow = (t) => ({
       sym: t.sym, side: t.side,
-      setup: [t.setup, t.session].filter(Boolean).join(' · ') + (t.pics && t.pics.length ? ' · ' + t.pics.length + ' pic' + (t.pics.length > 1 ? 's' : '') : ''),
+      setup: (t.pics && t.pics.length ? t.pics.length + ' pic' + (t.pics.length > 1 ? 's' : '') : ''),
       time: fmtT(t.ts), pnl: fmt$(t.pnl), r: t.r ? ((t.r > 0 ? '+' : '') + t.r.toFixed(1) + 'R') : '',
       pnlStyle: t.pnl >= 0 ? win : loss, rStyle: t.pnl >= 0 ? win : loss,
       ruleDots: (function () { var total = t.rulesTotal || 0, f = t.rulesFollowed || 0, a = []; for (var i = 0; i < total; i++) a.push('width:6px;height:6px;border-radius:50%;flex:none;background:' + (i < f ? '#fff' : 'rgba(255,255,255,.18)')); return a; })(),
@@ -4298,7 +4314,7 @@ class Component extends DCLogic {
           }),
         };
       })(),
-      allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = row.setup + '  \u00b7  ' + this._acctName(t.acct); row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .35s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
+      allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = [this._acctName(t.acct), row.setup].filter(Boolean).join('  \u00b7  '); row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .35s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
       tradeFilterTabs: (() => { const { accts, hasBt } = this._tradeView(); const tabs = [['All', 'All'], ['Live', 'Live']]; if (accts.length) tabs.push(['Prop', 'Prop firm']); if (hasBt) tabs.push(['Backtest', 'Backtest']); return tabs.map(([v, label]) => ({ label, value: v, st: 'border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s;' + ((this.state.tradeFilter || 'All') === v ? 'background:#fff;color:#000;font-weight:500' : 'background:none;color:#9c9c9c'), pick: () => this.setState({ tradeFilter: v, tradeSub: 'All' }) })); })(),
       tradeSubOpen: (this.state.tradeFilter === 'Prop') && this._tradeView().accts.length > 1,
       tradeSubTabs: (() => { const { accts } = this._tradeView(); return [['All', 'All prop firms']].concat(accts.map((t) => [t, this._firmLabel(t)])).map(([v, label]) => ({ label, value: v, st: 'cursor:pointer;font-family:Archivo,sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s,border-color .3s;border:1px solid ' + ((this.state.tradeSub || 'All') === v ? '#fff;background:#fff;color:#000;font-weight:500' : 'rgba(255,255,255,.18);background:none;color:#9c9c9c'), pick: () => this.setState({ tradeSub: v }) })); })(),
@@ -4553,15 +4569,16 @@ class Component extends DCLogic {
         const editing = this.state.editTradeId;
         const _rl = this.state.tradeRules || [], _rch = this.state.draftChecks || {};
         const rulesFollowed = _rl.filter((_, i) => _rch[i]).length, rulesTotal = _rl.length;
+        const rulesChecked = _rl.filter((_, i) => _rch[i]);
         let nextList;
         if (editing) {
           const eBase = this.state.fAcct === 'Backtest' ? this._btParseDate(this.state.fBtDate) : null;
         const eBtTs = eBase;
-          nextList = (this.state.myTrades || []).map((x) => x.id === editing ? { ...x, ts: eBtTs || x.ts, btDate: this.state.fAcct === 'Backtest' ? (this.state.fBtDate || '') : x.btDate, acct: acct.key, sym: (this.state.fSym || '—').toUpperCase(), side: this.state.side, setup: this.state.setup, session: this.state.session, notes: this.state.fNotes, pics: this.state.draftPics || [], pnl: pnlV, r: rValid ? +r.toFixed(2) : x.r, rulesFollowed, rulesTotal } : x);
+          nextList = (this.state.myTrades || []).map((x) => x.id === editing ? { ...x, ts: eBtTs || x.ts, btDate: this.state.fAcct === 'Backtest' ? (this.state.fBtDate || '') : x.btDate, acct: acct.key, sym: (this.state.fSym || '—').toUpperCase(), side: this.state.side, setup: this.state.setup, session: this.state.session, notes: this.state.fNotes, pics: this.state.draftPics || [], pnl: pnlV, r: rValid ? +r.toFixed(2) : x.r, rulesFollowed, rulesTotal, rulesChecked } : x);
         } else {
           const btBase = this.state.fAcct === 'Backtest' ? this._btParseDate(this.state.fBtDate) : null;
         const btTs = btBase;
-          const tr = { id: Date.now(), ts: btTs || Date.now(), logged: Date.now(), btDate: this.state.fAcct === 'Backtest' ? (this.state.fBtDate || '') : undefined, acct: acct.key, sym: (this.state.fSym || '—').toUpperCase(), side: this.state.side, setup: this.state.setup, session: this.state.session, notes: this.state.fNotes, pics: this.state.draftPics || [], pnl: pnlV, r: +r.toFixed(2), rulesFollowed, rulesTotal };
+          const tr = { id: Date.now(), ts: btTs || Date.now(), logged: Date.now(), btDate: this.state.fAcct === 'Backtest' ? (this.state.fBtDate || '') : undefined, acct: acct.key, sym: (this.state.fSym || '—').toUpperCase(), side: this.state.side, setup: this.state.setup, session: this.state.session, notes: this.state.fNotes, pics: this.state.draftPics || [], pnl: pnlV, r: +r.toFixed(2), rulesFollowed, rulesTotal, rulesChecked };
           nextList = [...(this.state.myTrades || []), tr];
         }
         this._saveTrades(nextList);
