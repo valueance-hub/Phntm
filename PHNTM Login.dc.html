@@ -11,7 +11,7 @@
 <helmet>
 <title>PHNTM — Sign in</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#202024">
+<meta name="theme-color" content="#171717">
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -22,11 +22,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600;700&family=Michroma&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#202024;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+html,body{margin:0;padding:0;background:#171717;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
 ::selection{background:rgba(255,255,255,.2)}
 input{outline:none}
-input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{-webkit-text-fill-color:#fff;-webkit-box-shadow:0 0 0 1000px #101012 inset;caret-color:#fff;transition:background-color 9999s ease-in-out 0s}
+input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{-webkit-text-fill-color:#fff;-webkit-box-shadow:0 0 0 1000px #0e0e0e inset;caret-color:#fff;transition:background-color 9999s ease-in-out 0s}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes spinRing{to{transform:rotate(360deg)}}
@@ -52,11 +52,11 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 @keyframes cardGlow{0%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 0 rgba(255,255,255,0)}30%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 34px rgba(229,192,123,.26)}100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.5),0 0 0 rgba(255,255,255,0)}}
 </style>
 </helmet>
-<div style="position:relative;display:flex;flex-direction:column;min-height:100vh;background:#202024;overflow:hidden">
+<div style="position:relative;display:flex;flex-direction:column;min-height:100vh;background:#171717;overflow:hidden">
   <div style="position:absolute;inset:-18%;background:radial-gradient(120% 62% at 50% 100%,rgba(229,192,123,.19) 0%,rgba(229,192,123,.1) 34%,rgba(229,192,123,.035) 60%,rgba(229,192,123,0) 80%);filter:blur(46px);will-change:filter;pointer-events:none;z-index:0"></div>
   <div style="position:absolute;inset:0;background-image:url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22><filter id=%22n%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%223%22 stitchTiles=%22stitch%22/></filter><rect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/></svg>');background-size:260px 260px;opacity:.085;pointer-events:none;z-index:1"></div>
   <sc-if value="{{ loaderPresent }}" hint-placeholder-val="{{ true }}">
-    <div style="position:absolute;inset:0;z-index:5;background:#232327;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;padding:60px 54px;opacity:{{ loaderOpacity }};transition:opacity .55s cubic-bezier(.16,1,.3,1)">
+    <div style="position:absolute;inset:0;z-index:5;background:#1c1c1c;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;padding:60px 54px;opacity:{{ loaderOpacity }};transition:opacity .55s cubic-bezier(.16,1,.3,1)">
       <div style="position:relative;display:grid;place-items:center">
         <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:13px">
           <span style="font-family:'Michroma',sans-serif;font-size:30px;letter-spacing:.02em;color:#fff;animation:mdMark 1s cubic-bezier(.16,1,.3,1) .45s both">phntm<span style="display:inline-block;color:#fff;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
@@ -130,7 +130,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   </sc-if>
   <sc-if value="{{ forgotOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeForgot }}" style="position:fixed;inset:0;z-index:20;background:rgba(4,4,4,.72);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .25s ease both">
-      <div onClick="{{ stop }}" style="width:400px;max-width:100%;box-sizing:border-box;padding:38px 36px;background:linear-gradient(180deg,#161618,#101012);border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
+      <div onClick="{{ stop }}" style="width:400px;max-width:100%;box-sizing:border-box;padding:38px 36px;background:linear-gradient(180deg,#141414,#0e0e0e);border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
         <div style="font-family:'Michroma',sans-serif;font-size:16px;color:#fff;margin-bottom:6px">Reset password</div>
         <div style="font-size:13px;color:#9c9c9c;line-height:1.55;margin-bottom:22px">Enter your account email. We will send a reset link.</div>
         <sc-if value="{{ forgotSent }}" hint-placeholder-val="{{ false }}">
@@ -146,7 +146,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   </sc-if>
   <sc-if value="{{ signupOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeSignup }}" style="position:fixed;inset:0;z-index:20;background:rgba(4,4,4,.72);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .25s ease both">
-      <div onClick="{{ stop }}" style="width:400px;max-width:100%;box-sizing:border-box;padding:38px 36px;background:linear-gradient(180deg,#161618,#101012);border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
+      <div onClick="{{ stop }}" style="width:400px;max-width:100%;box-sizing:border-box;padding:38px 36px;background:linear-gradient(180deg,#141414,#0e0e0e);border:1px solid rgba(255,255,255,.12);border-radius:22px;box-shadow:0 40px 100px rgba(0,0,0,.6);animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both">
         <div style="font-family:'Michroma',sans-serif;font-size:16px;color:#fff;margin-bottom:6px">Create account</div>
         <div style="font-size:13px;color:#9c9c9c;line-height:1.55;margin-bottom:22px">One account. Every device.</div>
         <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:18px">
@@ -164,7 +164,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2e2e2e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#252529&quot;,&quot;#292a2e&quot;,&quot;#1e1e1e&quot;,&quot;#242424&quot;,&quot;#2e2e2e&quot;],&quot;section&quot;:&quot;Note editor&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#2e2e2e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#1f1f1f&quot;,&quot;#232323&quot;,&quot;#1e1e1e&quot;,&quot;#242424&quot;,&quot;#2e2e2e&quot;],&quot;section&quot;:&quot;Note editor&quot;}}">
 class Component extends DCLogic {
   state = { name: '', email: '', password: '', loading: false, phase: 'load', pct: 0, forgotLabel: 'Forgot?', forgotOpen: false, forgotEmail: '', forgotSent: false, signupOpen: false, suName: '', suEmail: '', suPass: '' };
   _authMsg(err) {

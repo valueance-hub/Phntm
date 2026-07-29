@@ -20,7 +20,7 @@
 <helmet>
 <title>PHNTM — Trading Journal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#2A2A2A">
+<meta name="theme-color" content="#171717">
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600;700&amp;family=Michroma&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#202024;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+html,body{margin:0;padding:0;background:#171717;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
 ::selection{background:rgba(255,255,255,.2)}
 input,select,textarea{outline:none}
@@ -140,13 +140,13 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 }
 </style>
 </helmet>
-<div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; background-color: #2A2A2A">
-  <div style="position:fixed;inset:0;z-index:200;background:#232327;display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
+<div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; background-color:{{ pageBg }}">
+  <div style="position:fixed;inset:0;z-index:200;background:#1c1c1c;display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
     <span style="position:relative;display:grid;place-items:center;width:170px;height:170px"><span style="position:relative;display:flex;flex-direction:column;align-items:center;gap:11px"><span style="font-size:22px;font-weight:300;color:#fff;font-family:'Michroma',sans-serif;letter-spacing:.02em;animation:mdMark 2s .55s cubic-bezier(.16,1,.3,1) both">phntm.</span><span style="width:100px;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);transform-origin:center;animation:mdRule 1.9s .9s cubic-bezier(.16,1,.3,1) both"></span></span></span>
   </div>
   <sc-if value="{{ nameModalOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:310;background:rgba(4,4,4,.86);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .4s ease both">
-      <div style="max-width:440px;width:100%;background:linear-gradient(180deg,#292a2e,#252529);border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:44px 42px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both">
+      <div style="max-width:440px;width:100%;background:linear-gradient(180deg,#232323,#1f1f1f);border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:44px 42px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both">
         <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.28em;color:#b0b0b0;margin-bottom:16px">WELCOME</div>
         <div style="font-size:28px;font-weight:200;letter-spacing:-.02em;color:#fff;line-height:1.15">What should we<br>call you?</div>
         <input value="{{ nameDraft }}" onInput="{{ setNameDraft }}" placeholder="Your name" autofocus="" style="width:100%;box-sizing:border-box;margin-top:26px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:22px;font-weight:300;padding:10px 0;outline:none;transition:border-color .3s" style-focus="border-color:#fff">
@@ -157,7 +157,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </div>
   </sc-if>
   <sc-if value="{{ welcomeOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeWelcome }}" style="position:fixed;inset:0;z-index:312;background:radial-gradient(120% 76% at 50% 0%,rgba(229,192,123,.11) 0%,rgba(229,192,123,.05) 34%,rgba(229,192,123,.015) 60%,rgba(229,192,123,0) 80%),#202024;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:52px;cursor:pointer;animation:{{ welcomeAnim }}">
+    <div onClick="{{ closeWelcome }}" style="position:fixed;inset:0;z-index:312;background:radial-gradient(120% 76% at 50% 0%,rgba(229,192,123,.11) 0%,rgba(229,192,123,.05) 34%,rgba(229,192,123,.015) 60%,rgba(229,192,123,0) 80%),#171717;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:52px;cursor:pointer;animation:{{ welcomeAnim }}">
       <div style="font-family:'Archivo',sans-serif;font-size:clamp(34px,6vw,52px);font-weight:200;letter-spacing:-.02em;color:#fff;line-height:1.05;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) both">Welcome, {{ userName }}</div>
       <div style="width:90px;height:1px;background:rgba(255,255,255,.6);margin:26px 0;transform-origin:center;animation:growBar .7s .5s cubic-bezier(.16,1,.3,1) both"></div>
       <div style="max-width:520px;font-size:15.5px;line-height:1.75;color:#c4c4c4;font-style:italic;text-wrap:pretty;animation:fadeUp .8s .7s cubic-bezier(.16,1,.3,1) both">"I built PHNTM for the traders grinding in silence — the ones who kept going when it hurt, who blew accounts and still showed up the next morning. This is for you. I hope it carries you further than you ever thought you could go."</div>
@@ -168,7 +168,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ failOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closeFail }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,4,4,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .4s ease both">
-    <div onClick="{{ stop }}" style="position:relative;max-width:560px;width:100%;background:linear-gradient(180deg,#292a2e,#232327);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:56px 52px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .6s cubic-bezier(.16,1,.3,1) both">
+    <div onClick="{{ stop }}" style="position:relative;max-width:560px;width:100%;background:linear-gradient(180deg,#232323,#1c1c1c);border:1px solid rgba(255,255,255,.12);border-radius:24px;padding:56px 52px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .6s cubic-bezier(.16,1,.3,1) both">
       <div style="position:absolute;top:0;left:0;right:0;height:1px;overflow:hidden"><div style="width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);animation:bladeSweep 2.6s ease-in-out infinite"></div></div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:26px">
         <span style="width:9px;height:9px;transform:rotate(45deg);background:#c9a15a"></span>
@@ -183,7 +183,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </div>
   </sc-if>
   <sc-if value="{{ failFundedOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;inset:0;z-index:301;background:radial-gradient(130% 80% at 50% 0%,rgba(224,160,90,.13),transparent 62%),#202024;display:flex;align-items:center;justify-content:center;padding:40px;animation:fadeIn .5s ease both">
+  <div style="position:fixed;inset:0;z-index:301;background:radial-gradient(130% 80% at 50% 0%,rgba(224,160,90,.13),transparent 62%),#171717;display:flex;align-items:center;justify-content:center;padding:40px;animation:fadeIn .5s ease both">
     <div style="max-width:660px;width:100%">
       <div style="display:flex;align-items:center;gap:12px;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) both">
         <span style="width:9px;height:9px;transform:rotate(45deg);background:#e0a05a"></span>
@@ -264,7 +264,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ payoutModalOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closePayoutModal }}" style="position:fixed;inset:0;z-index:302;background:rgba(4,4,4,.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-    <div onClick="{{ stop }}" style="width:440px;max-width:100%;box-sizing:border-box;background:linear-gradient(180deg,#292a2e,#252529);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:36px;animation:fadeUp .45s cubic-bezier(.16,1,.3,1) both">
+    <div onClick="{{ stop }}" style="width:440px;max-width:100%;box-sizing:border-box;background:linear-gradient(180deg,#232323,#1f1f1f);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:36px;animation:fadeUp .45s cubic-bezier(.16,1,.3,1) both">
       <div style="font-family:'Michroma',sans-serif;font-size:15px;color:#fff;margin-bottom:6px">Withdraw payout</div>
       <div style="font-size:13px;color:#9c9c9c;margin-bottom:22px">Up to {{ payoutAvailText }} available · your firm keeps 20%.</div>
       <label style="font-size:11px;color:#b0b0b0;font-family:'JetBrains Mono',monospace;letter-spacing:.1em">AMOUNT TO WITHDRAW</label>
@@ -283,7 +283,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ passOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closePass }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,4,4,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .4s ease both">
-    <div onClick="{{ stop }}" style="position:relative;max-width:560px;width:100%;background:linear-gradient(180deg,#1a1a1a,#252529);border:1px solid rgba(255,255,255,.16);border-radius:24px;padding:56px 52px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .6s cubic-bezier(.16,1,.3,1) both">
+    <div onClick="{{ stop }}" style="position:relative;max-width:560px;width:100%;background:linear-gradient(180deg,#1a1a1a,#1f1f1f);border:1px solid rgba(255,255,255,.16);border-radius:24px;padding:56px 52px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .6s cubic-bezier(.16,1,.3,1) both">
       <div style="position:absolute;top:0;left:0;right:0;height:1px;overflow:hidden"><div style="width:55%;height:100%;background:linear-gradient(90deg,transparent,#fff,transparent);animation:bladeSweep 2.2s ease-in-out infinite"></div></div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:26px">
         <span style="width:9px;height:9px;transform:rotate(45deg);background:#fff;animation:glowPulse 1.6s ease-in-out infinite"></span>
@@ -323,7 +323,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </sc-for>
     <button onClick="{{ mobMore.open }}" style="{{ mobMore.st }}"><span style="{{ mobMore.ruleSt }}"></span>{{ mobMore.label }}</button>
   </nav>
-  <nav data-m="desknav" style="position:sticky;top:0;z-index:70;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:26px 48px;background:rgba(32,32,36,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);animation:fadeIn .8s 1.5s ease both">
+  <nav data-m="desknav" style="position:sticky;top:0;z-index:70;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:26px 48px;background:{{ navBg }};backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);animation:fadeIn .8s 1.5s ease both">
     <div style="display:flex;align-items:center;gap:32px;min-width:0">
       <span style="font-family:'Michroma',sans-serif;font-size:19px;letter-spacing:.01em;color:#fff;flex:none">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
       <div style="display:flex;gap:24px;font-size:13.5px;min-width:0">
@@ -1046,7 +1046,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
             <span style="{{ acctCaretStyle }}">⌄</span>
           </button>
           <sc-if value="{{ acctMenuOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:40;background:#25262b;border:1px solid rgba(255,255,255,.14);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.55);overflow:hidden;padding:6px;animation:menuIn .28s cubic-bezier(.16,1,.3,1) both">
+            <div style="position:absolute;top:calc(100% + 8px);left:0;right:0;z-index:40;background:#1f1f1f;border:1px solid rgba(255,255,255,.14);border-radius:14px;box-shadow:0 24px 60px rgba(0,0,0,.55);overflow:hidden;padding:6px;animation:menuIn .28s cubic-bezier(.16,1,.3,1) both">
               <sc-for list="{{ acctPickers }}" as="a" hint-placeholder-count="3">
                 <button onClick="{{ a.pick }}" style="{{ a.rowStyle }}" style-hover="background:rgba(255,255,255,.08)">
                   <span>{{ a.label }}</span>
@@ -1128,7 +1128,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ dayEditOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeDayEdit }}" style="position:fixed;inset:0;z-index:298;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="max-width:420px;width:100%;box-sizing:border-box;background:linear-gradient(180deg,#292a2e,#252529);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:32px 34px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .45s cubic-bezier(.16,1,.3,1) both">
+      <div onClick="{{ stop }}" style="max-width:420px;width:100%;box-sizing:border-box;background:linear-gradient(180deg,#232323,#1f1f1f);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:32px 34px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .45s cubic-bezier(.16,1,.3,1) both">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
           <div>
             <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;color:#b0b0b0">DAY RECORD</div>
@@ -1155,7 +1155,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ manualOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeManual }}" style="position:fixed;inset:0;z-index:297;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="max-width:520px;width:100%;background:linear-gradient(180deg,#292a2e,#252529);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:34px 36px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .5s cubic-bezier(.16,1,.3,1) both">
+      <div onClick="{{ stop }}" style="max-width:520px;width:100%;background:linear-gradient(180deg,#232323,#1f1f1f);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:34px 36px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .5s cubic-bezier(.16,1,.3,1) both">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
           <div>
             <div style="font-size:17px;font-weight:500;color:#fff">Add it yourself</div>
@@ -1194,7 +1194,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ foodEditing }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeFoodEdit }}" style="position:fixed;inset:0;z-index:296;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="max-width:480px;width:100%;background:linear-gradient(180deg,#292a2e,#252529);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:34px 36px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .5s cubic-bezier(.16,1,.3,1) both">
+      <div onClick="{{ stop }}" style="max-width:480px;width:100%;background:linear-gradient(180deg,#232323,#1f1f1f);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:34px 36px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .5s cubic-bezier(.16,1,.3,1) both">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
           <span style="font-size:17px;font-weight:500;color:#fff">Edit item</span>
           <button onClick="{{ closeFoodEdit }}" style="border:none;background:none;color:#a0a0a0;font-size:22px;cursor:pointer;line-height:1;transition:color .3s" style-hover="color:#fff">×</button>
@@ -1352,7 +1352,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#292a2e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#252529&quot;,&quot;#292a2e&quot;,&quot;#1e1e1e&quot;,&quot;#242424&quot;,&quot;#2e2e2e&quot;],&quot;section&quot;:&quot;Note editor&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;pageBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#171717&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#171717&quot;,&quot;#0d0d0d&quot;,&quot;#212121&quot;,&quot;#101014&quot;]},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1c1c1c&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#1c1c1c&quot;,&quot;#141414&quot;,&quot;#232323&quot;,&quot;#12121a&quot;]}}">
 class Component extends DCLogic {
   state = { range: 'D', tab: 'Overview', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
   _openFoodEdit(f) { this.setState({ editFoodId: f.id, editFood: { name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0 } }); }
@@ -3152,7 +3152,17 @@ class Component extends DCLogic {
     step();
   }
   renderVals() {
-    const _nbHx = String(this.props.noteBg || '#292a2e').replace('#', '');
+    const BG = this.props.pageBg || '#171717';
+    const NAV = (() => {
+      // the sticky nav sits over scrolling content, so it needs the page colour at
+      // ~86% with a blur behind it — derived, never a second hardcoded grey
+      const h = BG.replace('#', '');
+      const n = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+      const r = parseInt(n.substr(0, 2), 16), g = parseInt(n.substr(2, 2), 16), b = parseInt(n.substr(4, 2), 16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',.86)';
+    })();
+    try { if (document.body.style.background !== BG) document.body.style.background = BG; } catch (e) {}
+    const _nbHx = String(this.props.noteBg || '#232323').replace('#', '');
     const _nbN = parseInt(_nbHx.length === 3 ? _nbHx.split('').map((x) => x + x).join('') : _nbHx, 16) || 0;
     const _nbR = (_nbN >> 16) & 255, _nbG = (_nbN >> 8) & 255, _nbB = _nbN & 255;
     const noteEditorBg = 'radial-gradient(120% 70% at 50% 0%,rgba(255,255,255,.05),transparent 55%),#' + _nbHx;
@@ -3222,14 +3232,14 @@ class Component extends DCLogic {
       key: 'scan' + this.state.scanN,
       style: {
         position: 'fixed', inset: 0, zIndex: 191, pointerEvents: 'none',
-        background: '#2A2A2A', animation: 'tabVeil .46s cubic-bezier(.32,.72,0,1) both',
+        background: BG, animation: 'tabVeil .46s cubic-bezier(.32,.72,0,1) both',
       },
     });
     const tabWipe = !this.state.wipeN ? null : rc('div', {
       key: 'wipe' + this.state.wipeN,
       style: {
         position: 'fixed', inset: 0, zIndex: 190, pointerEvents: 'none',
-        background: '#2A2A2A', animation: 'tabVeil .46s cubic-bezier(.32,.72,0,1) both',
+        background: BG, animation: 'tabVeil .46s cubic-bezier(.32,.72,0,1) both',
       },
     });
     const parseHM = (s) => { const [h, m] = String(s || '0:0').split(':').map(Number); return (h || 0) * 60 + (m || 0); };
@@ -3744,6 +3754,8 @@ class Component extends DCLogic {
       tabTrades: this.state.tab === 'Trades',
       tabRoutine: this.state.tab === 'Routine',
       acctAnim: (this.state.scanN || 0) % 2 ? 'fadeUpB' : 'fadeUp',
+      pageBg: BG,
+      navBg: NAV,
       goTrades: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this.state.tab === 'Trades') return; this.setState({ tab: 'Trades', wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab('Trades'); },
       tabBacktest: this.state.tab === 'Backtest',
       ...(() => {
