@@ -140,7 +140,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 }
 </style>
 </helmet>
-<div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; background-color: #2A2A2A">
+<div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; background-color: #2A2A2A">
   <div style="position:fixed;inset:0;z-index:200;background:#232327;display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
     <span style="position:relative;display:grid;place-items:center;width:170px;height:170px"><span style="position:relative;display:flex;flex-direction:column;align-items:center;gap:11px"><span style="font-size:22px;font-weight:300;color:#fff;font-family:'Michroma',sans-serif;letter-spacing:.02em;animation:mdMark 2s .55s cubic-bezier(.16,1,.3,1) both">phntm.</span><span style="width:100px;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);transform-origin:center;animation:mdRule 1.9s .9s cubic-bezier(.16,1,.3,1) both"></span></span></span>
   </div>
@@ -323,7 +323,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </sc-for>
     <button onClick="{{ mobMore.open }}" style="{{ mobMore.st }}"><span style="{{ mobMore.ruleSt }}"></span>{{ mobMore.label }}</button>
   </nav>
-  <nav data-m="desknav" style="position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:26px 48px;border-bottom:1px solid rgba(255,255,255,.08);animation:fadeIn .8s 1.5s ease both">
+  <nav data-m="desknav" style="position:sticky;top:0;z-index:70;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:26px 48px;background:rgba(32,32,36,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08);animation:fadeIn .8s 1.5s ease both">
     <div style="display:flex;align-items:center;gap:32px;min-width:0">
       <span style="font-family:'Michroma',sans-serif;font-size:19px;letter-spacing:.01em;color:#fff;flex:none">phntm<span style="display:inline-block;animation:dotPulse 1.8s ease-in-out infinite">.</span></span>
       <div style="display:flex;gap:24px;font-size:13.5px;min-width:0">
@@ -570,9 +570,13 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   <section data-m="pad" style="position:relative;z-index:1;margin:0 0 20px;padding:22px 26px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);animation:fadeUp .7s cubic-bezier(.16,1,.3,1) both">
     <div style="display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:20px">
       <span style="font-size:15px;color:#fff">Rules for {{ acctLabel }}</span>
-      <div style="width:320px;max-width:48%">
-        <div style="position:relative;height:3px;background:rgba(255,255,255,.1);border-radius:99px;margin-bottom:9px"><div style="{{ glowFillStyle }}"></div><div style="{{ glowDotStyle }}"></div></div>
-        <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9.5px"><span style="color:#a0a0a0">LIMIT · {{ glowBreachText }}</span><span style="color:#cfcfcf">{{ glowGoalLabel }} · {{ glowGoalText }}</span></div>
+      <div style="width:340px;max-width:52%">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:12px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:200;letter-spacing:-.02em;color:#fff;line-height:1">{{ meterEqText }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#c8c8c8">{{ meterEarnedText }}</span>
+        </div>
+        <div style="height:6px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;margin-bottom:9px"><div style="{{ meterFillStyle }}"></div></div>
+        <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#a0a0a0"><span>{{ glowBreachText }}</span><span>{{ glowGoalText }}</span></div>
       </div>
     </div>
     <div style="display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)">
@@ -922,292 +926,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </section>
   </sc-if>
 </sc-if>
-<sc-if value="{{ tabHealth }}" hint-placeholder-val="{{ false }}">
-  <section data-m="pad stack hdr" style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;padding:64px 48px 44px">
-    <div style="animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
-      <div style="font-size:14px;color:#a0a0a0">Health — {{ healthPeriodLabel }} · slept <span style="color:#eaeaea">{{ sleepDuration }}</span></div>
-      <div style="display:flex;align-items:baseline;gap:22px;margin-top:10px">
-        <span data-m="hero" style="font-size:88px;font-weight:200;letter-spacing:-.03em;line-height:1;color:#fff">{{ kcal }}</span>
-        <span style="font-size:14px;color:#a0a0a0">of {{ kcalGoal }} kcal · {{ kcalLeft }} left</span>
-      </div>
-    </div>
-    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:16px;animation:fadeUp .9s .15s cubic-bezier(.16,1,.3,1) both">
-      <div data-m="pills" style="display:flex;gap:4px;padding:5px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:99px">
-        <sc-for list="{{ healthRanges }}" as="h" hint-placeholder-count="3">
-          <button onClick="{{ h.pick }}" style="{{ h.st }}">{{ h.label }}</button>
-        </sc-for>
-      </div>
-    </div>
-  </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:8px 48px 0;animation:fadeUp .9s .1s cubic-bezier(.16,1,.3,1) both">
-    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:18px">
-      <span style="font-family:'Michroma',sans-serif;font-size:14px;letter-spacing:.02em;color:#fff">Your targets</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#b0b0b0">BODY &amp; GOAL</span>
-    </div>
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px">
-      <div data-m="col1 hidediv" style="display:grid;grid-template-columns:1.15fr 1px 1fr;gap:34px;align-items:center">
-        <div style="display:flex;flex-direction:column;gap:20px">
-          <div style="display:flex;gap:22px;flex-wrap:wrap">
-            <div style="flex:1;min-width:130px"><label style="font-size:12px;color:#a0a0a0">Sex</label>
-              <div style="display:flex;gap:8px;margin-top:10px"><sc-for list="{{ sexButtons }}" as="s" hint-placeholder-count="2"><button onClick="{{ s.pick }}" style="{{ s.st }}">{{ s.label }}</button></sc-for></div>
-            </div>
-            <div style="width:96px"><label style="font-size:12px;color:#a0a0a0">Height</label>
-              <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff">
-                <input value="{{ htCm }}" onChange="{{ setHt }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:20px;padding:8px 0"><span style="font-size:12px;color:#9c9c9c">cm</span>
-              </div>
-            </div>
-            <div style="width:96px"><label style="font-size:12px;color:#a0a0a0">Weight</label>
-              <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff">
-                <input value="{{ wtKg }}" onChange="{{ setWt }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:20px;padding:8px 0"><span style="font-size:12px;color:#9c9c9c">kg</span>
-              </div>
-            </div>
-          </div>
-          <div><label style="font-size:12px;color:#a0a0a0">Goal</label>
-            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><sc-for list="{{ goalButtons }}" as="g" hint-placeholder-count="4"><button onClick="{{ g.pick }}" style="{{ g.st }}">{{ g.label }}</button></sc-for></div>
-            <div style="margin-top:12px;font-size:12.5px;color:#a0a0a0">{{ goalNote }}</div>
-          </div>
-        </div>
-        <div style="width:1px;height:100%;background:rgba(255,255,255,.1)"></div>
-        <div style="display:flex;flex-direction:column;gap:18px">
-          <div>
-            <div style="font-size:12px;color:#a0a0a0">Recommended daily intake</div>
-            <div style="margin-top:6px;font-size:44px;font-weight:200;letter-spacing:-.02em;color:#fff">{{ tgtKcal }}<span style="font-size:16px;color:#9c9c9c"> kcal</span></div>
-          </div>
-          <div style="display:flex;gap:12px">
-            <div style="flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px"><div style="font-size:11.5px;color:#b0b0b0">Protein</div><div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:22px;color:#fff">{{ tgtProtein }}</div></div>
-            <div style="flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px"><div style="font-size:11.5px;color:#b0b0b0">Carbs</div><div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:22px;color:#fff">{{ tgtCarbs }}</div></div>
-            <div style="flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px"><div style="font-size:11.5px;color:#b0b0b0">Fats</div><div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:22px;color:#fff">{{ tgtFat }}</div></div>
-            <div style="flex:1;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:16px 18px"><div style="font-size:11.5px;color:#b0b0b0">Sugar</div><div style="margin-top:6px;font-family:'JetBrains Mono',monospace;font-size:22px;color:#fff">{{ tgtSugar }}</div></div>
-          </div>
-          <button onClick="{{ saveTargets }}" style="display:flex;align-items:center;justify-content:center;gap:9px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:14px;font-weight:500;padding:14px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="opacity:.7">{{ saveLabel }}</button>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:44px 48px 0">
-    <div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 60%,transparent)"></div>
-    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-top:26px">
-      <span style="font-family:'Michroma',sans-serif;font-size:14px;letter-spacing:.02em;color:#fff">Today’s intake</span>
-      <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:#b0b0b0">AGAINST TARGET</span>
-    </div>
-  </section>
-  <section data-m="pad" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:18px;padding:16px 48px 0">
-    <sc-for list="{{ macros }}" as="m" hint-placeholder-count="4">
-      <div style="background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 26px;animation:fadeUp .7s .12s cubic-bezier(.16,1,.3,1) both">
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:#a0a0a0"><span>{{ m.k }}</span><span style="{{ m.metStyle }}"><span style="{{ m.dotStyle }}"></span>{{ m.met }}</span></div>
-        <div style="margin-top:8px;font-size:34px;font-weight:300;color:#fff">{{ m.v }}<span style="font-size:15px;color:#9c9c9c"> / {{ m.goal }}</span></div>
-        <div style="margin-top:14px;height:2px;background:rgba(255,255,255,.12)"><div style="{{ m.barStyle }}"></div></div>
-      </div>
-    </sc-for>
-  </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:18px 48px 0">
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .7s .18s cubic-bezier(.16,1,.3,1) both">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px">
-        <span style="font-family:'Michroma',sans-serif;font-size:14px;letter-spacing:.02em;color:#fff">Food log — {{ healthPeriodLabel }}</span>
-        <span style="display:flex;align-items:center;gap:14px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.06em;color:#b0b0b0">◆ SAVED · SELECT ANY ITEM TO EDIT</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#b0b0b0">{{ foodTotal }}</span></span>
-      </div>
-      <div data-m="stack" style="display:flex;gap:12px;row-gap:10px;flex-wrap:wrap;align-items:center">
-        <div data-m="pills" style="display:flex;gap:4px;padding:5px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:99px">
-          <sc-for list="{{ mealTabs }}" as="mt" hint-placeholder-count="3">
-            <button onClick="{{ mt.pick }}" style="{{ mt.st }}">{{ mt.label }}</button>
-          </sc-for>
-        </div>
-        <input placeholder="Describe it — '1 sandwich: 1 ham, 1 cheese, 1 tbsp peanut butter'" value="{{ foodInput }}" onChange="{{ setFoodInput }}" onKeyDown="{{ foodKey }}" style="flex:1 1 240px;min-width:240px;box-sizing:border-box;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
-        <button onClick="{{ addFood }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:8px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:500;padding:11px 22px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="opacity:.7">
-          <sc-if value="{{ foodLoading }}" hint-placeholder-val="{{ false }}"><span style="width:13px;height:13px;border-radius:50%;border:2px solid rgba(0,0,0,.2);border-top-color:#000;animation:spinRing .7s linear infinite"></span><span>{{ foodStageLabel }}</span></sc-if>
-          <sc-if value="{{ foodNotLoading }}" hint-placeholder-val="{{ true }}"><span>Add to {{ mealLabel }}</span><span>+</span></sc-if>
-        </button>
-        <button onClick="{{ openManual }}" style="flex:none;white-space:nowrap;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.22);background:none;color:#eaeaea;font-family:'Archivo',sans-serif;font-size:13.5px;padding:11px 20px;border-radius:99px;cursor:pointer;white-space:nowrap;transition:background .4s cubic-bezier(.32,.72,0,1),border-color .4s,color .4s" style-hover="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4);color:#fff">Enter it myself</button>
-      </div>
-      <div style="margin-top:10px;font-size:12px;color:#9c9c9c">Unknown brand or a drink we can’t guess? Use <span style="color:#a0a0a0">Enter it myself</span> and type the label numbers — you can fine-tune calories any time after.</div>
-      <sc-if value="{{ hasFoodErr }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:12px;font-size:12.5px;color:#a0a0a0">{{ foodErr }}</div>
-      </sc-if>
-      <sc-if value="{{ hasFoodSuggest }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:12px;font-size:13px;color:#a0a0a0">Did you mean <span onClick="{{ applySuggest }}" style="color:#fff;text-decoration:underline;text-underline-offset:3px;cursor:pointer">{{ foodSuggest }}</span>?</div>
-      </sc-if>
-      <sc-if value="{{ hasUsuals }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-top:26px;padding-top:22px;border-top:1px solid rgba(255,255,255,.1)">
-          <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px">
-            <span style="font-size:13.5px;color:#fff">Your usuals</span>
-            <span style="font-size:11.5px;color:#b0b0b0">Saved automatically · select one, choose a meal</span>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
-            <sc-for list="{{ usuals }}" as="u" hint-placeholder-count="5">
-              <div style="position:relative">
-                <div onClick="{{ u.pick }}" style="{{ u.st }}" style-hover="background:rgba(255,255,255,.075);border-color:rgba(255,255,255,.2)">
-                  <span style="font-size:12.5px;color:#eaeaea;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">{{ u.name }}</span>
-                  <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#b0b0b0;flex:none">{{ u.meta }}</span>
-                </div>
-                <sc-if value="{{ u.open }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:absolute;top:calc(100% + 8px);left:0;z-index:6;display:flex;flex-direction:column;min-width:170px;background:linear-gradient(180deg,#1a1a1a,#111);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:7px;box-shadow:0 24px 60px rgba(0,0,0,.6);animation:popIn .32s cubic-bezier(.32,.72,0,1) both">
-                    <sc-for list="{{ u.drop }}" as="d" hint-placeholder-count="4">
-                      <button onClick="{{ d.add }}" style="text-align:left;background:none;border:none;color:#c4c4c4;font-family:'Archivo',sans-serif;font-size:13px;padding:9px 12px;border-radius:9px;cursor:pointer;transition:background .3s,color .3s" style-hover="background:rgba(255,255,255,.09);color:#fff">Add to {{ d.label }}</button>
-                    </sc-for>
-                    <button onClick="{{ u.forget }}" style="text-align:left;margin-top:4px;padding-top:9px;border:none;border-top:1px solid rgba(255,255,255,.1);background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:12px;padding-left:12px;padding-bottom:5px;cursor:pointer;transition:color .3s" style-hover="color:#e0a05a">Forget this</button>
-                  </div>
-                </sc-if>
-              </div>
-            </sc-for>
-          </div>
-        </div>
-      </sc-if>
-      <div style="margin-top:14px">
-        <sc-for list="{{ mealGroups }}" as="g" hint-placeholder-count="4">
-          <div style="margin-top:22px">
-            <div style="display:flex;align-items:baseline;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.14)">
-              <span style="font-size:13px;letter-spacing:.02em;color:#fff">{{ g.label }}</span>
-              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#b0b0b0">{{ g.total }}</span>
-            </div>
-            <sc-if value="{{ g.empty }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:13px 0;font-size:13px;color:#9c9c9c">Nothing logged.</div>
-            </sc-if>
-            <sc-if value="{{ g.notEmpty }}" hint-placeholder-val="{{ false }}">
-              <div data-m="rowhead" style="display:grid;grid-template-columns:1fr 110px 90px 90px 90px 36px;gap:12px;padding:10px 0 7px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.16em;color:#9c9c9c">
-                <span>ITEM</span>
-                <span style="text-align:right;padding-right:10px">KCAL</span>
-                <span style="text-align:right;padding-right:10px">P</span>
-                <span style="text-align:right;padding-right:10px">C</span>
-                <span style="text-align:right">F</span>
-                <span></span>
-              </div>
-            </sc-if>
-            <sc-for list="{{ g.rows }}" as="f" hint-placeholder-count="1">
-              <div data-m="row" style="display:grid;grid-template-columns:1fr 110px 90px 90px 90px 36px;gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:14px;transition:background .3s;cursor:pointer" style-hover="background:rgba(255,255,255,.02)" onClick="{{ f.edit }}">
-                <span style="color:#fff">{{ f.name }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:#fff;text-align:right;padding-right:10px;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.kcalN }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c4c4c4;text-align:right;padding-right:10px;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.pN }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c4c4c4;text-align:right;padding-right:10px;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.cN }}</span>
-                <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c4c4c4;text-align:right;border-left:1px solid rgba(255,255,255,.07);font-variant-numeric:tabular-nums">{{ f.fatN }}</span>
-                <button onClick="{{ f.remove }}" style="background:none;border:none;color:#9c9c9c;font-size:16px;cursor:pointer;justify-self:end;transition:color .3s;line-height:1" style-hover="color:#fff">×</button>
-              </div>
-            </sc-for>
-          </div>
-        </sc-for>
-      </div>
-      <div style="margin-top:16px;text-align:right;font-size:10.5px;line-height:1.6;color:#b0b0b0;max-width:420px;margin-left:auto">Figures are AI-estimated. List the parts — “1 sandwich: ham, cheese, peanut butter” — and they total as one entry.</div>
-    </div>
-  </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:44px 48px 0">
-    <div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 60%,transparent);margin-bottom:26px"></div>
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .9s .38s cubic-bezier(.16,1,.3,1) both">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px">
-        <span style="font-family:'Michroma',sans-serif;font-size:14px;letter-spacing:.02em;color:#fff">Sleep — last night</span>
-        <span style="display:flex;align-items:center;gap:14px">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:{{ sleepMetColor }}">{{ sleepDuration }}</span>
-          <button onClick="{{ saveSleep }}" style="{{ sleepSaveStyle }}">{{ sleepSaveLabel }}</button>
-        </span>
-      </div>
-      <div style="display:flex;gap:44px;align-items:center;flex-wrap:wrap">
-        <div style="flex:1;min-width:300px;display:flex;flex-direction:column;gap:16px">
-          <div style="display:flex;align-items:baseline;justify-content:space-between">
-            <label style="font-size:12px;color:#a0a0a0">Drag to set last night’s sleep</label>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:30px;font-weight:300;color:#fff">{{ sleepDuration }}</span>
-          </div>
-          {{ sleepField }}
-          <div style="display:flex;align-items:center;gap:10px">
-            <span style="{{ sleepDotStyle }}"></span>
-            <span style="font-size:13px;color:{{ sleepMetColor }};white-space:nowrap">{{ sleepVsGoal }}</span>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:1px solid rgba(255,255,255,.1)">
-          <label style="font-size:11.5px;color:#b0b0b0">Time you fell asleep</label>
-          {{ bedField }}
-          <div style="display:flex;align-items:center;gap:9px;margin-top:2px">
-            <span style="{{ bedDotStyle }}"></span>
-            <span style="font-size:11.5px;color:{{ bedNoteColor }};white-space:nowrap">{{ bedNote }}</span>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;padding-left:40px;border-left:1px solid rgba(255,255,255,.1)">
-          <label style="font-size:11.5px;color:#b0b0b0">Sleep goal</label>
-          {{ goalSelect }}
-          <span style="margin-top:4px;font-size:11.5px;color:#b0b0b0">Avg <span style="color:#fff">{{ avgSleep }}</span> · {{ nightsLogged }}</span>
-        </div>
-      </div>
-    </div>
-  </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:44px 48px 72px">
-    <div style="height:1px;background:linear-gradient(90deg,rgba(255,255,255,.16),rgba(255,255,255,.04) 60%,transparent);margin-bottom:26px"></div>
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .9s .15s cubic-bezier(.16,1,.3,1) both">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:22px">
-        <span style="font-family:'Michroma',sans-serif;font-size:14px;letter-spacing:.02em;color:#fff">{{ monthLabel }}</span>
-        
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:10px;max-width:520px">
-        <sc-for list="{{ weekdayHeads }}" as="wd" hint-placeholder-count="7">
-          <span style="text-align:center;font-size:11px;letter-spacing:.08em;color:#b0b0b0">{{ wd }}</span>
-        </sc-for>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px;max-width:520px">
-        <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="35">
-          <div onClick="{{ c.open }}" style="{{ c.cellStyle }}" style-hover="border-color:rgba(255,255,255,.3)">{{ c.node }}</div>
-        </sc-for>
-      </div>
-      <div style="display:flex;gap:22px;margin-top:20px;font-size:11.5px;color:#b0b0b0">
-        <span>Number = kcal logged</span><span>☾ = sleep</span><span style="display:flex;align-items:center;gap:7px"><span style="width:14px;height:14px;border-radius:5px;border:1px solid #fff"></span>Today</span>
-      </div>
-    </div>
-  </section>
-  </sc-if>
-  <sc-if value="{{ tabTrades }}" hint-placeholder-val="{{ false }}">
-  <section data-m="pad" style="position:relative;z-index:1;padding:64px 48px 72px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
-    <div style="margin-bottom:20px">
-      <div style="font-size:14px;color:#a0a0a0">Every trade. Filter by account, sort by column.</div>
-      <div style="margin-top:6px;font-size:34px;font-weight:200;color:#fff">{{ allTradeLabel }}</div>
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;padding:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:99px;animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both">
-        <sc-for list="{{ tradeFilterTabs }}" as="f" hint-placeholder-count="3"><button onClick="{{ f.pick }}" style="{{ f.st }}">{{ f.label }}</button></sc-for>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <sc-if value="{{ confirmClearOpen }}" hint-placeholder-val="{{ false }}">
-          <span style="font-size:13px;color:#e0a05a">Clear all trades?</span>
-          <button onClick="{{ confirmClearYes }}" style="border:1px solid rgba(224,160,90,.5);background:rgba(224,160,90,.12);color:#e0a05a;font-family:'Archivo',sans-serif;font-size:12.5px;padding:9px 16px;border-radius:99px;cursor:pointer">Yes, clear</button>
-          <button onClick="{{ confirmClearNo }}" style="border:none;background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:12.5px;cursor:pointer;transition:color .3s" style-hover="color:#fff">Cancel</button>
-        </sc-if>
-        <sc-if value="{{ confirmClearClosed }}" hint-placeholder-val="{{ true }}">
-          <sc-if value="{{ hasAnyTrades }}" hint-placeholder-val="{{ false }}">
-            <button onClick="{{ askClearAll }}" style="border:1px solid rgba(255,255,255,.16);background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:12.5px;padding:9px 16px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#e0a05a;border-color:rgba(224,160,90,.4)">Clear all</button>
-          </sc-if>
-          <button onClick="{{ togglePanel }}" style="display:flex;align-items:center;gap:9px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13px;font-weight:500;padding:11px 22px;border-radius:99px;cursor:pointer;transition:opacity .3s,gap .3s,transform .16s ease-out" style-hover="opacity:.85;gap:15px" style-active="transform:scale(.97)"><span style="font-size:15px;line-height:1">+</span> Log trade</button>
-        </sc-if>
-      </div>
-    </div>
-    <sc-if value="{{ tradeSubOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:22px;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both">
-        <sc-for list="{{ tradeSubTabs }}" as="s" hint-placeholder-count="2"><button onClick="{{ s.pick }}" style="{{ s.st }}">{{ s.label }}</button></sc-for>
-      </div>
-    </sc-if>
-    <sc-if value="{{ clearAllOpen }}" hint-placeholder-val="{{ false }}">
-      <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:320;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,#1a1a1a,#0f0f0f);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px 12px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both">
-        <span style="font-family:'Archivo',sans-serif;font-size:14px;color:#eaeaea">{{ clearAllLabel }}</span>
-        <button onClick="{{ undoClearAll }}" style="border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13px;font-weight:500;padding:8px 18px;border-radius:99px;cursor:pointer">Undo</button>
-        <button onClick="{{ dismissClearAll }}" style="border:none;background:none;color:#a0a0a0;font-size:18px;line-height:1;cursor:pointer;padding:4px 6px">×</button>
-      </div>
-    </sc-if>
-    <div data-m="rowhead" style="display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em">
-      <sc-for list="{{ tradeSortCols }}" as="c" hint-placeholder-count="6"><span onClick="{{ c.pick }}" style="{{ c.st }}">{{ c.label }}</span></sc-for>
-      <span>Rules met</span>
-      <span></span>
-    </div>
-    <sc-if value="{{ noAllTrades }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:26px 0;font-size:14px;color:#9c9c9c">No trades on record. Log one to begin.</div>
-    </sc-if>
-    <sc-for list="{{ allTrades }}" as="t" hint-placeholder-count="10">
-      <div onClick="{{ t.open }}" data-m="row" style="{{ t.rowStyle }}" style-hover="padding-left:12px;background:rgba(255,255,255,.02)">
-        <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ t.sym }}</span>
-        <span style="color:#a0a0a0">{{ t.side }}</span>
-        <span style="color:#a0a0a0">{{ t.setup }}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#9c9c9c">{{ t.time }}</span>
-        <span style="{{ t.pnlStyle }}">{{ t.pnl }}</span>
-        <span style="{{ t.rStyle }}">{{ t.r }}</span>
-        <span style="display:flex;gap:5px;align-items:center"><sc-for list="{{ t.ruleDots }}" as="d" hint-placeholder-count="0"><span style="{{ d }}"></span></sc-for></span>
-        <button onClick="{{ t.remove }}" title="Delete trade" style="justify-self:end;border:none;background:none;color:#9c9c9c;font-size:18px;line-height:1;cursor:pointer;transition:color .3s" style-hover="color:#e0a05a">×</button>
-      </div>
-    </sc-for>
-  </section>
-  </sc-if>
-  <sc-if value="{{ tabRoutine }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ tabRoutine }}" hint-placeholder-val="{{ false }}">
   <section data-m="pad" style="position:relative;z-index:1;padding:64px 48px 20px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
     <div style="font-size:14px;color:#a0a0a0">Daily rituals</div>
     <div style="display:flex;align-items:baseline;gap:22px;margin-top:10px">
@@ -1271,7 +990,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   <section data-m="pad" style="position:relative;z-index:1;padding:0 48px 18px;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) both">
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <sc-for list="{{ filterChips }}" as="c" hint-placeholder-count="1">
-        <span onClick="{{ c.pick }}" style="{{ c.st }}">{{ c.label }}<sc-if value="{{ c.removable }}" hint-placeholder-val="{{ false }}"><span onClick="{{ c.remove }}" style="{{ c.xStyle }}" style-hover="opacity:1">×</span></sc-if></span>
+        <span onClick="{{ c.pick }}" draggable="{{ c.draggable }}" onDragStart="{{ c.dragStart }}" onDragOver="{{ c.dragOver }}" onDrop="{{ c.drop }}" onDragEnd="{{ c.dragEnd }}" title="Drag to reorder" style="{{ c.st }}">{{ c.label }}<sc-if value="{{ c.removable }}" hint-placeholder-val="{{ false }}"><span onClick="{{ c.remove }}" style="{{ c.xStyle }}" style-hover="opacity:1">×</span></sc-if></span>
       </sc-for>
       <sc-if value="{{ addingCat }}" hint-placeholder-val="{{ false }}">
         <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.05)">
@@ -1635,7 +1354,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#292a2e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#252529&quot;,&quot;#292a2e&quot;,&quot;#1e1e1e&quot;,&quot;#242424&quot;,&quot;#2e2e2e&quot;],&quot;section&quot;:&quot;Note editor&quot;}}">
 class Component extends DCLogic {
-  state = { range: 'D', tab: 'Overview', fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
+  state = { range: 'D', tab: 'Overview', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
   _openFoodEdit(f) { this.setState({ editFoodId: f.id, editFood: { name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0 } }); }
   _setEditFood(field, val) { const v = field === 'name' ? val : (parseInt(String(val).replace(/[^0-9]/g, '')) || 0); this.setState({ editFood: { ...this.state.editFood, [field]: v } }); }
   _saveEditFood() { const e = this.state.editFood; const foods = (this.state.foods || []).map((f) => f.id === this.state.editFoodId ? { ...f, name: e.name, kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, sugar: e.sugar } : f);
@@ -1648,6 +1367,13 @@ class Component extends DCLogic {
     this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, done: { ...r.done, [k]: !r.done[k] } } : r)); }
   _removeRoutine(id) { this._saveRoutines((this.state.routines || []).filter((r) => r.id !== id)); }
   _renameRoutine(id, name) { this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, name } : r)); }
+  _moveNoteCat(from, to) {
+    const cats = [...(this.state.noteCats || [])];
+    if (from === to || from < 0 || to < 0 || from >= cats.length || to >= cats.length) return;
+    const [moved] = cats.splice(from, 1);
+    cats.splice(to, 0, moved);
+    this._saveNoteCats(cats);
+  }
   _saveNoteCats(list) { this.setState({ noteCats: list }); this._persist('phntm-note-cats-v1', JSON.stringify(list)); }
   _addNoteCat(name) { const n = (name || '').trim(); if (!n) return; const cur = this.state.noteCats || []; if (cur.includes(n)) return; this._saveNoteCats([...cur, n]); }
   _removeNoteCat(name) {
@@ -2520,6 +2246,20 @@ class Component extends DCLogic {
   _firmLabel(token) { const c = (this.state.challenges || []).find((x) => x.token === token); return c ? c.name : 'Prop firm'; }
   _ordinal(n) { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
   _saveChallenges(list, activeId) { const aid = activeId !== undefined ? activeId : this.state.activeChallengeId; this.setState({ challenges: list, activeChallengeId: aid }); try { this._persist('phntm-challenges-v1', JSON.stringify({ challenges: list, activeChallengeId: aid })); } catch (e) {} }
+  // A challenge's phase must be justified by its passes: you cannot sit in Eval 2
+  // without having passed Eval 1. Earlier builds let a view control write the phase,
+  // which promoted accounts silently — this repairs that on load.
+  _repairPhases(list) {
+    const ORDER = ['Eval 1', 'Eval 2', 'Funded'];
+    let fixed = 0;
+    const out = (list || []).map((c) => {
+      const p = c.passed || {};
+      const earned = p['Eval 2'] ? 'Funded' : p['Eval 1'] ? 'Eval 2' : 'Eval 1';
+      if (ORDER.indexOf(c.phase) > ORDER.indexOf(earned)) { fixed++; return { ...c, phase: earned }; }
+      return c;
+    });
+    return { list: out, fixed };
+  }
   _mirror(c) { this.setState({ acctFirm: c.token, acctMarket: c.market, acctSize: c.size, acctPhase: c.phase, viewAcct: c.phase, viewPhase: c.phase }); }
   _selectChallenge(id) { const c = (this.state.challenges || []).find((x) => x.id === id); if (!c) return; this._mirror(c); this._saveChallenges(this.state.challenges, id); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
   _startSetup() { const n = (this.state.challenges || []).length; this.setState({ challengeSetup: { market: 'Futures', size: 50000, name: this._ordinal(n + 1) + ' prop firm challenge' } }); }
@@ -3344,9 +3084,13 @@ class Component extends DCLogic {
     let nc = null; try { nc = JSON.parse(localStorage.getItem('phntm-note-cats-v1') || 'null'); } catch (e) {}
     this.setState({ noteCats: Array.isArray(nc) ? nc : [] });
     let ac = null; try { ac = JSON.parse(localStorage.getItem('phntm-account-v2') || 'null'); } catch (e) {}
+    if (this.state.tab === 'Health') this.setState({ tab: 'Overview' });
     if (ac) this.setState({ acctType: ac.acctType || 'Prop', acctFirm: ac.acctFirm || 'Lucid', acctSize: ac.acctSize || 50000, acctPhase: ac.acctPhase || 'Eval 1', acctCfg: ac.acctCfg || {} });
     let ch = null; try { ch = JSON.parse(localStorage.getItem('phntm-challenges-v1') || 'null'); } catch (e) {}
     if (ch && Array.isArray(ch.challenges) && ch.challenges.length) {
+      const rep = this._repairPhases(ch.challenges);
+      ch.challenges = rep.list;
+      if (rep.fixed) { try { this._persist('phntm-challenges-v1', JSON.stringify({ challenges: ch.challenges, activeChallengeId: ch.activeChallengeId })); } catch (e) {} }
       const c = ch.challenges.find((x) => x.id === ch.activeChallengeId) || ch.challenges[0];
       this.setState({ challenges: ch.challenges, activeChallengeId: c.id, acctFirm: c.token, acctMarket: c.market, acctSize: c.size, acctPhase: c.phase, viewAcct: c.phase });
     } else {
@@ -3365,6 +3109,8 @@ class Component extends DCLogic {
     if (bd) this.setState({ sex: bd.sex || 'male', htCm: bd.htCm || 178, wtKg: bd.wtKg || 78, goal: bd.goal || 'Maintain' });
   }
   componentDidMount() {
+    // a reload should start at the top, not wherever the last session left off
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; window.scrollTo(0, 0); } catch (e) {}
     // A ticking seconds clock meant setState every second, which re-ran the whole
     // renderVals pass (every trade scan, the equity JSON, all derived stats) 60×
     // a minute on every tab. Minute precision, checked twice a minute, is plenty
@@ -3436,19 +3182,19 @@ class Component extends DCLogic {
       pick: () => { this.setState({ range: r }); this.animateNumbers(); },
     }));
     const k = this.state.prog;
-    const tabs = ['Overview', 'Challenges', 'Achievements', 'Trades', 'Backtest', 'Health', 'Routine', 'Notes'].map((tab) => ({
+    const tabs = ['Overview', 'Challenges', 'Achievements', 'Trades', 'Backtest', 'Routine', 'Notes'].map((tab) => ({
       label: tab,
       st: 'padding-bottom:5px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s cubic-bezier(.16,1,.3,1),color .3s;' +
         (tab === this.state.tab ? 'color:#fff;background-size:100% 1px' : 'color:#a0a0a0;background-size:0% 1px'),
       pick: (e) => { e.preventDefault(); if (tab === this.state.tab) return; this.setState({ tab, wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab(tab); },
     }));
     // Phone navigation: four everyday tabs in a bottom bar, the rest behind More.
-    const MOB_MAIN = ['Overview', 'Challenges', 'Trades', 'Health'];
+    const MOB_MAIN = ['Overview', 'Challenges', 'Trades', 'Routine'];
     // derived, not hardcoded — a tab added to `tabs` can never go missing on phones again
     const MOB_MORE = tabs.map((t) => t.label).filter((l) => !MOB_MAIN.includes(l));
     // No icons: the wordmark is the brand, so the bar is set type — uppercase
     // Archivo with a hairline rule marking the active tab.
-    const mobLabel = { Overview: 'Home', Challenges: 'Challenge', Trades: 'Trades', Health: 'Health', Achievements: 'Fame', Routine: 'Routine', Notes: 'Notes' };
+    const mobLabel = { Overview: 'Home', Challenges: 'Challenge', Trades: 'Trades', Achievements: 'Fame', Routine: 'Routine', Notes: 'Notes' };
     const tabBase = 'position:relative;display:flex;align-items:center;justify-content:center;min-height:56px;padding:10px 2px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color .35s cubic-bezier(.32,.72,0,1);';
     const mobTabs = MOB_MAIN.map((t) => {
       const on = this.state.tab === t;
@@ -3651,7 +3397,7 @@ class Component extends DCLogic {
     const viewPhase = this.state.viewPhase || _curPhase;
     const phaseButtons = _order.map((ph, i) => { const done = !!acPassed[ph]; const isCur = ph === _curPhase; const future = i > _curIdx && !done; const sel = ph === viewPhase;
       return { label: ph + (done ? '  \u2713' : (future ? '  \ud83d\udd12' : '')),
-        st: 'font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;transition:background .3s,color .3s,border-color .3s;cursor:' + (future ? 'not-allowed' : 'pointer') + ';animation:' + (sel ? 'popIn .32s ease both' : 'none') + ';' + (done ? ('background:rgba(95,191,131,' + (sel ? '.22' : '.1') + ');color:#5fbf83;border:1px solid rgba(95,191,131,' + (sel ? '.7' : '.4') + ');text-decoration:line-through') : (isCur ? ('background:' + (sel ? '#fff' : 'rgba(255,255,255,.14)') + ';color:' + (sel ? '#000' : '#fff') + ';font-weight:500') : 'background:none;color:#9c9c9c;border:1px solid rgba(255,255,255,.1)')),
+        st: 'font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;transition:background .3s,color .3s,border-color .3s;cursor:' + (future ? 'not-allowed' : 'pointer') + ';animation:' + (sel ? 'popIn .32s ease both' : 'none') + ';' + (done ? ('background:rgba(95,191,131,' + (sel ? '.22' : '.1') + ');color:#5fbf83;border:1px solid rgba(95,191,131,' + (sel ? '.7' : '.4') + ');text-decoration:line-through') : (isCur ? ('background:' + (sel ? '#fff' : 'rgba(255,255,255,.14)') + ';color:' + (sel ? '#000' : '#fff') + ';font-weight:500') : (sel ? 'background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4)' : 'background:none;color:#b0b0b0;border:1px solid rgba(255,255,255,.1)'))),
         pick: () => { if (i > _curIdx && !done) return; this.setState({ viewPhase: ph }); } }; });
     const viewingPassed = !!acPassed[viewPhase] && viewPhase !== _curPhase;
     const vpacct = viewingPassed ? this._evalAccount(this.state.myTrades || [], { type: 'Prop', firm: _acEval.token, market: _acEval.market, size: _acEval.size, phase: viewPhase }) : pacct;
@@ -3693,7 +3439,7 @@ class Component extends DCLogic {
       viewPhaseButtons: ['Eval 1', 'Eval 2', 'Funded'].map((v) => ({
         label: v,
         st: 'background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12px;padding:7px 14px;border-radius:99px;transition:background .3s,color .3s;' + ((this.state.viewAcct || 'Live') === v ? 'background:#fff;color:#000;font-weight:500' : 'color:#9c9c9c'),
-        pick: () => this._setChallengePhase(v),
+        pick: () => this.setState({ viewAcct: v, viewPhase: v }),   // view only — never writes the phase
       })),
       acctPhaseName: this.state.acctPhase,
       acctPickers: (((this.state.challenges || []).length ? [['Live', 'Live'], ['Challenge', this._firmLabel(this.state.acctFirm) + ' · ' + this.state.acctPhase], ['Backtest', 'Backtest']] : [['Live', 'Live'], ['Backtest', 'Backtest']])).map(([v, label]) => ({
@@ -3818,11 +3564,24 @@ class Component extends DCLogic {
       challNextLabel: pacct.phase === 'Funded' ? ('Payout rule — ' + pacct.payoutDays + ' winning days of ' + money(pacct.payoutMin) + '+') : ('Clear to ' + (pacct.nextPhase || 'Funded')),
       challStart: String(pacct.startBal), challGoal: String(pacct.goal),
       challFail: String(pacct.mll), challFailLabel: 'DRAWDOWN LIMIT',
-      glowFillStyle: 'position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:linear-gradient(90deg,rgba(255,255,255,.25),#fff);transition:width .7s cubic-bezier(.16,1,.3,1);width:' + Math.max(4, Math.min(96, (((pacct.phase === 'Funded' ? pacct.startBal + (pacct.maxDD || Math.round(pacct.startBal * 0.1)) : pacct.goal) - pacct.mll) > 0 ? Math.round(((pacct.eq - pacct.mll) / ((pacct.phase === 'Funded' ? pacct.startBal + (pacct.maxDD || Math.round(pacct.startBal * 0.1)) : pacct.goal) - pacct.mll)) * 100) : 50))) + '%',
-      glowDotStyle: 'position:absolute;top:50%;transform:translate(-50%,-50%);width:10px;height:10px;border-radius:50%;box-shadow:0 0 12px 2px rgba(255,255,255,.6);transition:left .7s cubic-bezier(.16,1,.3,1);background:' + (pacct.breached ? '#e0a05a' : '#fff') + ';left:' + Math.max(4, Math.min(96, (((pacct.phase === 'Funded' ? pacct.startBal + (pacct.maxDD || Math.round(pacct.startBal * 0.1)) : pacct.goal) - pacct.mll) > 0 ? Math.round(((pacct.eq - pacct.mll) / ((pacct.phase === 'Funded' ? pacct.startBal + (pacct.maxDD || Math.round(pacct.startBal * 0.1)) : pacct.goal) - pacct.mll)) * 100) : 50))) + '%',
+      meterEqText: money(pacct.eq),
+      meterEarnedText: (() => {
+        // dollars earned against dollars needed — no percentage to translate, and a
+        // drawdown reads as negative rather than being clamped to zero
+        if (pacct.phase === 'Funded') return money(pacct.eq - pacct.startBal) + ' since funded';
+        if (pacct.eq >= pacct.goal) return 'target hit';
+        const earned = pacct.eq - pacct.startBal, need = pacct.goal - pacct.startBal;
+        return (earned < 0 ? '\u2212$' : '$') + Math.abs(Math.round(earned)).toLocaleString() + ' of ' + money(need) + ' earned';
+      })(),
+      meterFillStyle: (() => {
+        const top = pacct.phase === 'Funded' ? pacct.startBal + (pacct.maxDD || Math.round(pacct.startBal * 0.1)) : pacct.goal;
+        const span = top - pacct.mll;
+        const pct = span > 0 ? Math.round(((pacct.eq - pacct.mll) / span) * 100) : 50;
+        return 'height:100%;border-radius:99px;transition:width .7s cubic-bezier(.16,1,.3,1);background:' +
+          (pacct.breached ? '#e0a05a' : '#fff') + ';width:' + Math.max(2, Math.min(100, pct)) + '%';
+      })(),
       glowBreachText: money(pacct.mll),
       glowGoalText: money(pacct.phase === 'Funded' ? pacct.startBal + (pacct.maxDD || Math.round(pacct.startBal * 0.1)) : pacct.goal),
-      glowGoalLabel: pacct.phase === 'Funded' ? 'PROFIT' : 'GOAL',
       payoutEligibleOpen: !!this.state.payoutEligibleOpen,
       payoutModalOpen: !!this.state.payoutModalOpen,
       closePayoutEligible: () => this.setState({ payoutEligibleOpen: false }),
@@ -3983,7 +3742,6 @@ class Component extends DCLogic {
         };
       })(),
       tabTrades: this.state.tab === 'Trades',
-      tabHealth: this.state.tab === 'Health',
       tabRoutine: this.state.tab === 'Routine',
       acctAnim: (this.state.scanN || 0) % 2 ? 'fadeUpB' : 'fadeUp',
       goTrades: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this.state.tab === 'Trades') return; this.setState({ tab: 'Trades', wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab('Trades'); },
@@ -4163,8 +3921,17 @@ class Component extends DCLogic {
         const cats = this.state.noteCats || [];
         const filter = this.state.noteFilter || 'All';
         const shown = filter === 'All' ? nlist : nlist.filter((n) => (n.category || '') === filter);
-        const filterChips = ['All'].concat(cats).map((c) => ({ label: c, removable: c !== 'All',
-          st: 'display:inline-flex;align-items:center;gap:7px;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 16px;border-radius:99px;cursor:pointer;transition:background .3s,color .3s,border-color .3s;' + (c === filter ? 'background:#fff;color:#000;font-weight:500;border:1px solid #fff' : 'background:none;color:#a0a0a0;border:1px solid rgba(255,255,255,.2)'),
+        const dragI = this.state.catDrag, overI = this.state.catOver;
+        const filterChips = ['All'].concat(cats).map((c, ci) => ({ label: c, removable: c !== 'All',
+          draggable: c !== 'All',
+          dragStart: (e) => { if (c === 'All') return; try { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(ci - 1)); } catch (_) {} this.setState({ catDrag: ci - 1, catOver: ci - 1 }); },
+          dragOver: (e) => { if (c === 'All' || this.state.catDrag == null) return; e.preventDefault(); if (this.state.catOver !== ci - 1) this.setState({ catOver: ci - 1 }); },
+          drop: (e) => { if (c === 'All' || this.state.catDrag == null) return; e.preventDefault(); this._moveNoteCat(this.state.catDrag, ci - 1); this.setState({ catDrag: null, catOver: null }); },
+          dragEnd: () => this.setState({ catDrag: null, catOver: null }),
+          st: 'display:inline-flex;align-items:center;gap:7px;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 16px;border-radius:99px;cursor:' + (c === 'All' ? 'pointer' : 'grab') + ';user-select:none;transition:background .3s,color .3s,border-color .3s,transform .28s cubic-bezier(.32,.72,0,1),opacity .2s;' +
+            (c === filter ? 'background:#fff;color:#000;font-weight:500;border:1px solid #fff' : 'background:none;color:#a0a0a0;border:1px solid rgba(255,255,255,.2)') +
+            (dragI != null && dragI === ci - 1 ? ';opacity:.4' : '') +
+            (dragI != null && overI === ci - 1 && dragI !== ci - 1 ? ';transform:translateX(' + (dragI < ci - 1 ? '-6px' : '6px') + ');border-color:rgba(255,255,255,.55)' : ''),
           xStyle: 'font-size:14px;line-height:1;cursor:pointer;transition:opacity .3s;opacity:.6;color:' + (c === filter ? '#000' : '#a0a0a0'),
           pick: () => this.setState({ noteFilter: c }),
           remove: (e) => { e.stopPropagation(); this._removeNoteCat(c); } }));

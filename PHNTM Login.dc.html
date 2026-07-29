@@ -64,7 +64,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:14px;line-height:1">
-        <span style="font-family:'Archivo',sans-serif;font-size:16px;color:#9c9c9c">Loading</span>
+        <span style="font-family:'Archivo',sans-serif;font-size:16px;color:#b0b0b0">{{ resumeLabel }}</span>
         <div style="font-family:'Archivo',sans-serif;font-size:16px;color:#fff;font-variant-numeric:tabular-nums">{{ pctLabel }}</div>
         <svg width="20" height="20" viewBox="0 0 60 60" style="display:block;animation:spinRing 1.4s linear infinite;overflow:visible">
           <circle cx="30" cy="30" r="27" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="3" stroke-linecap="round" stroke-dasharray="60 25 60 25"></circle>
@@ -228,7 +228,12 @@ class Component extends DCLogic {
         let bounced = false; try { bounced = sessionStorage.getItem('phntm-bounce') === '1'; } catch (e) {}
         if (bounced) { try { sessionStorage.removeItem('phntm-bounce'); } catch (e) {} return; }
         const s = A.sessionReady ? await A.sessionReady(1200) : await A.currentUser();
-        if (s) window.location.replace('PHNTM Dashboard.dc.html');
+        if (s) {
+          // keep the loader up and skip the reveal entirely — no form flash
+          this.setState({ resuming: true, phase: 'load' });
+          if (this._raf) cancelAnimationFrame(this._raf);
+          setTimeout(() => window.location.replace('PHNTM Dashboard.dc.html'), 260);
+        }
       } catch (e) {}
     })();
     // Full intro on a first visit; brief on every later one in the same session.
@@ -309,9 +314,10 @@ class Component extends DCLogic {
 
       loading: this.state.loading,
       notLoading: !this.state.loading,
-      loaderPresent: this.state.phase !== 'done',
-      loginMounted: this.state.phase !== 'load',
-      loaderOpacity: this.state.phase === 'load' ? 1 : 0,
+      loaderPresent: this.state.resuming || this.state.phase !== 'done',
+      loginMounted: !this.state.resuming && this.state.phase !== 'load',
+      loaderOpacity: (this.state.resuming || this.state.phase === 'load') ? 1 : 0,
+      resumeLabel: this.state.resuming ? 'Welcome back' : 'Loading',
       pctLabel: this.state.pct + '%',
       submit: () => this._submit(),
       googleIn: this._g || (this._g = (e) => { if (e && e.preventDefault) e.preventDefault(); this._oauth('google'); }),
