@@ -8,9 +8,9 @@
 <script src="./phntm-supabase.js"></script>
 </head>
 <body>
-<template id="__bundler_thumbnail" data-bg-color="#1F1F1F">
+<template id="__bundler_thumbnail" data-bg-color="#1f1f1f">
   <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1200" height="800" fill="#1F1F1F"/>
+    <rect width="1200" height="800" fill="#1f1f1f"/>
     <polyline points="200,620 360,560 480,600 640,440 800,470 980,240" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
     <circle cx="980" cy="240" r="16" fill="#ffffff"/>
     <text x="600" y="400" fill="#ffffff" font-family="Archivo, sans-serif" font-size="120" font-weight="300" letter-spacing="24" text-anchor="middle">PHNTM</text>
@@ -306,13 +306,13 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </header>
   <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeMore }}" style="position:fixed;inset:0;z-index:120;background:rgba(4,4,4,.7);backdrop-filter:blur(8px);display:flex;align-items:flex-end;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1c1c1e,#121213);border-top:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:22px 14px calc(30px + env(safe-area-inset-bottom));animation:sheetUp .42s cubic-bezier(.32,.72,0,1) both">
+      <div onClick="{{ stop }}" style="width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1c1c1c,#121213);border-top:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:22px 14px calc(30px + env(safe-area-inset-bottom));animation:sheetUp .42s cubic-bezier(.32,.72,0,1) both">
         <div style="width:38px;height:4px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px"></div>
         <div style="display:flex;flex-direction:column;gap:4px">
           <sc-for list="{{ moreItems }}" as="mi" hint-placeholder-count="3">
             <button onClick="{{ mi.pick }}" style="{{ mi.st }}">{{ mi.label }}</button>
           </sc-for>
-          <a href="PHNTM Login.dc.html" style="display:flex;align-items:center;min-height:52px;padding:14px 16px;border-radius:14px;color:#9c9c9c;font-size:15px">Sign out</a>
+          <a href="PHNTM Login.dc.html" onClick="{{ signOut }}" style="display:flex;align-items:center;min-height:52px;padding:14px 16px;border-radius:14px;color:#9c9c9c;font-size:15px;cursor:pointer">Sign out</a>
         </div>
       </div>
     </div>
@@ -333,7 +333,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:20px;flex:none">
-      <a href="PHNTM Login.dc.html" style="font-size:13.5px;color:#a0a0a0;white-space:nowrap;transition:color .3s" style-hover="color:#fff">Sign out</a>
+      <a href="PHNTM Login.dc.html" onClick="{{ signOut }}" style="font-size:13.5px;color:#a0a0a0;white-space:nowrap;cursor:pointer;transition:color .3s" style-hover="color:#fff">Sign out</a>
     </div>
   </nav>
   <sc-if value="{{ tabOverview }}" hint-placeholder-val="{{ true }}">
@@ -940,7 +940,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
         <span style="font-size:15px;color:#fff">Today</span>
         <div style="display:flex;align-items:center;gap:12px">
           <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a0a0a0">{{ todayCount }}</span>
-          <div style="position:relative;width:40px;height:40px;border-radius:50%;background:{{ ringStyle }}"><div style="position:absolute;inset:4px;border-radius:50%;background:#2c2c2e;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#fff">{{ todayPct }}</div></div>
+          <div style="position:relative;width:40px;height:40px;border-radius:50%;background:{{ ringStyle }}"><div style="position:absolute;inset:4px;border-radius:50%;background:#2b2b2b;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#fff">{{ todayPct }}</div></div>
         </div>
       </div>
       <sc-if value="{{ routineEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 0;font-size:14px;color:#9c9c9c">No rituals set. Add one below.</div></sc-if>
@@ -3754,6 +3754,25 @@ class Component extends DCLogic {
       tabTrades: this.state.tab === 'Trades',
       tabRoutine: this.state.tab === 'Routine',
       acctAnim: (this.state.scanN || 0) % 2 ? 'fadeUpB' : 'fadeUp',
+      signOut: (e) => {
+        if (e && e.preventDefault) e.preventDefault();
+        // end the Supabase session first, then clear the local cache — otherwise the
+        // login page finds a live session and sends you straight back in
+        const go = () => { try { sessionStorage.removeItem('phntm-bounce'); } catch (_) {} window.location.replace('PHNTM Login.dc.html'); };
+        const A = window.PHNTM && window.PHNTM.auth;
+        const wipe = () => {
+          try {
+            Object.keys(localStorage).filter((k) => k.indexOf('phntm-') === 0 && k !== 'phntm-name')
+              .forEach((k) => localStorage.removeItem(k));
+          } catch (_) {}
+        };
+        if (A && A.signOut) {
+          let done = false;
+          const finish = () => { if (done) return; done = true; wipe(); go(); };
+          setTimeout(finish, 1500);          // never hang on a slow network
+          Promise.resolve(A.signOut()).then(finish).catch(finish);
+        } else { wipe(); go(); }
+      },
       pageBg: BG,
       navBg: NAV,
       goTrades: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this.state.tab === 'Trades') return; this.setState({ tab: 'Trades', wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab('Trades'); },
@@ -4050,7 +4069,7 @@ class Component extends DCLogic {
           annoSelOpen: this.state.annoSel != null,
           annoDeleteSel: () => this._annoDeleteSel(),
           annoDeselect: () => this.setState({ annoSel: null }, () => this._annoPaint()),
-          annoSelStyle: (() => { const a = this.state.annoSelAt || { x: 0, y: 0 }; return 'position:absolute;z-index:6;left:' + Math.round(a.x) + 'px;top:' + Math.round(a.y + 14) + 'px;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;background:linear-gradient(180deg,#1c1c1e,#121213);border:1px solid rgba(255,255,255,.16);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.55);animation:popIn .22s cubic-bezier(.32,.72,0,1) both'; })(),
+          annoSelStyle: (() => { const a = this.state.annoSelAt || { x: 0, y: 0 }; return 'position:absolute;z-index:6;left:' + Math.round(a.x) + 'px;top:' + Math.round(a.y + 14) + 'px;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;background:linear-gradient(180deg,#1c1c1c,#121213);border:1px solid rgba(255,255,255,.16);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.55);animation:popIn .22s cubic-bezier(.32,.72,0,1) both'; })(),
           canAnnoUndo: !!(this._annoStrokes && this._annoStrokes.length),
           annoRef: (el) => { if (el && this._annoEl !== el) { this._annoEl = el; setTimeout(() => this._annoSize(), 0); } },
           annoCanvasStyle: 'position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;' + (this.state.annoOn ? 'pointer-events:auto;cursor:crosshair' : 'pointer-events:none'),
