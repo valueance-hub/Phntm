@@ -384,7 +384,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </div>
   </nav>
   <sc-if value="{{ tabOverview }}" hint-placeholder-val="{{ true }}">
-  <section data-m="pad stack hdr" style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding:64px 48px 40px">
+  <section data-m="pad stack hdr" style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:28px;padding:64px 48px 36px">
     <div style="flex:1 1 320px;min-width:0;animation:{{ acctAnim }} .9s cubic-bezier(.16,1,.3,1) both">
       <div style="font-size:14px;color:#b0b0b0">Good morning, {{ userName }} — Net P&amp;L, {{ chipLabel }}</div>
       <div style="display:flex;align-items:baseline;gap:22px;margin-top:10px">
@@ -406,7 +406,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       </div>
     </div>
     <div style="display:flex;gap:4px;padding:5px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:99px;flex:none;animation:{{ acctAnim }} .9s .04s cubic-bezier(.16,1,.3,1) both">
-      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4">
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="5">
         <button onClick="{{ c.pick }}" style="{{ c.st }}">{{ c.label }}</button>
       </sc-for>
     </div>
@@ -448,15 +448,26 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       </div>
     </div>
   </section>
-  <section data-m="pad col2" style="position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;padding:44px 48px 8px;animation:{{ acctAnim }} .55s .12s cubic-bezier(.16,1,.3,1) both">
-    <sc-for list="{{ vitalsBig }}" as="v" hint-placeholder-count="3">
-      <div style="{{ v.wrapStyle }}">
-        <div style="font-size:12.5px;color:#a0a0a0">{{ v.label }}</div>
-        <div style="margin-top:8px;font-size:34px;font-weight:300;line-height:1;color:#fff">{{ v.val }}</div>
+
+  <section data-m="pad" style="position:relative;z-index:1;padding:36px 48px 0;animation:{{ acctAnim }} .55s .12s cubic-bezier(.16,1,.3,1) both">
+    <div data-m="col1" style="display:grid;grid-template-columns:1fr;gap:18px;align-items:stretch">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:22px 24px;display:flex;flex-direction:column">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:4px">
+          <span style="font-size:15px;color:#fff">Performance</span>
+          <span style="font-size:11.5px;color:#b0b0b0">{{ chipLabel }}</span>
+        </div>
+        <sc-for list="{{ vitalsBig }}" as="v" hint-placeholder-count="3">
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.07)">
+            <span style="font-size:13px;color:#a0a0a0;white-space:nowrap">{{ v.label }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:300;line-height:1;color:#fff">{{ v.val }}</span>
+          </div>
+        </sc-for>
+        <div style="margin-top:auto;padding-top:16px;font-size:11.5px;color:#a0a0a0;line-height:1.5;text-wrap:pretty">{{ pfNote }}</div>
       </div>
-    </sc-for>
+
+    </div>
   </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:36px 48px 8px;animation:{{ acctAnim }} .62s .16s cubic-bezier(.16,1,.3,1) both">
+  <section data-m="pad" style="position:relative;z-index:1;padding:36px 48px 0;animation:{{ acctAnim }} .62s .16s cubic-bezier(.16,1,.3,1) both">
     <div data-m="col1" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start">
       <div style="background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 26px">
         <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px">
@@ -502,13 +513,38 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       </div>
     </div>
   </section>
-  <section data-m="pad" style="position:relative;z-index:1;padding:56px 48px 72px;animation:{{ acctAnim }} .62s .2s cubic-bezier(.16,1,.3,1) both">
+  <section data-m="pad" style="position:relative;z-index:1;padding:36px 48px 0;animation:{{ acctAnim }} .62s .2s cubic-bezier(.16,1,.3,1) both">
+      <div style="background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:22px 24px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:14px">
+          <span style="font-size:15px;color:#fff">Win rate by symbol</span>
+          <span style="font-size:11.5px;color:#b0b0b0">{{ chipLabel }}</span>
+        </div>
+        <sc-if value="{{ hasSymRows }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:1fr 1.2fr .55fr .8fr;gap:16px;padding:0 2px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
+            <span>Symbol</span><span>Win rate</span><span>%</span><span>Net</span>
+          </div>
+          <sc-for list="{{ symRows }}" as="s" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:1fr 1.2fr .55fr .8fr;gap:16px;align-items:center;padding:15px 2px;border-bottom:1px solid rgba(255,255,255,.07)">
+              <span style="font-size:13.5px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.name }}</span>
+              <div style="height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden"><div style="{{ s.barStyle }}"></div></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ s.wrText }}</span>
+              <span style="{{ s.netStyle }}">{{ s.net }}</span>
+            </div>
+          </sc-for>
+        </sc-if>
+        <sc-if value="{{ noSymRows }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:26px 0;font-size:13px;color:#a0a0a0">No trades in this range yet.</div>
+        </sc-if>
+      </div>
+  </section>
+
+  <section data-m="pad" style="position:relative;z-index:1;padding:36px 48px 76px;animation:{{ acctAnim }} .62s .2s cubic-bezier(.16,1,.3,1) both">
     <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px">
       <span style="font-size:15px;color:#fff">Recent trades</span>
       <a href="#" onClick="{{ goTrades }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#a0a0a0;cursor:pointer;transition:color .3s,gap .3s" style-hover="color:#fff;gap:14px">View all <span>→</span></a>
     </div>
     <div data-m="rowhead" style="display:grid;grid-template-columns:110px 90px 1fr 130px 110px 90px;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
-      <span>Symbol</span><span>Side</span><span>Account</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span>
+      <span>Symbol</span><span>Side</span><span>Setup</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span>
     </div>
     <sc-if value="{{ noTrades }}" hint-placeholder-val="{{ false }}">
       <div style="padding:26px 0;font-size:14px;color:#a0a0a0">No trades on record. Log one to begin.</div>
@@ -544,7 +580,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 
   <section data-m="pad" style="position:relative;z-index:1;padding:20px 48px 80px">
     <div data-m="rowhead" style="display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
-      <span>Symbol</span><span>Side</span><span>Account</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span><span>Rules</span><span></span>
+      <span>Symbol</span><span>Side</span><span>Setup</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span><span>Rules</span><span></span>
     </div>
     <sc-if value="{{ noAllTrades }}" hint-placeholder-val="{{ true }}">
       <div style="padding:34px 0;font-size:14px;color:#b0b0b0">Nothing here yet — log your first trade to begin the record.</div>
@@ -724,16 +760,18 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#b0b0b0">{{ btScopeLabel }}</span>
     </div>
     <div style="display:flex;flex-direction:column">
-      <div style="display:grid;grid-template-columns:1.1fr 130px .8fr .8fr .9fr;gap:14px;padding:0 4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
-        <span>Session</span><span>Win rate</span><span>%</span><span>Record</span><span>Net</span>
+      <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;padding:0 4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
+        <span>Session</span><span>Win rate</span><span></span><span>%</span><span></span><span>Net</span><span></span>
       </div>
       <sc-for list="{{ btSessions }}" as="s" hint-placeholder-count="3">
-        <div style="display:grid;grid-template-columns:1.1fr 130px .8fr .8fr .9fr;gap:14px;align-items:center;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.07)">
+        <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;align-items:center;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.07)">
           <span style="font-size:14px;color:#fff">{{ s.name }}</span>
           <div style="height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden"><div style="{{ s.barStyle }}"></div></div>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ s.win }}</span>
-          <span style="font-size:12.5px;color:#a0a0a0">{{ s.record }}</span>
+          <span></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ s.win }} <span style="color:#a0a0a0;font-size:11.5px">{{ s.record }}</span></span>
+          <span></span>
           <span style="{{ s.netStyle }}">{{ s.net }}</span>
+          <span></span>
         </div>
       </sc-for>
     </div>
@@ -742,7 +780,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 
   <section data-m="pad" style="position:relative;z-index:1;padding:40px 48px 72px">
     <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;padding:0 4px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
-      <span>Symbol</span><span>Date</span><span>Side</span><span>Account</span><span>R</span><span>P&amp;L</span><span></span>
+      <span>Symbol</span><span>Date</span><span>Side</span><span>Setup</span><span>R</span><span>P&amp;L</span><span></span>
     </div>
     <div style="display:flex;flex-direction:column">
       <sc-for list="{{ btRows }}" as="t" hint-placeholder-count="5">
@@ -2772,6 +2810,17 @@ class Component extends DCLogic {
     if (bd) this.setState({ sex: bd.sex || 'male', htCm: bd.htCm || 178, wtKg: bd.wtKg || 78, goal: bd.goal || 'Maintain' });
   }
   componentDidMount() {
+    // "Keep me signed in" off means the session should not survive closing the browser.
+    // sessionStorage is per-tab-session, so its absence marks a fresh browser session.
+    try {
+      if (localStorage.getItem('phntm-keep') === '0' && !sessionStorage.getItem('phntm-live')) {
+        const A = window.PHNTM && window.PHNTM.auth;
+        if (A && A.signOut) { A.signOut(); }
+        window.location.replace('PHNTM Login.dc.html');
+        return;
+      }
+      sessionStorage.setItem('phntm-live', '1');
+    } catch (e) {}
     // arriving from an auto sign-in: the login screen already showed the mark
     try { this._handoff = sessionStorage.getItem('phntm-handoff') === '1'; if (this._handoff) sessionStorage.removeItem('phntm-handoff'); } catch (e) {}
     // a reload should start at the top, not wherever the last session left off
@@ -2870,7 +2919,7 @@ class Component extends DCLogic {
     const _ac = this._activeChallenge();
     const pacct = this._evalAccount(this.state.myTrades || [], _ac ? { type: 'Prop', firm: _ac.token, market: _ac.market, size: _ac.size, phase: _ac.phase } : { type: 'Prop', firm: this.state.acctFirm, size: this.state.acctSize, phase: this.state.acctPhase });
     const mts = acct.scoped;
-    const spans = { D: 864e5, W: 6048e5, M: 26784e5, Y: 31536e6 };
+    const spans = { D: 864e5, W: 6048e5, M: 26784e5, Y: 31536e6, A: Infinity };
     const nowTs = Date.now();
     const inRange = mts.filter((t) => nowTs - t.ts <= spans[this.state.range]);
     const winsL = inRange.filter((t) => t.pnl > 0), lossL = inRange.filter((t) => t.pnl < 0);
@@ -2882,8 +2931,8 @@ class Component extends DCLogic {
       pf: gl > 0 ? gw / gl : (gw > 0 ? Infinity : 0),   // no losses is not a ratio — say so
       avgR: inRange.length ? inRange.reduce((a, t) => a + (t.r || 0), 0) / inRange.length : 0,
     };
-    const labels = { D: 'today', W: 'this week', M: 'this month', Y: 'this year' };
-    const chips = [['D', 'Day'], ['W', 'Week'], ['M', 'Month'], ['Y', 'Year']].map(([r, l]) => ({
+    const labels = { D: 'today', W: 'this week', M: 'this month', Y: 'this year', A: 'all time' };
+    const chips = [['D', 'Day'], ['W', 'Week'], ['M', 'Month'], ['Y', 'Year'], ['A', 'All']].map(([r, l]) => ({
       label: l,
       st: 'background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;padding:9px 16px;border-radius:99px;transition:background .3s,color .3s;' +
         (r === this.state.range ? 'background:#fff;color:#000;font-weight:500' : 'color:#a0a0a0'),
@@ -3032,7 +3081,8 @@ class Component extends DCLogic {
     const fmt$ = (v) => (Math.round(v) === 0 ? '$' : (v < 0 ? '-$' : '+$')) + Math.abs(Math.round(v)).toLocaleString();
     const mkRow = (t) => ({
       sym: t.sym, side: t.side,
-      setup: (t.pics && t.pics.length ? t.pics.length + ' pic' + (t.pics.length > 1 ? 's' : '') : ''),
+      setup: t.setup || '',
+      pics: (t.pics && t.pics.length ? t.pics.length + ' pic' + (t.pics.length > 1 ? 's' : '') : ''),
       time: fmtT(t.ts), pnl: fmt$(t.pnl), r: t.r ? ((t.r > 0 ? '+' : '') + t.r.toFixed(1) + 'R') : '',
       pnlStyle: t.pnl >= 0 ? win : loss, rStyle: t.pnl >= 0 ? win : loss,
       ruleDots: (function () { var total = t.rulesTotal || 0, f = t.rulesFollowed || 0, a = []; for (var i = 0; i < total; i++) a.push('width:6px;height:6px;border-radius:50%;flex:none;background:' + (i < f ? '#fff' : 'rgba(255,255,255,.18)')); return a; })(),
@@ -3054,6 +3104,22 @@ class Component extends DCLogic {
     const disc = inRange.length ? Math.round(100 * inRange.filter((t) => (t.r || 0) >= -1.05).length / inRange.length) : null;
     // Session win rates
     const extraSess = [...new Set(inRange.map((t) => t.session).filter((s) => s && !['Asia', 'London', 'NY'].includes(s)))];
+    const symRows = (() => {
+      const names = [...new Set(inRange.map((t) => (t.sym || '').toUpperCase()).filter(Boolean))];
+      return names.map((name) => {
+        const g = inRange.filter((t) => (t.sym || '').toUpperCase() === name);
+        const wins = g.filter((t) => t.pnl > 0).length, losses = g.filter((t) => t.pnl < 0).length;
+        const dec = wins + losses;
+        const wr = dec ? Math.round(100 * wins / dec) : 0;
+        const sum = g.reduce((a, t) => a + (t.pnl || 0), 0);
+        return { name, wr, n: g.length,
+          wrText: dec ? wr + '%' : '—',
+          record: wins + 'W · ' + losses + 'L',
+          net: (sum < 0 ? '−$' : '+$') + Math.abs(Math.round(sum)).toLocaleString(),
+          netStyle: 'font-family:JetBrains Mono,monospace;font-size:13px;color:' + (sum > 0 ? '#7fd1a0' : sum < 0 ? '#e0a05a' : '#a0a0a0'),
+          barStyle: 'height:100%;border-radius:99px;width:' + (dec ? Math.max(3, wr) : 0) + '%;background:' + (sum > 0 ? '#7fd1a0' : '#e0a05a') + ';transition:width .6s cubic-bezier(.16,1,.3,1)' };
+      }).sort((a, b) => b.n - a.n);
+    })();
     const sessRows = ['Asia', 'London', 'NY'].concat(extraSess).map((name) => {
       const g = inRange.filter((t) => t.session === name);
       const wins = g.filter((t) => t.pnl > 0).length;
@@ -3128,7 +3194,7 @@ class Component extends DCLogic {
       setGoalLabel: (e) => this._setActCfgStr('goalLabel', e.target.value),
       vitalsBig: [
         ['Win rate', !inRange.length ? '—' : (data.wr * k).toFixed(1) + '%', '.2s'],
-        ['Profit factor', !inRange.length ? '—' : (gl === 0 ? '∞' : (data.pf * k).toFixed(2)), '.25s'],
+        ['Profit factor', (!inRange.length || gl === 0) ? '—' : (data.pf * k).toFixed(2), '.25s'],
         ['Average R', !inRange.length ? '—' : ((data.avgR >= 0 ? '+' : '') + (data.avgR * k).toFixed(1) + 'R'), '.3s'],
       ].map(([label, val, delay]) => ({
         label, val,
@@ -3138,7 +3204,12 @@ class Component extends DCLogic {
       mobTabs, mobMore, moreItems,
       moreOpen: !!this.state.moreOpen,
       closeMore: () => this.setState({ moreOpen: false }),
-      sessRows, sessInsight, setupRows, setupInsight, dayRows, dayInsight,
+      sessRows, symRows, hasSymRows: symRows.length > 0, noSymRows: symRows.length === 0,
+      pfNote: !inRange.length
+        ? 'No trades in this range yet.'
+        : (gl === 0
+            ? 'Profit factor needs at least one loss to divide by — it appears once you have one.'
+            : 'Profit factor is gross profit ÷ gross loss. Above 1 means you are net ahead.'), sessInsight, setupRows, setupInsight, dayRows, dayInsight,
       viewIsChallenge: (this.state.viewAcct || 'Live') !== 'Live',
       viewTopButtons: [['Live', 'Live'], ['Challenge', 'Challenge']].map(([label, mode]) => {
         const on = mode === 'Live' ? (this.state.viewAcct || 'Live') === 'Live' : (this.state.viewAcct || 'Live') !== 'Live';
@@ -3922,7 +3993,7 @@ class Component extends DCLogic {
           }),
         };
       })(),
-      allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = [this._acctName(t.acct), row.setup].filter(Boolean).join('  \u00b7  '); row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
+      allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = [this._acctName(t.acct), t.setup].filter(Boolean).join('  \u00b7  '); row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
       tradeFilterReset: (() => { const { hasBt, hasLive, accts } = this._tradeView(); const f = this.state.tradeFilter || 'All'; const ok = f === 'All' || (f === 'Live' && hasLive) || (f === 'Backtest' && hasBt) || (f === 'Prop' && accts.length); if (!ok && this.state.tradeFilter) setTimeout(() => this.setState({ tradeFilter: 'All' }), 0); return true; })(),
       tradeFilterTabs: (() => { const { accts, hasBt, hasLive } = this._tradeView(); const tabs = [['All', 'All']]; if (hasLive) tabs.push(['Live', 'Live']); if (accts.length) tabs.push(['Prop', 'Prop firm']); if (hasBt) tabs.push(['Backtest', 'Backtest']); return tabs.map(([v, label]) => ({ label, value: v, st: 'border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s;' + ((this.state.tradeFilter || 'All') === v ? 'background:#fff;color:#000;font-weight:500' : 'background:none;color:#a0a0a0'), pick: () => this.setState({ tradeFilter: v, tradeSub: 'All' }) })); })(),
       tradeSubOpen: (this.state.tradeFilter === 'Prop') && this._tradeView().accts.length > 1,
