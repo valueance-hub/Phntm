@@ -20,13 +20,13 @@
 
       const mono = (px) => px + "px 'JetBrains Mono', monospace";
       const money = (v) => (v < 0 ? '-$' : '$') + Math.abs(Math.round(v)).toLocaleString();
-      const kLabel = (v) => { const a = Math.abs(v), sg = v < 0 ? '-$' : '$'; if (a >= 1000) { const k = a / 1000; return sg + (a % 1000 === 0 ? k.toFixed(0) : k.toFixed(1)) + 'K'; } return sg + Math.round(a).toLocaleString(); };
+      const kLabel = (v) => { const a = Math.abs(v), sg = v < 0 ? '-$' : '$'; if (a >= 1000) { const k = a / 1000; const s = k.toFixed(1).replace(/\.0$/, ''); return sg + s + 'K'; } return sg + Math.round(a).toLocaleString(); };
       const niceStep = (raw) => { const p = Math.pow(10, Math.floor(Math.log10(Math.max(1, raw)))); const f = raw / p; let nf; if (f < 1.5) nf = 1; else if (f < 3) nf = 2; else if (f < 7) nf = 5; else nf = 10; return nf * p; };
       const dLabel = (ts) => { const d = new Date(ts); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getDate(); };
       const tLabel = (ts) => { const d = new Date(ts); let h = d.getHours(); const ap = h < 12 ? 'AM' : 'PM'; h = h % 12; if (h === 0) h = 12; return h + ap; };
       const TZ = (function () { const o = -new Date().getTimezoneOffset() / 60; let z = ''; try { z = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {} return (z ? z + ' · ' : '') + 'GMT' + (o >= 0 ? '+' : '') + o; })();
 
-      let START = 0, GOAL = 0, FAIL = NaN, isLive = true, PTS = [];
+      let START = 0, GOAL = 0, FAIL = NaN, isLive = true, PTS = [], HAS_TRADES = false;
       const parse = () => {
         const s = +this.getAttribute('start'); START = isFinite(s) ? s : 0;
         const g = +this.getAttribute('goal'); GOAL = isFinite(g) ? g : START;
@@ -34,6 +34,7 @@
         isLive = !isFinite(FAIL);
         let arr = null; try { arr = JSON.parse(this.getAttribute('eq')); } catch (e) {}
         const pts = Array.isArray(arr) ? arr : [];
+        HAS_TRADES = pts.length > 0;   // the anchor below always adds one point, so count trades here
         // prepend the starting balance as the first anchor point
         PTS = [{ eq: START, ts: pts.length ? (pts[0].ts - Math.max(60000, (pts[pts.length - 1].ts - pts[0].ts) / Math.max(1, pts.length))) : Date.now() }].concat(pts.map((d) => ({ eq: d.eq, ts: d.ts })));
       };
@@ -41,7 +42,9 @@
       this._key = ''; this._p = 0; this._pStart = 0;
 
       const draw = () => {
-        const padL = 60, padT = 26, padB = 40, padR = 20;
+        // gutters scale with the canvas — at half width fixed 60px ate a third of the plot
+        const narrow = W < 520;
+        const padL = narrow ? 46 : 60, padT = narrow ? 20 : 26, padB = narrow ? 32 : 40, padR = narrow ? 14 : 20;
         const plotW = W - padL - padR, plotH = H - padT - padB;
         const x0 = padL, topY = padT, botY = padT + plotH;
         const n = PTS.length;
@@ -58,6 +61,15 @@
         }
         else { const hi = Math.max.apply(null, eqs), lo = Math.min.apply(null, eqs); const pad = Math.max((hi - lo) * 0.18, Math.abs(START) * 0.04, 1); yMax = hi + pad; yMin = lo - pad; }
         if (!(yMax > yMin)) { yMax = START + Math.max(1, Math.abs(START) * 0.1); yMin = START - Math.max(1, Math.abs(START) * 0.1); }
+        // A zero baseline is the reference a trader reads against — but anchoring to it
+        // unconditionally crushes a funded curve into a flat band at the top (a $5,000
+        // account moving $230 gets 8% of the plot). So only extend to zero when the data
+        // still keeps a readable share of the height; otherwise the padded data range wins.
+        if (isLive) {
+          const MIN_BAND = 0.34;                       // data must keep >= 34% of the plot
+          if (yMin > 0) { const t = yMax - 0; if ((yMax - yMin) / t >= MIN_BAND) yMin = 0; }
+          if (yMax < 0) { const t = 0 - yMin; if ((yMax - yMin) / t >= MIN_BAND) yMax = 0; }
+        }
         const y = (v) => botY - ((v - yMin) / (yMax - yMin)) * plotH;
         const span = n > 1 ? (PTS[n - 1].ts - PTS[0].ts) : 0;
         const useTime = n > 1 && span > 0 && span < 129600000;
@@ -69,13 +81,36 @@
 
         // Y gridlines + $ labels (nice steps)
         ctx.textAlign = 'right'; ctx.font = mono(9);
-        const step = niceStep((yMax - yMin) / 4);
-        const gStart = Math.ceil(yMin / step) * step;
-        for (let v = gStart; v <= yMax; v += step) {
+        const EMPTY = !HAS_TRADES;   // the anchor point alone is not data
+        let step;
+        if (EMPTY) {
+          // no data yet — centre the band ON the balance in whole steps, so the starting
+          // figure is always a labelled gridline and the baseline gap lands on it
+          const span = Math.max(Math.abs(START) * 0.1, 100);
+          step = niceStep(span / 2);
+          yMin = START - step * 2; yMax = START + step * 2;
+        } else {
+          step = niceStep((yMax - yMin) / 4);
+          // snap the bounds to the step so labels read 4k / 4.5k / 5k, never 390 / 410
+          yMin = Math.floor(yMin / step) * step;
+          yMax = Math.ceil(yMax / step) * step;
+        }
+        if (yMax === yMin) yMax = yMin + step;
+        const gStart = yMin;
+        for (let v = gStart; v <= yMax + step * 0.001; v += step) {
           const yy = y(v);
+          if (EMPTY && Math.abs(v - START) < step * 0.001) {
+            // draw the baseline in two segments, leaving a gap for the panel's message
+            const cx = x0 + plotW / 2, gap = Math.min(230, plotW * 0.72) / 2;
+            ctx.strokeStyle = 'rgba(255,255,255,.16)'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(cx - gap, yy); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(cx + gap, yy); ctx.lineTo(W - padR, yy); ctx.stroke();
+            ctx.fillStyle = '#a0a0a0'; ctx.fillText(kLabel(v), padL - 10, yy);   // the balance must be labelled like any other line
+            continue;
+          }
           ctx.strokeStyle = 'rgba(255,255,255,.05)'; ctx.lineWidth = 1;
           ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(W - padR, yy); ctx.stroke();
-          ctx.fillStyle = '#9c9c9c'; ctx.fillText(kLabel(v), padL - 10, yy);
+          ctx.fillStyle = '#a0a0a0'; ctx.fillText(kLabel(v), padL - 10, yy);
         }
         // GOAL / FAIL levels (prop only)
         const level = (v, col, line, label) => { if (v > yMax || v < yMin) return; const yy = y(v); ctx.strokeStyle = line; ctx.setLineDash([4, 6]); ctx.beginPath(); ctx.moveTo(x0, yy); ctx.lineTo(W - padR, yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = col; ctx.font = '600 ' + mono(9); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(label, W - padR, yy - 5); ctx.textBaseline = 'middle'; };
@@ -83,7 +118,7 @@
         if (!isLive) { level(GOAL, 'rgba(95,191,131,.95)', 'rgba(95,191,131,.3)', (this.getAttribute('goallabel') || 'TARGET') + (metGoal ? '  ✓ MET' : '')); level(FAIL, 'rgba(224,160,90,.95)', 'rgba(224,160,90,.3)', (this.getAttribute('faillabel') || 'LIMIT')); }
 
         // axis titles
-        ctx.fillStyle = '#949494'; ctx.font = mono(8.5); ctx.textAlign = 'left';
+        ctx.fillStyle = '#a0a0a0'; ctx.font = mono(8.5); ctx.textAlign = 'left';
         ctx.textAlign = 'right'; ctx.fillText(TZ, W - padR, botY + 32);
 
         const p = this._p;
@@ -105,12 +140,12 @@
           ctx.font = mono(9); ctx.textBaseline = 'alphabetic';
           const dayKey = (ts) => { const d = new Date(ts); return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); };
           if (dayKey(PTS[0].ts) === dayKey(PTS[n - 1].ts)) {
-            ctx.fillStyle = '#9c9c9c'; ctx.textAlign = 'left'; ctx.fillText(tLabel(PTS[0].ts), x0, botY + 18);
+            ctx.fillStyle = '#a0a0a0'; ctx.textAlign = 'left'; ctx.fillText(tLabel(PTS[0].ts), x0, botY + 18);
             ctx.textAlign = 'right'; ctx.fillText(tLabel(PTS[n - 1].ts), x0 + plotW, botY + 18);
-            ctx.fillStyle = '#949494'; ctx.textAlign = 'center'; ctx.fillText(dLabel(PTS[0].ts), x0 + plotW / 2, botY + 18);
+            ctx.fillStyle = '#a0a0a0'; ctx.textAlign = 'center'; ctx.fillText(dLabel(PTS[0].ts), x0 + plotW / 2, botY + 18);
           } else {
             let prev = null;
-            for (let i = 0; i < n; i++) { const k = dayKey(PTS[i].ts); if (k === prev) continue; prev = k; const xx = x(i); ctx.strokeStyle = 'rgba(255,255,255,.04)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xx, topY); ctx.lineTo(xx, botY); ctx.stroke(); ctx.fillStyle = '#9c9c9c'; ctx.textAlign = i === 0 ? 'left' : (i === n - 1 ? 'right' : 'center'); ctx.fillText(dLabel(PTS[i].ts), xx, botY + 18); }
+            for (let i = 0; i < n; i++) { const k = dayKey(PTS[i].ts); if (k === prev) continue; prev = k; const xx = x(i); ctx.strokeStyle = 'rgba(255,255,255,.04)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xx, topY); ctx.lineTo(xx, botY); ctx.stroke(); ctx.fillStyle = '#a0a0a0'; ctx.textAlign = i === 0 ? 'left' : (i === n - 1 ? 'right' : 'center'); ctx.fillText(dLabel(PTS[i].ts), xx, botY + 18); }
           }
           ctx.textBaseline = 'middle';
 
@@ -128,8 +163,7 @@
           ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.font = '600 ' + mono(12); ctx.fillText(txt, bx, by);
           ctx.globalAlpha = 1;
         } else {
-          ctx.fillStyle = 'rgba(255,255,255,.4)'; ctx.textAlign = 'center'; ctx.font = '500 ' + mono(11);
-          ctx.fillText('READY — your equity curve builds as you log trades', x0 + plotW / 2, botY - plotH / 2);
+          /* empty state is rendered by the panel, not the canvas */
         }
       };
 
