@@ -3,6 +3,9 @@
   "functions": {
     "api/nutrition.js": {
       "maxDuration": 30
+    },
+    "api/rates.js": {
+      "maxDuration": 15
     }
   }
 }

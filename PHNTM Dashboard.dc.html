@@ -38,6 +38,7 @@ input,select,textarea{outline:none}
 [contenteditable]{outline:none !important}
 [contenteditable]:focus,[contenteditable]:focus-visible{outline:none !important;box-shadow:none !important}
 @keyframes fadeUpB{0%{opacity:0;transform:translate3d(0,14px,0)}100%{opacity:1;transform:translate3d(0,0,0)}}
+@keyframes ratePulse{0%,100%{opacity:1}50%{opacity:.45}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes menuIn{0%{opacity:0;transform:translateY(-6px) scale(.985)}100%{opacity:1;transform:translateY(0) scale(1)}}
@@ -770,7 +771,82 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </div>
   </section>
   </sc-if>
-  <sc-if value="{{ tabBacktest }}" hint-placeholder-val="{{ false }}">
+  <sc-if value="{{ tabSizing }}" hint-placeholder-val="{{ false }}">
+  <section data-m="pad" style="position:relative;z-index:1;padding:64px 48px 26px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:14px;color:#b0b0b0">Position size</div>
+        <div style="font-size:clamp(34px,4.4vw,52px);font-weight:200;letter-spacing:-.03em;line-height:1.05;color:#fff;margin-top:8px">{{ szRiskLabel }} <span style="font-size:.4em;font-weight:300;color:#b0b0b0">at risk</span></div>
+        <div style="margin-top:9px;font-size:13px;color:#b0b0b0">{{ szRiskMath }}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none">
+        <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:{{ szRatesColor }}"><span style="{{ szDotSt }}"></span>{{ szRatesLabel }}</span>
+        <button onClick="{{ szRefresh }}" style="border:1px solid rgba(255,255,255,.16);background:none;color:#b0b0b0;font-family:Archivo,sans-serif;font-size:12px;padding:7px 15px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s,transform .16s cubic-bezier(.32,.72,0,1)" style-hover="color:#fff;border-color:rgba(255,255,255,.34)" style-active="transform:scale(.96)">Refresh</button>
+      </div>
+    </div>
+  </section>
+
+  <section data-m="pad" style="position:relative;z-index:1;padding:0 48px 8px;animation:fadeUp .6s .06s cubic-bezier(.16,1,.3,1) both">
+    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;align-items:end">
+      <div>
+        <label style="font-size:12px;color:#b0b0b0">Balance</label>
+        <input placeholder="{{ szBalPlaceholder }}" value="{{ szBal }}" onInput="{{ szSetBal }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 14px;outline:none;transition:border-color .3s,background .3s" style-focus="border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.06)">
+        <div style="margin-top:7px;font-size:11.5px;color:#b0b0b0">{{ szBalNote }}</div>
+      </div>
+      <div>
+        <label style="font-size:12px;color:#b0b0b0">Risk</label>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input placeholder="1" value="{{ szRiskPct }}" onInput="{{ szSetRiskPct }}" style="flex:1;min-width:0;box-sizing:border-box;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 14px;outline:none;transition:border-color .3s,background .3s" style-focus="border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.06)">
+          <button onClick="{{ szToggleMode }}" style="flex:none;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:14px;width:46px;cursor:pointer;transition:background .3s,transform .16s cubic-bezier(.32,.72,0,1)" style-hover="background:rgba(255,255,255,.12)" style-active="transform:scale(.94)">{{ szModeSign }}</button>
+        </div>
+        <div style="margin-top:7px;font-size:11.5px;color:#b0b0b0">{{ szModeNote }}</div>
+      </div>
+      <div>
+        <label style="font-size:12px;color:#b0b0b0">Stop</label>
+        <input placeholder="20" value="{{ szStop }}" onInput="{{ szSetStop }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 14px;outline:none;transition:border-color .3s,background .3s" style-focus="border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.06)">
+        <div style="margin-top:7px;font-size:11.5px;color:#b0b0b0">pips, entry to stop</div>
+      </div>
+    </div>
+  </section>
+
+  <section data-m="pad" style="position:relative;z-index:1;padding:30px 48px 80px">
+    <div style="display:grid;grid-template-columns:1.2fr .8fr .8fr 44px;gap:14px;padding:0 4px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
+      <span>Pair</span><span>Lots</span><span>Per pip</span><span></span>
+    </div>
+    <div style="display:flex;flex-direction:column">
+      <sc-for list="{{ szRows }}" as="r" hint-placeholder-count="7">
+        <div style="{{ r.rowSt }}">
+          <span style="font-size:15px;color:#fff">{{ r.sym }}</span>
+          <span style="{{ r.lotsSt }}">{{ r.lots }}</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#b0b0b0">{{ r.pip }}</span>
+          <button onClick="{{ r.remove }}" title="Remove pair" style="justify-self:end;background:none;border:none;color:#7a7a7a;font-size:15px;line-height:1;padding:8px 9px;margin:-8px 0 -8px -9px;cursor:pointer;transition:color .3s" style-hover="color:#e0a05a">×</button>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:22px">
+      <select value="{{ szAddPick }}" onChange="{{ szAdd }}" style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:13px;padding:10px 13px;outline:none;cursor:pointer;transition:border-color .3s" style-hover="border-color:rgba(255,255,255,.28)">
+        <sc-for list="{{ szAddOptions }}" as="o" hint-placeholder-count="10"><option value="{{ o.value }}">{{ o.label }}</option></sc-for>
+      </select>
+      <sc-if value="{{ szCanReset }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ szReset }}" style="background:none;border:none;color:#b0b0b0;font-family:Archivo,sans-serif;font-size:12.5px;cursor:pointer;transition:color .3s" style-hover="color:#fff">Reset list</button>
+      </sc-if>
+    </div>
+    <div style="margin-top:26px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase">Rates used · {{ szRatesWhen }}</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <sc-for list="{{ szRateChips }}" as="c" hint-placeholder-count="4">
+          <span style="display:flex;align-items:baseline;gap:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:9px;padding:7px 12px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#b0b0b0">{{ c.pair }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ c.rate }}</span>
+          </span>
+        </sc-for>
+      </div>
+      <div style="margin-top:16px;font-size:12px;color:#b0b0b0;line-height:1.6;max-width:620px;text-wrap:pretty">{{ szFootnote }}</div>
+    </div>
+  </section>
+</sc-if>
+<sc-if value="{{ tabBacktest }}" hint-placeholder-val="{{ false }}">
   <section data-m="pad" style="position:relative;z-index:1;padding:64px 48px 22px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:28px;flex-wrap:wrap">
       <div style="flex:1 1 300px;min-width:0">
@@ -1354,7 +1430,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;pageBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#171717&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#171717&quot;,&quot;#0d0d0d&quot;,&quot;#212121&quot;,&quot;#101014&quot;]},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1c1c1c&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#1c1c1c&quot;,&quot;#141414&quot;,&quot;#232323&quot;,&quot;#12121a&quot;]}}">
 class Component extends DCLogic {
-  state = { range: 'D', tab: 'Overview', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
+  state = { range: 'D', tab: 'Overview', szPairs: null, szStop: '20', szRiskPct: '1', szMode: 'pct', szRiskUsd: '500', szBal: '', rates: null, ratesDate: '', ratesErr: '', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
   _openFoodEdit(f) { this.setState({ editFoodId: f.id, editFood: { name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0 } }); }
   _setEditFood(field, val) { const v = field === 'name' ? val : (parseInt(String(val).replace(/[^0-9]/g, '')) || 0); this.setState({ editFood: { ...this.state.editFood, [field]: v } }); }
   _saveEditFood() { const e = this.state.editFood; const foods = (this.state.foods || []).map((f) => f.id === this.state.editFoodId ? { ...f, name: e.name, kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, sugar: e.sugar } : f);
@@ -2614,6 +2690,64 @@ class Component extends DCLogic {
     });
     return { list: out, fixed };
   }
+  // ---- Position sizing -----------------------------------------------------
+  // A pip is worth its quote currency, so only pairs quoted in USD have a fixed
+  // dollar value. Everything else has to be converted at the live rate — which is
+  // why this fetches ECB daily rates instead of trusting a memorised number.
+  _szDefaultPairs() { return ['GBPUSD', 'USDCAD', 'EURUSD', 'NZDJPY', 'USDJPY', 'EURJPY', 'USDCHF']; }
+  _szSetPairs(next) {
+    const list = next && next.length ? next : null;
+    this.setState({ szPairs: list || this._szDefaultPairs() });
+    try {
+      if (list) localStorage.setItem('phntm-sz-pairs-v1', JSON.stringify(list));
+      else localStorage.removeItem('phntm-sz-pairs-v1');
+    } catch (e) {}
+  }
+  _szInstruments() {
+    const FX = (sym, quote, jpy) => ({ sym, quote, pip: jpy ? 0.01 : 0.0001, contract: 100000, digits: jpy ? 3 : 5 });
+    return [
+      FX('EURUSD', 'USD'), FX('GBPUSD', 'USD'), FX('AUDUSD', 'USD'), FX('NZDUSD', 'USD'),
+      FX('USDJPY', 'JPY', 1), FX('EURJPY', 'JPY', 1), FX('GBPJPY', 'JPY', 1),
+      FX('NZDJPY', 'JPY', 1), FX('AUDJPY', 'JPY', 1), FX('CADJPY', 'JPY', 1), FX('CHFJPY', 'JPY', 1),
+      FX('USDCAD', 'CAD'), FX('USDCHF', 'CHF'),
+      FX('EURGBP', 'GBP'), FX('EURCHF', 'CHF'), FX('EURCAD', 'CAD'), FX('EURAUD', 'AUD'), FX('EURNZD', 'NZD'),
+      FX('GBPCAD', 'CAD'), FX('GBPCHF', 'CHF'), FX('GBPAUD', 'AUD'), FX('GBPNZD', 'NZD'),
+      FX('AUDCAD', 'CAD'), FX('AUDCHF', 'CHF'), FX('AUDNZD', 'NZD'),
+      FX('NZDCAD', 'CAD'), FX('NZDCHF', 'CHF'), FX('CADCHF', 'CHF'),
+      FX('USDSGD', 'SGD'), FX('USDMXN', 'MXN'), FX('USDZAR', 'ZAR'),
+      FX('USDSEK', 'SEK'), FX('USDNOK', 'NOK'), FX('USDPLN', 'PLN'), FX('USDTRY', 'TRY'),
+    ];
+  }
+  // Last known good rates, so the tab is useful on a plane or if the API is down.
+  // Deliberately conservative for the drifting pairs: a slightly HIGH pip value
+  // yields a slightly SMALL lot, so being stale leaves you under-risked, not over.
+  _szFallback() {
+    return { USD: 1, JPY: 1 / 160.3, CAD: 1 / 1.403, CHF: 1 / 0.807, GBP: 1.34, EUR: 1.16,
+             AUD: 0.655, NZD: 0.6, SGD: 0.74, MXN: 0.054, ZAR: 0.055, SEK: 0.094,
+             NOK: 0.092, PLN: 0.27, TRY: 0.024 };
+  }
+  async _szLoadRates() {
+    const today = new Date().toISOString().slice(0, 10);
+    // a cached set from today is authoritative — ECB only publishes once a day
+    try {
+      const c = JSON.parse(localStorage.getItem('phntm-rates-v1') || 'null');
+      if (c && c.fetched === today && c.usdPer) {
+        this.setState({ rates: c.usdPer, ratesDate: c.date || today, ratesErr: '' });
+        return;
+      }
+      if (c && c.usdPer) this.setState({ rates: c.usdPer, ratesDate: c.date || '' });   // show stale while refreshing
+    } catch (e) {}
+    try {
+      const r = await fetch('/api/rates');
+      if (!r.ok) throw new Error('http ' + r.status);
+      const j = await r.json();
+      if (!j || !j.usdPer || !j.usdPer.JPY) throw new Error('bad payload');
+      this.setState({ rates: j.usdPer, ratesDate: j.date || today, ratesErr: '' });
+      try { localStorage.setItem('phntm-rates-v1', JSON.stringify({ fetched: today, date: j.date, usdPer: j.usdPer })); } catch (e) {}
+    } catch (e) {
+      if (!this.state.rates) this.setState({ rates: this._szFallback(), ratesDate: '', ratesErr: 'offline' });
+    }
+  }
   _btTrades() { return (this.state.myTrades || []).filter((t) => t.acct === 'Backtest'); }
   _btDeleteSlice(ids) {
     if (!ids || !ids.length) return;
@@ -3125,6 +3259,8 @@ class Component extends DCLogic {
     this._loadLocal();
     const h = new Date().getHours();
     this.setState({ meal: h < 11 ? 'Breakfast' : h < 15 ? 'Lunch' : 'Dinner' });
+    try { const p = JSON.parse(localStorage.getItem('phntm-sz-pairs-v1') || 'null'); if (Array.isArray(p) && p.length) this.setState({ szPairs: p }); } catch (e) {}
+    this._szLoadRates();
     setTimeout(() => this.animateTab(this.state.tab), 1900); // count up once, after the intro veil lifts
     setTimeout(() => this.setState({ rolled: true }), 1650); // odometer digits roll in
     try { if (sessionStorage.getItem('phntm-welcome') === '1') { sessionStorage.removeItem('phntm-welcome'); this.setState({ welcomeOpen: true }); } } catch (e) {}
@@ -3192,7 +3328,7 @@ class Component extends DCLogic {
       pick: () => { this.setState({ range: r }); this.animateNumbers(); },
     }));
     const k = this.state.prog;
-    const tabs = ['Overview', 'Challenges', 'Achievements', 'Trades', 'Backtest', 'Routine', 'Notes'].map((tab) => ({
+    const tabs = ['Overview', 'Challenges', 'Achievements', 'Trades', 'Sizing', 'Backtest', 'Routine', 'Notes'].map((tab) => ({
       label: tab,
       st: 'padding-bottom:5px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s cubic-bezier(.16,1,.3,1),color .3s;' +
         (tab === this.state.tab ? 'color:#fff;background-size:100% 1px' : 'color:#a0a0a0;background-size:0% 1px'),
@@ -3204,12 +3340,12 @@ class Component extends DCLogic {
     const MOB_MORE = tabs.map((t) => t.label).filter((l) => !MOB_MAIN.includes(l));
     // No icons: the wordmark is the brand, so the bar is set type — uppercase
     // Archivo with a hairline rule marking the active tab.
-    const mobLabel = { Overview: 'Home', Challenges: 'Challenge', Trades: 'Trades', Achievements: 'Fame', Routine: 'Routine', Notes: 'Notes' };
+    const mobLabel = { Overview: 'Home', Challenges: 'Challenge', Trades: 'Trades', Sizing: 'Sizing', Backtest: 'Backtest', Achievements: 'Fame', Routine: 'Routine', Notes: 'Notes' };
     const tabBase = 'position:relative;display:flex;align-items:center;justify-content:center;min-height:56px;padding:10px 2px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color .35s cubic-bezier(.32,.72,0,1);';
     const mobTabs = MOB_MAIN.map((t) => {
       const on = this.state.tab === t;
       return {
-        label: mobLabel[t],
+        label: mobLabel[t] || t,
         st: tabBase + (on ? 'color:#fff' : 'color:#9c9c9c'),
         ruleSt: 'position:absolute;top:0;left:22%;right:22%;height:1px;background:#fff;transition:opacity .35s cubic-bezier(.32,.72,0,1);opacity:' + (on ? '1' : '0'),
         pick: () => { if (t === this.state.tab) return; this.setState({ tab: t, wipeN: (this.state.wipeN || 0) + 1, moreOpen: false }); this.animateTab(t); },
@@ -3776,6 +3912,96 @@ class Component extends DCLogic {
       pageBg: BG,
       navBg: NAV,
       goTrades: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this.state.tab === 'Trades') return; this.setState({ tab: 'Trades', wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab('Trades'); },
+      tabSizing: this.state.tab === 'Sizing',
+      ...(() => {
+        const rates = this.state.rates || this._szFallback();
+        const list = this._szInstruments();
+        const money = (v) => '$' + (v < 100 ? v.toFixed(2) : Math.round(v).toLocaleString());
+        // equity of whatever account is in view, so the risk figure is the real one
+        const ac = this._evalAccount(this.state.myTrades || [], this._acctFromPick(this.state.viewAcct || this.state.activeAcct || 'Live'));
+        const autoBal = ac && isFinite(ac.eq) ? ac.eq : 50000;
+        const num = (v) => parseFloat(String(v == null ? '' : v).replace(/[^0-9.]/g, '')) || 0;
+        const balRaw = String(this.state.szBal || '').replace(/[^0-9.]/g, '');
+        const bal = balRaw === '' ? autoBal : num(balRaw);
+        const stop = num(this.state.szStop);
+        const pctMode = this.state.szMode !== 'usd';
+        const riskUsd = pctMode ? bal * (num(this.state.szRiskPct) / 100) : num(this.state.szRiskUsd);
+
+        const pairs = (this.state.szPairs && this.state.szPairs.length) ? this.state.szPairs : this._szDefaultPairs();
+        const rowBase = 'display:grid;grid-template-columns:1.2fr .8fr .8fr 44px;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.07);transition:background .3s';
+
+        return {
+          szRiskLabel: money(riskUsd),
+          szRiskMath: pctMode
+            ? (num(this.state.szRiskPct) || 0) + '% of ' + money(bal) + (balRaw === '' ? ' — your ' + (ac && ac.isProp ? 'challenge' : 'live') + ' balance' : '')
+            : 'fixed amount per trade',
+          szBal: this.state.szBal,
+          szBalPlaceholder: Math.round(autoBal).toLocaleString(),
+          szSetBal: (e) => this.setState({ szBal: e.target.value }),
+          szBalNote: balRaw === '' ? 'your ' + (ac && ac.isProp ? 'challenge' : 'live') + ' equity — type to override' : 'manual override',
+          szRiskPct: pctMode ? this.state.szRiskPct : this.state.szRiskUsd,
+          szSetRiskPct: (e) => this.setState(pctMode ? { szRiskPct: e.target.value } : { szRiskUsd: e.target.value }),
+          szToggleMode: () => this.setState({ szMode: pctMode ? 'usd' : 'pct' }),
+          szModeSign: pctMode ? '%' : '$',
+          szModeNote: pctMode ? 'of balance — tap % to switch' : 'fixed dollars — tap $ to switch',
+          szStop: this.state.szStop,
+          szSetStop: (e) => this.setState({ szStop: e.target.value }),
+
+          szRows: pairs.map((sym, i) => {
+            const it = list.find((x) => x.sym === sym);
+            // an unknown quote currency must never silently size at 1:1
+            const up = it && rates[it.quote] != null ? rates[it.quote] : null;
+            const pv = it && up != null ? it.pip * it.contract * up : 0;
+            const lots = (pv > 0 && stop > 0) ? Math.floor((riskUsd / (stop * pv)) * 100) / 100 : 0;
+            const tiny = pv > 0 && stop > 0 && riskUsd > 0 && lots < 0.01;
+            return {
+              sym,
+              lots: pv <= 0 ? 'no rate' : lots > 0 ? lots.toFixed(2) : tiny ? '< 0.01' : '—',
+              lotsSt: 'font-family:JetBrains Mono,monospace;font-size:15px;color:' + (tiny || pv <= 0 ? '#e0a05a' : lots > 0 ? '#fff' : '#7a7a7a'),
+              pip: pv > 0 ? '$' + pv.toFixed(2) + (it.quote === 'USD' ? '' : ' · ' + it.quote) : '—',
+              rowSt: rowBase + ';animation:fadeUp .5s ' + (0.1 + i * 0.045).toFixed(3) + 's cubic-bezier(.16,1,.3,1) both',
+              remove: () => this._szSetPairs(pairs.filter((p) => p !== sym)),
+            };
+          }),
+
+          szAddPick: '',
+          szAddOptions: [{ value: '', label: '+ Add a pair' }].concat(
+            list.filter((x) => !pairs.includes(x.sym)).map((x) => ({ value: x.sym, label: x.sym }))),
+          szAdd: (e) => { const v = e.target.value; if (v) this._szSetPairs(pairs.concat([v])); },
+          szCanReset: JSON.stringify(pairs) !== JSON.stringify(this._szDefaultPairs()),
+          szReset: () => this._szSetPairs(null),
+          szFootnote: 'A pip pays out in the quote currency, so only USD-quoted pairs are fixed at $10. The rest move with the rate and are refreshed for you daily. Lots round down, so you are never over-risked.',
+
+          ...(() => {
+            // Freshness has to be legible at a glance: a green dot and the word
+            // "today" say it is current; amber says it is not.
+            const today = new Date().toISOString().slice(0, 10);
+            const dt = this.state.ratesDate;
+            const live = !this.state.ratesErr && !!dt;
+            const isToday = dt === today;
+            const nice = (s) => { if (!s) return ''; const x = new Date(s + 'T12:00:00');
+              return x.toLocaleDateString(undefined, { day: 'numeric', month: 'short' }); };
+            const tone = this.state.ratesErr ? '#e0a05a' : live ? '#7fd1a0' : '#b0b0b0';
+            return {
+              szRatesLabel: this.state.ratesErr ? 'Offline — using saved rates'
+                : !dt ? 'Checking rates…'
+                : isToday ? 'Updated today · ECB' : 'Updated ' + nice(dt) + ' · ECB',
+              szRatesColor: this.state.ratesErr ? '#e0a05a' : '#b0b0b0',
+              szDotSt: 'width:7px;height:7px;border-radius:50%;flex:none;background:' + tone +
+                (live ? ';box-shadow:0 0 9px 2px rgba(127,209,160,.45);animation:ratePulse 3.4s ease-in-out infinite' : ''),
+              szRatesWhen: this.state.ratesErr ? 'saved copy' : dt ? (isToday ? 'today, ' + nice(dt) : nice(dt)) : 'loading',
+              // showing the actual conversion rates is the only real proof the
+              // figures above came from live data rather than a hardcoded table
+              szRateChips: [['USD/JPY', 'JPY'], ['USD/CAD', 'CAD'], ['USD/CHF', 'CHF'], ['GBP/USD', 'GBP'], ['EUR/USD', 'EUR']].map(([pair, cur]) => {
+                const up = rates[cur];
+                const inv = cur === 'JPY' || cur === 'CAD' || cur === 'CHF';
+                return { pair, rate: up ? (inv ? (1 / up).toFixed(cur === 'JPY' ? 2 : 4) : up.toFixed(4)) : '—' };
+              }),
+            };
+          })(),
+          szRefresh: () => { try { localStorage.removeItem('phntm-rates-v1'); } catch (e) {} this.setState({ ratesDate: '', ratesErr: '' }); this._szLoadRates(); },
+        };
+      })(),
       tabBacktest: this.state.tab === 'Backtest',
       ...(() => {
         const all = this._btTrades();
