@@ -28,11 +28,21 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const r = await fetch('https://api.frankfurter.app/latest?base=USD&symbols=' + CURRENCIES.join(','));
-    if (!r.ok) throw new Error('upstream ' + r.status);
-    const data = await r.json();
-    const q = data && data.rates;
-    if (!q || !q.JPY) throw new Error('missing rates');
+    let q = null, date = null;
+    // frankfurter first (ECB reference rates), then open.er-api as a second source
+    try {
+      const r = await fetch('https://api.frankfurter.app/latest?base=USD&symbols=' + CURRENCIES.join(','));
+      if (r.ok) { const j = await r.json(); if (j && j.rates && j.rates.JPY) { q = j.rates; date = j.date; } }
+    } catch (e) {}
+    if (!q) {
+      const r2 = await fetch('https://open.er-api.com/v6/latest/USD');
+      if (!r2.ok) throw new Error('upstream ' + r2.status);
+      const j2 = await r2.json();
+      if (!j2 || !j2.rates || !j2.rates.JPY) throw new Error('missing rates');
+      q = j2.rates;
+      date = (j2.time_last_update_utc ? new Date(j2.time_last_update_utc) : new Date()).toISOString().slice(0, 10);
+    }
+    const data = { date };
 
     // usdPer[X] = how many USD one unit of X is worth. The API gives us the
     // inverse (units of X per USD), so invert. USD is 1 by definition.
