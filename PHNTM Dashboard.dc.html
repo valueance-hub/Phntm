@@ -1430,7 +1430,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;pageBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#171717&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#171717&quot;,&quot;#0d0d0d&quot;,&quot;#212121&quot;,&quot;#101014&quot;]},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#1c1c1c&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#1c1c1c&quot;,&quot;#141414&quot;,&quot;#232323&quot;,&quot;#12121a&quot;]}}">
 class Component extends DCLogic {
-  state = { range: 'D', tab: 'Overview', szPairs: null, szStop: '20', szRiskPct: '1', szMode: 'pct', szRiskUsd: '500', szBal: '', rates: null, ratesDate: '', ratesErr: '', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
+  state = { range: 'D', tab: 'Overview', szPairs: null, szStop: '20', szRiskPct: '1', szMode: 'pct', szRiskUsd: '500', szBal: '', rates: null, ratesDate: '', ratesErr: '', ratesVia: '', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 0, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
   _openFoodEdit(f) { this.setState({ editFoodId: f.id, editFood: { name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0 } }); }
   _setEditFood(field, val) { const v = field === 'name' ? val : (parseInt(String(val).replace(/[^0-9]/g, '')) || 0); this.setState({ editFood: { ...this.state.editFood, [field]: v } }); }
   _saveEditFood() { const e = this.state.editFood; const foods = (this.state.foods || []).map((f) => f.id === this.state.editFoodId ? { ...f, name: e.name, kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, sugar: e.sugar } : f);
@@ -2726,9 +2726,14 @@ class Component extends DCLogic {
              AUD: 0.655, NZD: 0.6, SGD: 0.74, MXN: 0.054, ZAR: 0.055, SEK: 0.094,
              NOK: 0.092, PLN: 0.27, TRY: 0.024 };
   }
+  // Three sources, tried in order, so a missing serverless function or one dead
+  // provider can never leave the calculator without rates:
+  //   1. /api/rates            — our function, cached, no CORS concerns
+  //   2. frankfurter.app       — ECB rates, called straight from the browser
+  //   3. open.er-api.com       — second public source
+  // Only if all three fail does it fall back to saved figures, and it says so.
   async _szLoadRates() {
     const today = new Date().toISOString().slice(0, 10);
-    // a cached set from today is authoritative — ECB only publishes once a day
     try {
       const c = JSON.parse(localStorage.getItem('phntm-rates-v1') || 'null');
       if (c && c.fetched === today && c.usdPer) {
@@ -2737,16 +2742,30 @@ class Component extends DCLogic {
       }
       if (c && c.usdPer) this.setState({ rates: c.usdPer, ratesDate: c.date || '' });   // show stale while refreshing
     } catch (e) {}
-    try {
-      const r = await fetch('/api/rates');
-      if (!r.ok) throw new Error('http ' + r.status);
-      const j = await r.json();
-      if (!j || !j.usdPer || !j.usdPer.JPY) throw new Error('bad payload');
-      this.setState({ rates: j.usdPer, ratesDate: j.date || today, ratesErr: '' });
-      try { localStorage.setItem('phntm-rates-v1', JSON.stringify({ fetched: today, date: j.date, usdPer: j.usdPer })); } catch (e) {}
-    } catch (e) {
-      if (!this.state.rates) this.setState({ rates: this._szFallback(), ratesDate: '', ratesErr: 'offline' });
+
+    const CUR = ['JPY','CAD','CHF','GBP','EUR','AUD','NZD','SEK','NOK','MXN','ZAR','SGD','PLN','TRY'];
+    const fromQuotePerUsd = (q) => { const o = { USD: 1 }; CUR.forEach((c) => { if (q[c]) o[c] = 1 / q[c]; }); return o; };
+    const tries = [
+      async () => { const r = await fetch('/api/rates'); if (!r.ok) throw 0;
+        const j = await r.json(); if (!j || !j.usdPer || !j.usdPer.JPY) throw 0;
+        return { usdPer: j.usdPer, date: j.date || today, via: 'ECB' }; },
+      async () => { const r = await fetch('https://api.frankfurter.app/latest?base=USD&symbols=' + CUR.join(',')); if (!r.ok) throw 0;
+        const j = await r.json(); if (!j || !j.rates || !j.rates.JPY) throw 0;
+        return { usdPer: fromQuotePerUsd(j.rates), date: j.date || today, via: 'ECB' }; },
+      async () => { const r = await fetch('https://open.er-api.com/v6/latest/USD'); if (!r.ok) throw 0;
+        const j = await r.json(); if (!j || !j.rates || !j.rates.JPY) throw 0;
+        return { usdPer: fromQuotePerUsd(j.rates), date: today, via: 'live' }; },
+    ];
+    for (const attempt of tries) {
+      try {
+        const got = await attempt();
+        this.setState({ rates: got.usdPer, ratesDate: got.date, ratesErr: '', ratesVia: got.via });
+        try { localStorage.setItem('phntm-rates-v1', JSON.stringify({ fetched: today, date: got.date, usdPer: got.usdPer, via: got.via })); } catch (e) {}
+        return;
+      } catch (e) {}
     }
+    if (!this.state.rates) this.setState({ rates: this._szFallback(), ratesErr: 'offline' });
+    else this.setState({ ratesErr: 'offline' });
   }
   _btTrades() { return (this.state.myTrades || []).filter((t) => t.acct === 'Backtest'); }
   _btDeleteSlice(ids) {
@@ -3985,7 +4004,7 @@ class Component extends DCLogic {
             return {
               szRatesLabel: this.state.ratesErr ? 'Offline — using saved rates'
                 : !dt ? 'Checking rates…'
-                : isToday ? 'Updated today · ECB' : 'Updated ' + nice(dt) + ' · ECB',
+                : isToday ? 'Updated today · ' + (this.state.ratesVia || 'ECB') : 'Updated ' + nice(dt) + ' · ' + (this.state.ratesVia || 'ECB'),
               szRatesColor: this.state.ratesErr ? '#e0a05a' : '#b0b0b0',
               szDotSt: 'width:7px;height:7px;border-radius:50%;flex:none;background:' + tone +
                 (live ? ';box-shadow:0 0 9px 2px rgba(127,209,160,.45);animation:ratePulse 3.4s ease-in-out infinite' : ''),
