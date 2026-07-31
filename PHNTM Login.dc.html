@@ -264,7 +264,7 @@ class Component extends DCLogic {
       return /^#[0-9a-f]{6}$/i.test(v) ? v : null;
     })();
     return {
-      introBg: _intro || '#151515',
+      introBg: _intro || '#0b0b0b',
       email: this.state.email,
       setEmail: (e) => this.setState({ email: e.target.value, authErr: '' }),
       name: this.state.name,

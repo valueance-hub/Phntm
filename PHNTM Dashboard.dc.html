@@ -143,7 +143,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 </style>
 </helmet>
 <div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; background-color:{{ pageBg }}">
-  <div style="position:fixed;inset:0;z-index:200;background:#1b1b1b;display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
+  <div style="position:fixed;inset:0;z-index:200;background:{{ introBg }};display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
     <span style="position:relative;display:grid;place-items:center;width:170px;height:170px"><span style="position:relative;display:flex;flex-direction:column;align-items:center;gap:11px"><span style="font-size:22px;font-weight:300;color:#fff;font-family:'Michroma',sans-serif;letter-spacing:.02em;animation:mdMark 2s .55s cubic-bezier(.16,1,.3,1) both">phntm.</span><span style="width:100px;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);transform-origin:center;animation:mdRule 1.9s .9s cubic-bezier(.16,1,.3,1) both"></span></span></span>
   </div>
   <sc-if value="{{ nameModalOpen }}" hint-placeholder-val="{{ false }}">
@@ -613,10 +613,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
         <div style="{{ r.rowSt }}">
           <span style="font-size:15px;color:#fff">{{ r.sym }}</span>
           <span style="{{ r.lotsSt }}">{{ r.lots }}</span>
-          <span style="display:flex;align-items:baseline;gap:7px;min-width:0">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#c8c8c8">{{ r.pipAmt }}</span>
-            <span style="font-family:Archivo,sans-serif;font-size:11.5px;color:#a0a0a0;white-space:nowrap">{{ r.pipUnit }}</span>
-          </span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#c8c8c8">{{ r.pipAmt }}</span>
           <button onClick="{{ r.remove }}" title="Remove pair" style="justify-self:end;background:none;border:none;color:#a0a0a0;font-size:15px;line-height:1;padding:8px 9px;margin:-8px 0 -8px -9px;cursor:pointer;transition:color .3s" style-hover="color:#e0a05a">×</button>
         </div>
       </sc-for>
@@ -1621,7 +1618,7 @@ class Component extends DCLogic {
     const insert = (src) => document.execCommand('insertHTML', false, '<img src="' + src + '" style="width:60%" loading="lazy" decoding="async">');
     if (inner) { insert(inner); this._syncFmt(); return; }
     for (const f of files) {
-      const local = await this._shrinkFile(f);
+      const local = await this._shrinkFile(f, 2400);
       if (!local) continue;
       insert(local);
       const url = await this._cloudImg(local);
@@ -1651,11 +1648,22 @@ class Component extends DCLogic {
         const img = new Image();
         img.onerror = () => res(rd.result);
         img.onload = () => {
-          const s = Math.min(1, (max || 2000) / Math.max(img.width, img.height));
+          const cap = max || 2400;
+          const s = Math.min(1, cap / Math.max(img.width, img.height));
+          // already within budget — keep the original bytes rather than re-encoding,
+          // which is what was softening screenshots that never needed resizing
+          if (s === 1 && String(rd.result).length < 3.2e6) { res(rd.result); return; }
           const c = document.createElement('canvas');
           c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
-          c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
-          res(c.toDataURL('image/jpeg', 0.9));
+          const cx = c.getContext('2d');
+          cx.imageSmoothingEnabled = true;
+          cx.imageSmoothingQuality = 'high';   // default is 'low' — visibly soft when downscaling
+          cx.drawImage(img, 0, 0, c.width, c.height);
+          // PNG sources are screenshots: crisp lines and text, so keep them lossless
+          const isPng = /^data:image\/png/i.test(String(rd.result));
+          const out = isPng ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', 0.94);
+          // fall back to JPEG if lossless PNG turns out heavier than the original
+          res((isPng && out.length > String(rd.result).length) ? c.toDataURL('image/jpeg', 0.94) : out);
         };
         img.src = rd.result;
       };
@@ -3139,10 +3147,10 @@ class Component extends DCLogic {
     const INTRO = (() => {
       let raw = null;
       try { raw = localStorage.getItem('phntm-intro-bg-v1'); } catch (e) {}
-      if (!raw) return '#151515';
+      if (!raw) return '#0b0b0b';   // the intro reads better a step darker than the app
       let v = String(raw).trim();
       if (v[0] === '"') { try { v = JSON.parse(v); } catch (e) { v = v.replace(/^"+|"+$/g, ''); } }
-      return /^#[0-9a-f]{6}$/i.test(v) ? v : '#151515';
+      return /^#[0-9a-f]{6}$/i.test(v) ? v : '#0b0b0b';
     })();
     const NAV = (() => {
       // the sticky nav sits over scrolling content, so it needs the page colour at
@@ -3184,19 +3192,19 @@ class Component extends DCLogic {
       pick: () => { this.setState({ range: r }); this.animateNumbers(); },
     }));
     const k = isFinite(this.state.prog) ? this.state.prog : 1;   // never let a stalled animation zero the hero
-    const tabs = ['Overview', 'Trades', 'Sizing', 'Backtest', 'Routine', 'Notes'].map((tab) => ({
+    const tabs = ['Overview', 'Trades', 'Lot size', 'Backtest', 'Routine', 'Notes'].map((tab) => ({
       label: tab,
       st: 'padding-bottom:5px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s cubic-bezier(.16,1,.3,1),color .3s;' +
         (tab === this.state.tab ? 'color:#fff;background-size:100% 1px' : 'color:#a0a0a0;background-size:0% 1px'),
       pick: (e) => { e.preventDefault(); if (tab === this.state.tab) return; this.setState({ tab, wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab(tab); },
     }));
     // Phone navigation: four everyday tabs in a bottom bar, the rest behind More.
-    const MOB_MAIN = ['Overview', 'Trades', 'Sizing', 'Routine'];
+    const MOB_MAIN = ['Overview', 'Trades', 'Lot size', 'Routine'];
     // derived, not hardcoded — a tab added to `tabs` can never go missing on phones again
     const MOB_MORE = tabs.map((t) => t.label).filter((l) => !MOB_MAIN.includes(l));
     // No icons: the wordmark is the brand, so the bar is set type — uppercase
     // Archivo with a hairline rule marking the active tab.
-    const mobLabel = { Overview: 'Home', Trades: 'Trades', Sizing: 'Sizing', Backtest: 'Backtest', Routine: 'Routine', Notes: 'Notes' };
+    const mobLabel = { Overview: 'Home', Trades: 'Trades', 'Lot size': 'Lots', Backtest: 'Backtest', Routine: 'Routine', Notes: 'Notes' };
     const tabBase = 'position:relative;display:flex;align-items:center;justify-content:center;min-height:56px;padding:10px 2px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color .45s cubic-bezier(.32,.72,0,1);';
     const mobTabs = MOB_MAIN.map((t) => {
       const on = this.state.tab === t;
@@ -3797,6 +3805,7 @@ class Component extends DCLogic {
         } else { wipe(); go(); }
       },
       pageBg: BG,
+      introBg: INTRO,
       navBg: NAV,
       mobNavBg: NAV.replace(',.86)', ',.94)'),   // the bottom bar sits over content, so it needs more cover
       settingsOpen: !!this.state.settingsOpen,
@@ -3823,7 +3832,7 @@ class Component extends DCLogic {
         pick: () => { try { localStorage.setItem('phntm-intro-bg-v1', hex); } catch (e) {} this._persist('phntm-intro-bg-v1', hex); this.forceUpdate(); },
       })),
       goTrades: (e) => { if (e && e.preventDefault) e.preventDefault(); if (this.state.tab === 'Trades') return; this.setState({ tab: 'Trades', wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab('Trades'); },
-      tabSizing: this.state.tab === 'Sizing',
+      tabSizing: this.state.tab === 'Lot size',
       ...(() => {
         const rates = this.state.rates || this._szFallback();
         const list = this._szInstruments();
@@ -3875,7 +3884,6 @@ class Component extends DCLogic {
               lots: pv <= 0 ? 'no rate' : lots > 0 ? lots.toFixed(2) : tiny ? '< 0.01' : '—',
               lotsSt: 'font-family:JetBrains Mono,monospace;font-size:15px;color:' + (tiny || pv <= 0 ? '#e0a05a' : lots > 0 ? '#fff' : '#a0a0a0'),
               pipAmt: pv > 0 ? '$' + pv.toFixed(2) : '—',
-              pipUnit: pv > 0 ? (it.quote === 'USD' ? 'USD' : 'USD / ' + it.quote + ' quote') : '',
               rowSt: rowBase + ';animation:fadeUp .5s ' + (0.1 + i * 0.045).toFixed(3) + 's cubic-bezier(.16,1,.3,1) both',
               remove: () => this._szSetPairs(pairs.filter((p) => p !== sym)),
             };
@@ -4170,7 +4178,7 @@ class Component extends DCLogic {
           hiSwatches: ['#ffffff', '#e5c07b', '#8fc9a4', '#9fbfe0'].map((c) => ({ col: c, st: 'width:20px;height:20px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:' + c, apply: () => this._edHighlight(c) })),
           colSwatches: [['#ffffff', 'foreColor'], ['#e5c07b', 'foreColor'], ['#7fd1a0', 'foreColor'], ['#e8ab6a', 'foreColor']].map(([c, cmd]) => swatch(c, cmd)),
           edPics: (ed.pics || []).map((p, i) => ({
-            img: React.createElement('img', { src: p.src, draggable: false, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' } }),
+            img: React.createElement('img', { src: p.src, draggable: false, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', pointerEvents: 'none', background: '#0b0b0b' } }),
             cap: p.cap || '', setCap: (e) => this._edPicCap(i, e.target.value),
             w: p.w || 32, setW: (e) => this._edPicWidth(i, e.target.value), resizeStart: (e) => this._edPicGrab(i, e),
             itemStyle: 'display:flex;flex-direction:column;gap:8px;flex:0 0 calc(' + Math.max(18, Math.min(100, p.w || 32)) + '% - 16px);min-width:104px',
@@ -4246,7 +4254,7 @@ class Component extends DCLogic {
               dateSub: dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
               hasSource: !!n.source, source: n.source, sourceHost: (() => { try { return new URL(n.source).hostname.replace('www.', ''); } catch (e) { return n.source; } })(),
               hasThumb: !!thumbSrc,
-              thumbImg: thumbSrc ? React.createElement('img', { src: thumbSrc, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }) : null,
+              thumbImg: thumbSrc ? React.createElement('img', { src: thumbSrc, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', background: '#0b0b0b' } }) : null,
               hasYt: !!yt,
               confirming: this.state.noteDelId === n.id, notConfirming: this.state.noteDelId !== n.id,
               askRemove: (e) => { e.stopPropagation(); this.setState({ noteDelId: n.id }); },
@@ -4430,7 +4438,7 @@ class Component extends DCLogic {
       picThumbs: (this.state.draftPics || []).map((p, i) => {
         const src = typeof p === 'string' ? p : p.src;
         return {
-          img: React.createElement('img', { src, style: { width: '100%', height: '100%', objectFit: 'cover', display: 'block' } }),
+          img: React.createElement('img', { src, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', background: '#0b0b0b' } }),
           cap: typeof p === 'string' ? '' : (p.cap || ''),
           setCap: (e) => { const d = (this.state.draftPics || []).map((x) => typeof x === 'string' ? { src: x, cap: '' } : x); d[i] = { ...d[i], cap: e.target.value }; this.setState({ draftPics: d }); },
           open: (e) => { e.stopPropagation(); this.setState({ lightbox: src }); },
