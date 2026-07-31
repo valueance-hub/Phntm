@@ -20,7 +20,7 @@
 <helmet>
 <title>PHNTM — Trading Journal</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#151515">
+<meta name="theme-color" content="#0e0e0e">
 <link rel="manifest" href="./manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@200;300;400;500;600;700&amp;family=Michroma&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <style>
-html,body{margin:0;padding:0;background:#151515;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
+html,body{margin:0;padding:0;background:#0e0e0e;color:#eaeaea;font-family:'Archivo',sans-serif;-webkit-font-smoothing:antialiased}
 a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
 ::selection{background:rgba(255,255,255,.2)}
 input,select,textarea{outline:none}
@@ -41,12 +41,14 @@ button,input,select,textarea{font-family:inherit}
 @keyframes fadeUpB{0%{opacity:0;transform:translate3d(0,14px,0)}100%{opacity:1;transform:translate3d(0,0,0)}}
 @keyframes ratePulse{0%,100%{opacity:1}50%{opacity:.45}}
 @keyframes chargeGlow{0%{opacity:0;transform:translateX(-100%)}40%{opacity:1}100%{opacity:0;transform:translateX(320%)}}
+@keyframes toastUp{from{opacity:0;transform:translateX(-50%) translateY(22px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes menuIn{0%{opacity:0;transform:translateY(-6px) scale(.985)}100%{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes slideIn{from{transform:translateX(105%)}to{transform:translateX(0)}}
 @keyframes rowIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes mdMark{0%{opacity:0;transform:translateY(7px)}62%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(0)}}
+@keyframes mdMark{0%{opacity:0;transform:translateY(62px)}42%{opacity:1}100%{opacity:1;transform:translateY(0)}}
+@keyframes asTrail{0%{opacity:0;transform:scaleY(0)}28%{opacity:.8}100%{opacity:0;transform:scaleY(1)}}
 @keyframes mdRule{0%{transform:scaleX(0)}55%{transform:scaleX(1);opacity:1}100%{transform:scaleX(1);opacity:0}}
 @keyframes introVeil{0%,72%{opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
 @keyframes growBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
@@ -143,9 +145,11 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 </style>
 </helmet>
 <div style="position: relative; min-height: 100vh; display: flex; flex-direction: column; background-color:{{ pageBg }}">
+  <sc-if value="{{ showIntro }}" hint-placeholder-val="{{ true }}">
   <div style="position:fixed;inset:0;z-index:200;background:{{ introBg }};display:flex;align-items:center;justify-content:center;animation:introVeil 2s .2s ease both;pointer-events:none">
-    <span style="position:relative;display:grid;place-items:center;width:170px;height:170px"><span style="position:relative;display:flex;flex-direction:column;align-items:center;gap:11px"><span style="font-size:22px;font-weight:300;color:#fff;font-family:'Michroma',sans-serif;letter-spacing:.02em;animation:mdMark 2s .55s cubic-bezier(.16,1,.3,1) both">phntm.</span><span style="width:100px;height:1px;background:linear-gradient(90deg,transparent,#fff,transparent);transform-origin:center;animation:mdRule 1.9s .9s cubic-bezier(.16,1,.3,1) both"></span></span></span>
+    <span style="position:relative;display:grid;place-items:center;width:200px;height:190px;overflow:hidden"><span style="position:absolute;bottom:0;width:2px;height:52%;background:linear-gradient(180deg,rgba(255,255,255,.5),transparent);transform-origin:bottom;animation:asTrail 1.5s cubic-bezier(.32,.72,0,1) both"></span><span style="position:relative;display:flex;flex-direction:column;align-items:center;gap:12px;animation:mdMark 1.5s cubic-bezier(.16,1,.3,1) both"><span style="font-size:22px;font-weight:300;color:#fff;font-family:'Michroma',sans-serif;letter-spacing:.02em">phntm.</span><span style="width:130px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);transform-origin:center;animation:mdRule 1.7s .24s cubic-bezier(.16,1,.3,1) both"></span></span></span>
   </div>
+  </sc-if>
   <sc-if value="{{ nameModalOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:310;background:rgba(4,4,4,.86);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .4s ease both">
       <div style="max-width:440px;width:100%;background:linear-gradient(180deg,#1f1f1f,#1b1b1b);border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:44px 42px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:fadeUp .6s cubic-bezier(.16,1,.3,1) both">
@@ -159,7 +163,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </div>
   </sc-if>
   <sc-if value="{{ welcomeOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeWelcome }}" style="position:fixed;inset:0;z-index:312;background:radial-gradient(120% 76% at 50% 0%,rgba(229,192,123,.11) 0%,rgba(229,192,123,.05) 34%,rgba(229,192,123,.015) 60%,rgba(229,192,123,0) 80%),#151515;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:52px;cursor:pointer;animation:{{ welcomeAnim }}">
+    <div onClick="{{ closeWelcome }}" style="position:fixed;inset:0;z-index:312;background:#0e0e0e;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:52px;cursor:pointer;animation:{{ welcomeAnim }}">
       <div style="font-family:'Archivo',sans-serif;font-size:clamp(34px,6vw,52px);font-weight:200;letter-spacing:-.02em;color:#fff;line-height:1.05;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) both">Welcome, {{ userName }}</div>
       <div style="width:90px;height:1px;background:rgba(255,255,255,.6);margin:26px 0;transform-origin:center;animation:growBar .7s .5s cubic-bezier(.16,1,.3,1) both"></div>
       <div style="max-width:520px;font-size:15.5px;line-height:1.75;color:#c8c8c8;font-style:italic;text-wrap:pretty;animation:fadeUp .8s .7s cubic-bezier(.16,1,.3,1) both">"I built PHNTM for the traders grinding in silence — the ones who kept going when it hurt, who blew accounts and still showed up the next morning. This is for you. I hope it carries you further than you ever thought you could go."</div>
@@ -185,7 +189,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </div>
   </sc-if>
   <sc-if value="{{ failFundedOpen }}" hint-placeholder-val="{{ false }}">
-  <div style="position:fixed;inset:0;z-index:301;background:radial-gradient(130% 80% at 50% 0%,rgba(224,160,90,.13),transparent 62%),#151515;display:flex;align-items:center;justify-content:center;padding:40px;animation:fadeIn .5s ease both">
+  <div style="position:fixed;inset:0;z-index:301;background:radial-gradient(130% 80% at 50% 0%,rgba(224,160,90,.13),transparent 62%),#0e0e0e;display:flex;align-items:center;justify-content:center;padding:40px;animation:fadeIn .5s ease both">
     <div style="max-width:660px;width:100%">
       <div style="display:flex;align-items:center;gap:12px;animation:fadeUp .8s .1s cubic-bezier(.16,1,.3,1) both">
         <span style="width:9px;height:9px;transform:rotate(45deg);background:#e0a05a"></span>
@@ -225,7 +229,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ consistOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closeConsist }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,4,4,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .4s ease both">
-    <div onClick="{{ stop }}" style="position:relative;max-width:560px;width:100%;background:linear-gradient(180deg,#1b1b1b,#0b0b0b);border:1px solid rgba(229,192,123,.28);border-radius:24px;padding:56px 52px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .6s cubic-bezier(.16,1,.3,1) both">
+    <div onClick="{{ stop }}" style="position:relative;max-width:560px;width:100%;background:linear-gradient(180deg,#1b1b1b,#0e0e0e);border:1px solid rgba(229,192,123,.28);border-radius:24px;padding:56px 52px;overflow:hidden;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .6s cubic-bezier(.16,1,.3,1) both">
       <div style="position:absolute;top:0;left:0;right:0;height:1px;overflow:hidden"><div style="width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(229,192,123,.7),transparent);animation:bladeSweep 2.6s ease-in-out infinite"></div></div>
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:26px">
         <span style="width:9px;height:9px;transform:rotate(45deg);background:#e5c07b"></span>
@@ -242,7 +246,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
   <sc-if value="{{ payoutEligibleOpen }}" hint-placeholder-val="{{ false }}">
   <div onClick="{{ closePayoutEligible }}" style="position:fixed;inset:0;z-index:301;background:rgba(4,4,4,.82);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-    <div onClick="{{ stop }}" style="position:relative;max-width:520px;width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1b1b1b,#0b0b0b);border:1px solid rgba(95,191,131,.4);border-radius:24px;padding:44px;box-shadow:0 0 0 1px rgba(95,191,131,.1),0 30px 90px rgba(0,0,0,.6);animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both">
+    <div onClick="{{ stop }}" style="position:relative;max-width:520px;width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1b1b1b,#0e0e0e);border:1px solid rgba(95,191,131,.4);border-radius:24px;padding:44px;box-shadow:0 0 0 1px rgba(95,191,131,.1),0 30px 90px rgba(0,0,0,.6);animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px"><span style="width:9px;height:9px;transform:rotate(45deg);background:#5fbf83;animation:glowPulse 1.6s ease-in-out infinite"></span><span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.34em;color:#5fbf83">PAYOUT ELIGIBLE</span></div>
       <div style="font-family:'Archivo',sans-serif;font-size:30px;font-weight:400;color:#fff;line-height:1.15">Congratulations, {{ achvName }}.<br>You’re clear to withdraw.</div>
       <div style="margin-top:14px;font-size:14.5px;color:#b4bfb6;line-height:1.6;text-wrap:pretty">{{ payoutHeldText }} on the funded account and you’re in profit. {{ payoutAvailText }} is available — how much do you want to take out?</div>
@@ -308,7 +312,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </header>
   <sc-if value="{{ moreOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeMore }}" style="position:fixed;inset:0;z-index:120;background:rgba(4,4,4,.7);backdrop-filter:blur(8px);display:flex;align-items:flex-end;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1b1b1b,#151515);border-top:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:22px 14px calc(30px + env(safe-area-inset-bottom));animation:sheetUp .42s cubic-bezier(.32,.72,0,1) both">
+      <div onClick="{{ stop }}" style="width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1b1b1b,#0e0e0e);border-top:1px solid rgba(255,255,255,.12);border-radius:22px 22px 0 0;padding:22px 14px calc(30px + env(safe-area-inset-bottom));animation:sheetUp .42s cubic-bezier(.32,.72,0,1) both">
         <div style="width:38px;height:4px;border-radius:99px;background:rgba(255,255,255,.22);margin:0 auto 18px"></div>
         <div style="display:flex;flex-direction:column;gap:4px">
           <sc-for list="{{ moreItems }}" as="mi" hint-placeholder-count="3">
@@ -565,9 +569,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   <section data-m="pad" style="position:relative;z-index:1;padding:64px 48px 26px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap">
       <div>
-        <div style="font-size:14px;color:#b0b0b0">Position size</div>
-        <div style="font-size:clamp(34px,4.4vw,52px);font-weight:200;letter-spacing:-.03em;line-height:1.05;color:#fff;margin-top:8px">{{ szRiskLabel }} <span style="font-size:.4em;font-weight:300;color:#b0b0b0">at risk</span></div>
-        <div style="margin-top:9px;font-size:13px;color:#b0b0b0">{{ szRiskMath }}</div>
+        <div style="font-size:clamp(30px,3.6vw,42px);font-weight:200;letter-spacing:-.025em;line-height:1.05;color:#fff">Lot size</div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none">
         <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:{{ szRatesColor }}"><span style="{{ szDotSt }}"></span>{{ szRatesLabel }}</span>
@@ -581,12 +583,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <div>
         <label style="font-size:12px;color:#b0b0b0">Balance</label>
         <input placeholder="{{ szBalPlaceholder }}" value="{{ szBal }}" onInput="{{ szSetBal }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 14px;outline:none;transition:border-color .3s,background .3s" style-focus="border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.06)">
-        <div style="margin-top:7px;display:flex;align-items:center;gap:9px;flex-wrap:wrap">
-          <span style="font-size:11.5px;color:#b0b0b0">{{ szBalNote }}</span>
-          <sc-if value="{{ szCanUseEquity }}" hint-placeholder-val="{{ false }}">
-            <button onClick="{{ szUseEquity }}" style="border:none;background:none;color:#fff;font-family:Archivo,sans-serif;font-size:11.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0">use my equity</button>
-          </sc-if>
-        </div>
+
       </div>
       <div>
         <label style="font-size:12px;color:#b0b0b0">Risk</label>
@@ -785,50 +782,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </section>
   </sc-if>
 </sc-if>
-<sc-if value="{{ tabRoutine }}" hint-placeholder-val="{{ false }}">
-  <section data-m="pad" style="position:relative;z-index:1;padding:64px 48px 20px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
-    <div style="font-size:14px;color:#a0a0a0">Daily rituals</div>
-    <div style="display:flex;align-items:baseline;gap:22px;margin-top:10px">
-      <span style="font-size:64px;font-weight:200;letter-spacing:-.03em;line-height:1;color:#fff">{{ streakText }}</span>
-      <span style="font-size:14px;color:#a0a0a0">current streak · every ritual, every day</span>
-    </div>
-  </section>
-  <section data-m="pad col1" style="position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:22px;padding:8px 48px 72px;align-items:start">
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .9s .1s cubic-bezier(.16,1,.3,1) both">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-        <span style="font-size:15px;color:#fff">Today</span>
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a0a0a0">{{ todayCount }}</span>
-          <div style="position:relative;width:40px;height:40px;border-radius:50%;background:{{ ringStyle }}"><div style="position:absolute;inset:4px;border-radius:50%;background:#272727;border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;color:#fff">{{ todayPct }}</div></div>
-        </div>
-      </div>
-      <sc-if value="{{ routineEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 0;font-size:14px;color:#a0a0a0">No rituals set. Add one below.</div></sc-if>
-      <div style="display:flex;flex-direction:column;gap:2px">
-        <sc-for list="{{ routineRows }}" as="r" hint-placeholder-count="4">
-          <div style="display:flex;align-items:center;gap:16px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.07)">
-            <div onClick="{{ r.toggle }}" style="{{ r.boxStyle }}">✓</div>
-            <input value="{{ r.name }}" onInput="{{ r.setName }}" style="{{ r.nameStyle }}" style-focus="border-bottom-color:rgba(255,255,255,.3)">
-            <button onClick="{{ r.remove }}" style="border:none;background:none;color:#a0a0a0;font-size:18px;cursor:pointer;transition:color .3s;line-height:1" style-hover="color:#e0a05a">×</button>
-          </div>
-        </sc-for>
-      </div>
-      <div style="display:flex;gap:12px;align-items:center;margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08)">
-        <input placeholder="Add a ritual — e.g. 'Meditate 10 min'" value="{{ newRoutine }}" onInput="{{ setNewRoutine }}" onKeyDown="{{ routineKey }}" style="flex:1;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:10px 0;transition:border-color .3s" style-focus="border-color:#fff">
-        <button onClick="{{ addRoutine }}" style="display:flex;align-items:center;gap:8px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:500;padding:11px 22px;border-radius:99px;cursor:pointer;transition:opacity .3s,gap .3s" style-hover="opacity:.85;gap:13px" style-active="transform:scale(.96)">Add <span>+</span></button>
-      </div>
-    </div>
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:26px 30px;animation:fadeUp .7s .12s cubic-bezier(.16,1,.3,1) both">
-      <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px"><span style="font-size:15px;color:#fff">{{ rMonthLabel }}</span><span style="font-size:11.5px;color:#b0b0b0">◆ = all rituals met</span></div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:7px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#b0b0b0;margin-bottom:9px">
-        <span style="text-align:center">M</span><span style="text-align:center">T</span><span style="text-align:center">W</span><span style="text-align:center">T</span><span style="text-align:center">F</span><span style="text-align:center">S</span><span style="text-align:center">S</span>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:7px;max-width:420px">
-        <sc-for list="{{ rCells }}" as="c" hint-placeholder-count="35"><div style="{{ c.st }}">{{ c.inner }}</div></sc-for>
-      </div>
-    </div>
-  </section>
-  </sc-if>
-  <sc-if value="{{ tabNotes }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ tabNotes }}" hint-placeholder-val="{{ false }}">
   <section data-m="pad stack hdr" style="position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;padding:64px 48px 28px;animation:fadeUp .9s cubic-bezier(.16,1,.3,1) both">
     <div>
       <div style="font-size:14px;color:#a0a0a0">Field notes</div>
@@ -1203,7 +1157,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     </div>
   </sc-if>
   <sc-if value="{{ undoOpen }}" hint-placeholder-val="{{ false }}">
-    <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:320;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,#1b1b1b,#0b0b0b);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px 12px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:fadeUp .3s cubic-bezier(.16,1,.3,1) both">
+    <div style="position:fixed;left:50%;bottom:32px;transform:translateX(-50%);z-index:320;display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,#1b1b1b,#0e0e0e);border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:12px 14px 12px 20px;box-shadow:0 20px 50px rgba(0,0,0,.5);animation:toastUp .3s cubic-bezier(.16,1,.3,1) both">
       <span style="font-family:'Archivo',sans-serif;font-size:14px;color:#eaeaea">{{ undoLabel }}</span>
       <button onClick="{{ undoDelete }}" style="border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:13px;font-weight:500;padding:8px 18px;border-radius:99px;cursor:pointer;transition:transform .18s ease-out" style-active="transform:scale(.97)">Undo</button>
       <button onClick="{{ dismissUndo }}" style="border:none;background:none;color:#a0a0a0;font-size:18px;line-height:1;cursor:pointer;padding:4px 6px;transition:color .18s" style-hover="color:#fff">×</button>
@@ -1211,21 +1165,18 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;pageBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#151515&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#272727&quot;,&quot;#272727&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1b1b1b&quot;,&quot;#151515&quot;,&quot;#151515&quot;,&quot;#0b0b0b&quot;,&quot;#0b0b0b&quot;,&quot;#0b0b0b&quot;]},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#151515&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#272727&quot;,&quot;#272727&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1b1b1b&quot;,&quot;#151515&quot;,&quot;#151515&quot;,&quot;#0b0b0b&quot;,&quot;#0b0b0b&quot;,&quot;#0b0b0b&quot;]}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;pageBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#0e0e0e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#272727&quot;,&quot;#272727&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1b1b1b&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;]},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#0e0e0e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#272727&quot;,&quot;#272727&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1b1b1b&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;]}}">
 class Component extends DCLogic {
   state = { range: 'D', tab: 'Overview', ovMonth: 0, szPairs: null, szStop: '20', szRiskPct: '1', szMode: 'pct', szRiskUsd: '500', szBal: '', rates: null, ratesDate: '', ratesErr: '', ratesVia: '', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 1, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
   _openFoodEdit(f) { this.setState({ editFoodId: f.id, editFood: { name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0 } }); }
-  _setEditFood(field, val) { const v = field === 'name' ? val : (parseInt(String(val).replace(/[^0-9]/g, '')) || 0); this.setState({ editFood: { ...this.state.editFood, [field]: v } }); }
-  _saveEditFood() { const e = this.state.editFood; const foods = (this.state.foods || []).map((f) => f.id === this.state.editFoodId ? { ...f, name: e.name, kcal: e.kcal, protein: e.protein, carbs: e.carbs, fat: e.fat, sugar: e.sugar } : f);
-    this._saveFoods(foods); this.setState({ editFoodId: null, editFood: null }); this.animateNumbers(); }
-  _removeEditFood() { this._saveFoods((this.state.foods || []).filter((f) => f.id !== this.state.editFoodId)); this.setState({ editFoodId: null, editFood: null }); this.animateNumbers(); }
-  _saveRoutines(list) { this.setState({ routines: list }); this._persist('phntm-routines-v1', JSON.stringify(list)); }
-  _addRoutine() { const n = (this.state.newRoutine || '').trim(); if (!n) return;
-    this._saveRoutines([...(this.state.routines || []), { id: Date.now(), name: n, done: {} }]); this.setState({ newRoutine: '' }); }
-  _toggleRoutine(id) { const k = this._dayKey();
-    this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, done: { ...r.done, [k]: !r.done[k] } } : r)); }
-  _removeRoutine(id) { this._saveRoutines((this.state.routines || []).filter((r) => r.id !== id)); }
-  _renameRoutine(id, name) { this._saveRoutines((this.state.routines || []).map((r) => r.id === id ? { ...r, name } : r)); }
+
+
+
+
+
+
+
+
   _moveNoteCat(from, to) {
     const cats = [...(this.state.noteCats || [])];
     if (from === to || from < 0 || to < 0 || from >= cats.length || to >= cats.length) return;
@@ -1285,7 +1236,7 @@ class Component extends DCLogic {
       document.execCommand('hiliteColor', false, col);
       // white and other pale highlights need dark text; deep ones keep it light
       const lum = (a[0] * 299 + a[1] * 587 + a[2] * 114) / 1000;
-      document.execCommand('foreColor', false, lum > 140 ? '#151515' : '#ffffff');
+      document.execCommand('foreColor', false, lum > 140 ? '#0e0e0e' : '#ffffff');
     }
     setTimeout(() => this._syncFmt(), 0); }
   // Removing a highlight can't be done with execCommand — Chrome ignores
@@ -1871,7 +1822,7 @@ class Component extends DCLogic {
   // Sketch pad — same stroke model as draw-over-text: device-resolution canvas,
   // one smooth path per stroke, undo, and an eraser that paints the pad colour
   // (the pad has an opaque background, so erasing means painting it back).
-  _SK_BG = '#151515';
+  _SK_BG = '#0e0e0e';
   _skDPR() { return Math.min(window.devicePixelRatio || 1, 2); }
   _sketchXY(e) { const b = this._sketchEl.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; }
   _skFit() {
@@ -2137,16 +2088,7 @@ class Component extends DCLogic {
   _setSetup(patch) { this.setState({ challengeSetup: { ...(this.state.challengeSetup || {}), ...patch } }); }
   _commitSetup() { const su = this.state.challengeSetup; if (!su) return; const id = Date.now(); const c = { id, token: 'C' + id, name: (su.name || 'Challenge').trim() || 'Challenge', market: su.market || 'Futures', size: su.size || 50000, phase: 'Eval 1' }; const list = [...(this.state.challenges || []), c]; this.setState({ challengeSetup: null }); this._saveChallenges(list, id); this._mirror(c); setTimeout(() => this._saveAccount(), 0); this.animateNumbers(); }
   _renameChallenge(id, name) { const list = (this.state.challenges || []).map((c) => c.id === id ? { ...c, name } : c); this._saveChallenges(list); }
-  _setChallengePhase(ph) {
-    const id = this.state.activeChallengeId;
-    // Switching to Funded by hand still has to start the payout clock — without a
-    // fundedAt the 21-day wait was skipped and the account read "payout eligible".
-    const list = (this.state.challenges || []).map((c) => c.id === id
-      ? { ...c, phase: ph, fundedAt: ph === 'Funded' ? (c.fundedAt || Date.now()) : c.fundedAt }
-      : c);
-    this.setState({ acctPhase: ph, viewAcct: ph });
-    this._saveChallenges(list); setTimeout(() => this._saveAccount(), 0); this.animateNumbers();
-  }
+
   _deleteChallenge(id) {
     const list = this.state.challenges || [];
     const removed = list.find((c) => c.id === id);
@@ -2243,15 +2185,16 @@ class Component extends DCLogic {
     const raw = (this.state.myTrades || []).slice();
     const accts = []; raw.forEach((t) => { const k = this._tradeTok(t.acct); if (k !== 'Live' && k !== 'Backtest' && !accts.includes(k)) accts.push(k); });
     const hasBt = raw.some((t) => t.acct === 'Backtest');
+    const hasLive = raw.some((t) => this._tradeTok(t.acct) === 'Live');
     const f = this.state.tradeFilter || 'All', sub = this.state.tradeSub || 'All';
     let fl;
     if (f === 'Live') fl = raw.filter((t) => this._tradeTok(t.acct) === 'Live');
     else if (f === 'Backtest') fl = raw.filter((t) => t.acct === 'Backtest');
     else if (f === 'Prop') fl = raw.filter((t) => { const k = this._tradeTok(t.acct); return k !== 'Live' && k !== 'Backtest' && (sub === 'All' || k === sub); });
-    else fl = raw.filter((t) => t.acct !== 'Backtest');   // All = real trades only
+    else fl = raw.slice();   // All means everything, backtest included
     const sb = this.state.tradeSort || 'ts', dir = this.state.tradeDir == null ? -1 : this.state.tradeDir;
     fl.sort((a, b) => { if (sb === 'sym' || sb === 'side' || sb === 'setup') return String(a[sb] || '').localeCompare(String(b[sb] || '')) * dir; const g = (t) => sb === 'pnl' ? t.pnl : sb === 'r' ? (t.r || 0) : t.ts; return (g(a) - g(b)) * dir; });
-    return { accts, fl, hasBt };
+    return { accts, fl, hasBt, hasLive };
   }
   _actCtx() { const s = this.state; return (s.activeAcct === 'Challenge') ? { type: 'Prop', firm: s.acctFirm, market: s.acctMarket, size: s.acctSize, phase: s.acctPhase } : { type: s.activeAcct || 'Live' }; }
   _viewCtx() { return { type: 'Live' }; }   // Overview is the live journal — no account switcher any more
@@ -2616,7 +2559,7 @@ class Component extends DCLogic {
     try { this._persist('phntm-my-trades-v1', JSON.stringify(list)); }
     catch (e) { try { this._persist('phntm-my-trades-v1', JSON.stringify(list.map((t) => ({ ...t, pics: [] })))); } catch (e2) {} }
   }
-  _saveFoods(foods) { this.setState({ foods }); this._persist('phntm-food-v2', JSON.stringify(foods)); this._syncToday(foods); }
+
   _saveUsuals(list) { this.setState({ usuals: list }); this._persist('phntm-usuals-v1', JSON.stringify(list)); }
   _backfillPayouts() {
     const led = this.state.payouts || [];
@@ -2691,293 +2634,35 @@ class Component extends DCLogic {
     // record it silently — no interruption
     this._persist('phntm-badges-v1', JSON.stringify(seen.concat(fresh.map((b) => b.id))));
   }
-  _rememberUsual(f) {
-    const list = (this.state.usuals || []).slice();
-    const key = String(f.name || '').trim().toLowerCase(); if (!key) return;
-    const i = list.findIndex((u) => String(u.name || '').trim().toLowerCase() === key);
-    if (i >= 0) list[i] = { ...list[i], kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0, n: (list[i].n || 1) + 1, last: Date.now() };
-    else list.push({ id: 'u' + Date.now(), name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0, kind: f.kind || 'Food', n: 1, last: Date.now() });
-    this._saveUsuals(list);
-  }
+
   _logUsual(u, meal) {
     const f = { id: Date.now(), name: u.name, kcal: u.kcal, protein: u.protein, carbs: u.carbs, fat: u.fat, sugar: u.sugar || 0, kind: u.kind || 'Food', meal: meal || this.state.meal };
-    this._saveFoods([...(this.state.foods || []), f]);
-    this._rememberUsual(f);
+    // Health tab removed — nothing to log against
+    return;
     this.setState({ usualPick: null });
     this.animateNumbers();
   }
-  _openManual() { this.setState({ manualOpen: true, manual: { name: '', kcal: '', protein: '', carbs: '', fat: '', sugar: '', serving: '', kind: 'Food', meal: this.state.meal, remember: true } }); }
+
   _setManual(field, val) {
     const nums = ['kcal', 'protein', 'carbs', 'fat', 'sugar'];
     const v = nums.indexOf(field) >= 0 ? String(val).replace(/[^0-9]/g, '') : val;
     this.setState({ manual: { ...(this.state.manual || {}), [field]: v } });
   }
-  _saveManual() {
-    const m = this.state.manual || {}; const name = String(m.name || '').trim(); if (!name) return;
-    const n = (x) => parseInt(x, 10) || 0;
-    const label = m.serving ? name + ' · ' + String(m.serving).trim() : name;
-    const f = { id: Date.now(), name: label, kcal: n(m.kcal), protein: n(m.protein), carbs: n(m.carbs), fat: n(m.fat), sugar: n(m.sugar), kind: m.kind || 'Food', meal: m.meal || this.state.meal };
-    this._saveFoods([...(this.state.foods || []), f]);
-    if (m.remember !== false) this._rememberUsual(f);
-    this.setState({ manualOpen: false, manual: null });
-    this.animateNumbers();
-  }
+
   _dayKey(d) { d = d || new Date(); const p = (n) => String(n).padStart(2, '0'); return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()); }
   // Clearing a past day: drop its history record and any food logged that date.
-  _clearDay(key, what) {
-    let days = {}; try { days = JSON.parse(localStorage.getItem('phntm-days-v1') || '{}'); } catch (e) {}
-    const rec = days[key];
-    if (rec) {
-      if (what === 'all') delete days[key];
-      else if (what === 'sleep') { const n = { ...rec }; delete n.sleepMin; delete n.bedMin; days[key] = n; }
-      else if (what === 'food') days[key] = { ...rec, kcal: 0, p: 0, c: 0, f: 0 };
-      this._persist('phntm-days-v1', JSON.stringify(days));
-    }
-    if (what === 'all' || what === 'food') {
-      const keep = (this.state.foods || []).filter((f) => this._dayKey(new Date(f.id)) !== key);
-      if (keep.length !== (this.state.foods || []).length) { this.setState({ foods: keep }); this._persist('phntm-food-v2', JSON.stringify(keep)); }
-    }
-    // today's row is derived from live state, so re-sync it after a clear
-    if (key === this._dayKey()) {
-      if (what === 'all' || what === 'sleep') this.setState({ sleepManualMin: null });
-      setTimeout(() => this._syncToday(), 0);
-    }
-    this.setState({ dayEdit: null });
-    this.animateNumbers();
-  }
-  _saveSleep() {
-    this._syncToday();
-    this.setState({ sleepSaved: true });
-    clearTimeout(this._slT);
-    this._slT = setTimeout(() => this.setState({ sleepSaved: false }), 2200);
-  }
-  _syncToday(foodsArg, sleepArg, bedArg) {
-    const foods = foodsArg || this.state.foods || [];
-    const t = foods.reduce((a, f) => ({ kcal: a.kcal + f.kcal, p: a.p + f.protein, c: a.c + f.carbs, f: a.f + f.fat }), { kcal: 0, p: 0, c: 0, f: 0 });
-    const sm = sleepArg != null ? sleepArg : this.state.sleepManualMin;
-    const bm = bedArg !== undefined ? bedArg : this._bedMin();
-    let days = {}; try { days = JSON.parse(localStorage.getItem('phntm-days-v1') || '{}'); } catch (e) {}
-    const key = this._dayKey();
-    days[key] = { ...(days[key] || {}), kcal: t.kcal, p: t.p, c: t.c, f: t.f, sleepMin: sm, bedMin: bm };
-    this._persist('phntm-days-v1', JSON.stringify(days));
-  }
-  _bedMin() { const [h, m] = String(this.state.bedTime || '22:30').split(':').map(Number); return ((h || 0) * 60 + (m || 0)); }
-  _foodSystemPrompt() {
-    return 'You are a careful multilingual nutrition estimator. Count the WHOLE item as served: for a sandwich, sub, burger, wrap, taco or burrito that means the bread or tortilla PLUS the filling PLUS any cheese, dressing or sauce — a bread-based item can never have 0 carbs, and a 6-inch sub is typically 330-500 kcal. Respect fractions like "half" (multiply everything by 0.5). Never under-report fat: dressings, mayo, cheese and fried foods carry most of it. The user may describe a food in ANY language (Korean, Japanese, Spanish, etc.) — including brand/product names like "오뚜기 3분카레" or "Snickers" and composite dishes with listed ingredients like "1 sandwich: 1 ham, 1 cheese, 1 tbsp peanut butter". Sum all listed ingredients into ONE total and reply ONLY with compact JSON like {"name":"Snickers bar — 1 standard (52g)","kcal":250,"protein":4,"carbs":33,"fat":12,"sugar":27}. Keep the original text in the name and add a short English gloss in parentheses. If the input looks misspelled, ALSO include a "suggest" field with the corrected spelling (e.g. {"suggest":"snickers",...}); otherwise omit "suggest". Estimate for the exact quantity described; if no quantity, assume one typical serving and include it in the name. "sugar" is grams of sugar (integer, 0 if none). Integers only. No text outside the JSON.';
-  }
-  _foodDB() {
-    return [
-      // --- noodles, rice and staples ----------------------------------------
-      { k: ['instant ramen', 'shin ramyun', 'ramyun', 'ramen', 'instant noodles', 'cup noodles'], n: 'instant ramen (1 pack)', kcal: 500, p: 11, c: 72, f: 19, s: 4 },
-      { k: ['pho', 'noodle soup'], n: 'noodle soup (bowl)', kcal: 420, p: 25, c: 55, f: 9, s: 4 },
-      { k: ['udon'], n: 'udon (bowl)', kcal: 430, p: 14, c: 82, f: 4, s: 5 },
-      { k: ['fried rice'], n: 'fried rice (1 plate)', kcal: 560, p: 14, c: 78, f: 20, s: 3 },
-      { k: ['white rice', 'steamed rice', 'rice'], n: 'rice (1 cup cooked)', kcal: 205, p: 4, c: 45, f: 0, s: 0 },
-      { k: ['spaghetti', 'pasta'], n: 'pasta (1 plate)', kcal: 480, p: 17, c: 72, f: 12, s: 8 },
-      { k: ['kimchi'], n: 'kimchi (side)', kcal: 25, p: 1, c: 4, f: 0, s: 2 },
-      { k: ['dumplings', 'mandu', 'gyoza'], n: 'dumplings (5)', kcal: 280, p: 12, c: 32, f: 11, s: 2 },
-      // --- dairy -------------------------------------------------------------
-      { k: ['low calorie milk', 'skim milk', 'low fat milk'], n: 'low-fat milk (1 tbsp)', kcal: 6, p: 0.5, c: 1, f: 0, s: 1 },
-      { k: ['whole milk', 'milk'], n: 'milk (1 tbsp)', kcal: 9, p: 0.5, c: 1, f: 0.5, s: 1 },
-      { k: ['cheese slice', 'slice of cheese', 'american cheese', 'cheddar', 'cheese'], n: 'cheese (1 slice)', kcal: 70, p: 4, c: 1, f: 6, s: 0 },
-      { k: ['cream cheese'], n: 'cream cheese (1 tbsp)', kcal: 50, p: 1, c: 1, f: 5, s: 1 },
-      { k: ['butter'], n: 'butter (1 tbsp)', kcal: 102, p: 0, c: 0, f: 12, s: 0 },
-      // --- drinks ------------------------------------------------------------
-      { k: ['coca cola', 'coke', 'cola', 'pepsi'], n: 'cola (1 can, 355ml)', kcal: 140, p: 0, c: 39, f: 0, s: 39 },
-      { k: ['diet coke', 'coke zero', 'zero sugar'], n: 'diet cola (1 can)', kcal: 0, p: 0, c: 0, f: 0, s: 0 },
-      { k: ['sprite', 'lemonade', 'soda'], n: 'soda (1 can)', kcal: 140, p: 0, c: 38, f: 0, s: 38 },
-      { k: ['orange juice', 'apple juice', 'juice'], n: 'juice (1 glass)', kcal: 110, p: 1, c: 26, f: 0, s: 22 },
-      { k: ['iced americano', 'americano', 'black coffee', 'coffee'], n: 'coffee (black)', kcal: 5, p: 0, c: 1, f: 0, s: 0 },
-      { k: ['latte', 'cafe latte'], n: 'latte (medium)', kcal: 190, p: 12, c: 18, f: 7, s: 17 },
-      { k: ['beer'], n: 'beer (1 can)', kcal: 150, p: 2, c: 13, f: 0, s: 0 },
-      { k: ['soju'], n: 'soju (1 bottle)', kcal: 400, p: 0, c: 0, f: 0, s: 0 },
-      { k: ['energy drink', 'monster', 'red bull'], n: 'energy drink (1 can)', kcal: 160, p: 0, c: 39, f: 0, s: 38 },
-      // --- snacks ------------------------------------------------------------
-      { k: ['lays', "lay's", 'potato chips', 'chips', 'crisps'], n: 'potato chips (small bag, 40g)', kcal: 215, p: 3, c: 20, f: 14, s: 0 },
-      { k: ['doritos', 'tortilla chips', 'nachos'], n: 'tortilla chips (small bag)', kcal: 230, p: 3, c: 26, f: 12, s: 1 },
-      { k: ['popcorn'], n: 'popcorn (1 bag)', kcal: 150, p: 3, c: 22, f: 6, s: 0 },
-      { k: ['chocolate bar', 'chocolate'], n: 'chocolate bar', kcal: 230, p: 3, c: 26, f: 13, s: 24 },
-      { k: ['protein bar'], n: 'protein bar', kcal: 210, p: 20, c: 22, f: 7, s: 5 },
-      { k: ['salt', 'extra salt'], n: 'salt (pinch)', kcal: 0, p: 0, c: 0, f: 0, s: 0 },
-      { k: ['sugar'], n: 'sugar (1 tsp)', kcal: 16, p: 0, c: 4, f: 0, s: 4 },
-      { k: ['honey'], n: 'honey (1 tbsp)', kcal: 64, p: 0, c: 17, f: 0, s: 17 },
-      { k: ['olive oil', 'cooking oil', 'oil'], n: 'oil (1 tbsp)', kcal: 119, p: 0, c: 0, f: 14, s: 0 },
-      // --- subs, sandwiches and the things that go in them -------------------
-      { k: ['footlong sub', 'footlong'], n: 'footlong sub (12in)', kcal: 760, p: 46, c: 92, f: 24, s: 12 },
-      { k: ['chicken sub', 'chicken teriyaki sub'], n: 'chicken sub (6in)', kcal: 380, p: 26, c: 47, f: 10, s: 8 },
-      { k: ['steak sub', 'steak and cheese sub'], n: 'steak & cheese sub (6in)', kcal: 430, p: 26, c: 45, f: 17, s: 8 },
-      { k: ['turkey sub'], n: 'turkey sub (6in)', kcal: 330, p: 20, c: 46, f: 6, s: 7 },
-      { k: ['tuna sub'], n: 'tuna sub (6in)', kcal: 480, p: 21, c: 45, f: 25, s: 7 },
-      { k: ['veggie sub'], n: 'veggie sub (6in)', kcal: 250, p: 9, c: 45, f: 4, s: 7 },
-      { k: ['sub sandwich', 'hoagie', 'submarine sandwich', 'sub'], n: 'sub sandwich (6in)', kcal: 390, p: 22, c: 47, f: 12, s: 8 },
-      { k: ['sub roll', 'baguette', 'hoagie roll'], n: 'sub roll (6in)', kcal: 200, p: 8, c: 38, f: 2, s: 4 },
-      { k: ['burger bun', 'hamburger bun', 'bun'], n: 'burger bun', kcal: 150, p: 5, c: 27, f: 2, s: 4 },
-      { k: ['tortilla wrap', 'wrap', 'tortilla'], n: 'flour tortilla (large)', kcal: 190, p: 5, c: 32, f: 5, s: 1 },
-      { k: ['sweet onion sauce', 'onion sauce'], n: 'sweet onion sauce (1 tbsp)', kcal: 40, p: 0, c: 9, f: 0, s: 8 },
-      { k: ['chipotle sauce', 'chipotle southwest'], n: 'chipotle sauce (1 tbsp)', kcal: 90, p: 0, c: 1, f: 10, s: 1 },
-      { k: ['ranch dressing', 'ranch'], n: 'ranch (1 tbsp)', kcal: 73, p: 0, c: 1, f: 8, s: 1 },
-      { k: ['mayonnaise', 'mayo'], n: 'mayonnaise (1 tbsp)', kcal: 94, p: 0, c: 0, f: 10, s: 0 },
-      { k: ['ketchup'], n: 'ketchup (1 tbsp)', kcal: 19, p: 0, c: 5, f: 0, s: 4 },
-      { k: ['mustard'], n: 'mustard (1 tsp)', kcal: 3, p: 0, c: 0, f: 0, s: 0 },
-      { k: ['bbq sauce', 'barbecue sauce'], n: 'BBQ sauce (1 tbsp)', kcal: 29, p: 0, c: 7, f: 0, s: 6 },
-      { k: ['sriracha', 'hot sauce'], n: 'hot sauce (1 tsp)', kcal: 5, p: 0, c: 1, f: 0, s: 1 },
-      { k: ['lettuce'], n: 'lettuce (handful)', kcal: 5, p: 0, c: 1, f: 0, s: 0 },
-      { k: ['tomato'], n: 'tomato (2 slices)', kcal: 8, p: 0, c: 2, f: 0, s: 1 },
-      { k: ['red onion', 'onion'], n: 'onion (slices)', kcal: 10, p: 0, c: 2, f: 0, s: 1 },
-      { k: ['pickles', 'pickle'], n: 'pickles', kcal: 5, p: 0, c: 1, f: 0, s: 0 },
-      { k: ['peanut butter'], n: 'peanut butter (1 tbsp)', kcal: 95, p: 4, c: 3, f: 8, s: 1 },
-      { k: ['almond butter'], n: 'almond butter (1 tbsp)', kcal: 98, p: 3, c: 3, f: 9, s: 1 },
-      { k: ['greek yogurt'], n: 'Greek yogurt (1 cup)', kcal: 150, p: 15, c: 8, f: 4, s: 7 },
-      { k: ['ground beef'], n: 'ground beef (100g)', kcal: 250, p: 20, c: 0, f: 18, s: 0 },
-      { k: ['chicken breast', 'chicken'], n: 'chicken breast (~120g)', kcal: 195, p: 36, c: 0, f: 4, s: 0 },
-      { k: ['french fries', 'fries'], n: 'french fries (medium)', kcal: 365, p: 4, c: 48, f: 17, s: 0 },
-      { k: ['ice cream'], n: 'ice cream (1 scoop)', kcal: 210, p: 4, c: 24, f: 11, s: 21 },
-      { k: ['fried rice'], n: 'fried rice (1 plate)', kcal: 350, p: 9, c: 52, f: 12, s: 3 },
-      { k: ['spaghetti', 'pasta', 'noodles', 'noodle', 'penne', 'macaroni', 'ramen'], n: 'pasta (cooked, ~1 plate)', kcal: 310, p: 11, c: 60, f: 2, s: 2 },
-      { k: ['white rice', 'brown rice', 'rice'], n: 'rice (1 cup cooked)', kcal: 205, p: 4, c: 45, f: 0, s: 0 },
-      { k: ['toast', 'slice of bread', 'bread'], n: 'bread (1 slice)', kcal: 80, p: 3, c: 14, f: 1, s: 1 },
-      { k: ['bagel'], n: 'bagel', kcal: 250, p: 10, c: 48, f: 2, s: 6 },
-      { k: ['egg', 'eggs'], n: 'egg', kcal: 78, p: 6, c: 1, f: 5, s: 0 },
-      { k: ['steak', 'beef'], n: 'beef/steak (100g)', kcal: 250, p: 26, c: 0, f: 17, s: 0 },
-      { k: ['salmon'], n: 'salmon (100g)', kcal: 208, p: 20, c: 0, f: 13, s: 0 },
-      { k: ['tuna'], n: 'tuna (100g)', kcal: 130, p: 28, c: 0, f: 1, s: 0 },
-      { k: ['shrimp'], n: 'shrimp (100g)', kcal: 99, p: 24, c: 0, f: 0, s: 0 },
-      { k: ['cheeseburger', 'hamburger', 'burger'], n: 'burger', kcal: 500, p: 25, c: 40, f: 25, s: 8 },
-      { k: ['pizza'], n: 'pizza (1 slice)', kcal: 285, p: 12, c: 36, f: 10, s: 4 },
-      { k: ['sandwich'], n: 'sandwich', kcal: 350, p: 15, c: 40, f: 14, s: 5 },
-      { k: ['baked potato', 'potato'], n: 'potato (1 medium)', kcal: 160, p: 4, c: 37, f: 0, s: 2 },
-      { k: ['salad'], n: 'salad (dressed)', kcal: 150, p: 3, c: 10, f: 10, s: 3 },
-      { k: ['cheese'], n: 'cheese (1 slice)', kcal: 110, p: 7, c: 1, f: 9, s: 0 },
-      { k: ['butter'], n: 'butter (1 tbsp)', kcal: 100, p: 0, c: 0, f: 11, s: 0 },
-      { k: ['oatmeal', 'oats', 'porridge'], n: 'oatmeal (1 cup cooked)', kcal: 150, p: 5, c: 27, f: 3, s: 1 },
-      { k: ['banana'], n: 'banana', kcal: 105, p: 1, c: 27, f: 0, s: 14 },
-      { k: ['apple'], n: 'apple', kcal: 95, p: 0, c: 25, f: 0, s: 19 },
-      { k: ['orange'], n: 'orange', kcal: 62, p: 1, c: 15, f: 0, s: 12 },
-      { k: ['latte', 'cappuccino'], n: 'latte', kcal: 120, p: 8, c: 12, f: 5, s: 11 },
-      { k: ['coffee', 'espresso'], n: 'coffee (black)', kcal: 5, p: 0, c: 0, f: 0, s: 0 },
-      { k: ['tea'], n: 'tea', kcal: 2, p: 0, c: 0, f: 0, s: 0 },
-      { k: ['milk'], n: 'milk (1 cup)', kcal: 120, p: 8, c: 12, f: 5, s: 12 },
-      { k: ['yogurt'], n: 'yogurt (1 cup)', kcal: 150, p: 8, c: 17, f: 8, s: 17 },
-      { k: ['protein shake', 'whey', 'protein powder'], n: 'protein shake (1 scoop)', kcal: 120, p: 24, c: 3, f: 1, s: 2 },
-      { k: ['cereal'], n: 'cereal (1 bowl)', kcal: 200, p: 5, c: 44, f: 2, s: 12 },
-      { k: ['bacon'], n: 'bacon (2 strips)', kcal: 90, p: 6, c: 0, f: 7, s: 0 },
-      { k: ['sausage'], n: 'sausage (1 link)', kcal: 130, p: 7, c: 1, f: 11, s: 0 },
-      { k: ['tofu'], n: 'tofu (100g)', kcal: 145, p: 15, c: 4, f: 9, s: 1 },
-      { k: ['black beans', 'beans'], n: 'beans (1 cup)', kcal: 227, p: 15, c: 41, f: 1, s: 0 },
-      { k: ['avocado'], n: 'avocado (half)', kcal: 160, p: 2, c: 9, f: 15, s: 1 },
-      { k: ['almonds', 'nuts', 'cashews', 'walnuts'], n: 'nuts (1 oz)', kcal: 165, p: 6, c: 6, f: 14, s: 1 },
-      { k: ['chocolate'], n: 'chocolate (1 bar)', kcal: 230, p: 3, c: 25, f: 13, s: 24 },
-      { k: ['cookie'], n: 'cookie', kcal: 150, p: 2, c: 20, f: 7, s: 10 },
-      { k: ['donut', 'doughnut'], n: 'donut', kcal: 250, p: 3, c: 30, f: 14, s: 12 },
-      { k: ['pancakes', 'pancake'], n: 'pancakes (2)', kcal: 350, p: 8, c: 45, f: 14, s: 10 },
-      { k: ['waffle'], n: 'waffle', kcal: 220, p: 5, c: 28, f: 10, s: 6 },
-      { k: ['soup'], n: 'soup (1 bowl)', kcal: 150, p: 7, c: 18, f: 5, s: 3 },
-      { k: ['curry'], n: 'curry (1 serving)', kcal: 400, p: 15, c: 35, f: 22, s: 6 },
-      { k: ['sushi'], n: 'sushi (1 roll)', kcal: 250, p: 8, c: 45, f: 4, s: 6 },
-      { k: ['soda', 'coke', 'pepsi', 'cola'], n: 'soda (1 can)', kcal: 140, p: 0, c: 39, f: 0, s: 39 },
-      { k: ['beer'], n: 'beer', kcal: 150, p: 2, c: 13, f: 0, s: 0 },
-      { k: ['wine'], n: 'wine (1 glass)', kcal: 125, p: 0, c: 4, f: 0, s: 1 },
-    ];
-  }
-  _localEstimate(q) {
-    let s = ' ' + String(q || '').toLowerCase().replace(/[^a-z0-9\/\.\s]/g, ' ').replace(/\s+/g, ' ') + ' ';
-    const w2n = { a: 1, an: 1, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, half: 0.5, couple: 2 };
-    const tot = { kcal: 0, p: 0, c: 0, f: 0, s: 0 }; const items = [];
-    for (const e of this._foodDB()) {
-      for (const kw of e.k) {
-        const idx = s.indexOf(' ' + kw + ' ') >= 0 ? s.indexOf(' ' + kw + ' ') : (s.indexOf(' ' + kw) >= 0 && s.indexOf(' ' + kw) + kw.length + 1 === s.length ? s.indexOf(' ' + kw) : -1);
-        if (idx < 0) continue;
-        const pre = s.slice(0, idx + 1).trim().split(' ').filter(Boolean);
-        let qy = 1;
-        const FILLER = { a: 1, an: 1, of: 1, the: 1, slice: 1, slices: 1, piece: 1, pieces: 1, my: 1, some: 1,
-          spoon: 1, spoons: 1, spoonful: 1, spoonfuls: 1, tbsp: 1, tablespoon: 1, tablespoons: 1,
-          tsp: 1, teaspoon: 1, teaspoons: 1, cup: 1, cups: 1, glass: 1, glasses: 1, bowl: 1, bowls: 1,
-          can: 1, cans: 1, bottle: 1, bottles: 1, bag: 1, bags: 1, pack: 1, packet: 1, packs: 1,
-          plate: 1, plates: 1, serving: 1, servings: 1, small: 1, medium: 1, large: 1, big: 1,
-          extra: 1, with: 1, and: 1, plus: 1, sprinkled: 1, sprinkle: 1, on: 1, top: 1, side: 1 };
-        // size words scale the serving
-        const SIZE = { small: 0.7, mini: 0.6, medium: 1, regular: 1, large: 1.4, big: 1.4, jumbo: 1.7 };
-        let sizeMul = 1;
-        for (let b = 1; b <= 4 && pre.length - b >= 0; b++) { const tk = pre[pre.length - b]; if (SIZE[tk] != null) { sizeMul = SIZE[tk]; break; } }
-        for (let b = 1; b <= 4 && pre.length - b >= 0; b++) {
-          const tk = pre[pre.length - b];
-          if (/^\d+(\.\d+)?$/.test(tk)) { qy = parseFloat(tk); break; }
-          if (/^\d+\/\d+$/.test(tk)) { const [a, c] = tk.split('/'); qy = (+a) / (+c); break; }
-          if (tk === 'half' || tk === 'halves') { qy = 0.5; break; }
-          if (w2n[tk] != null && !FILLER[tk]) { qy = w2n[tk]; break; }
-          if (!FILLER[tk]) break;   // a real word that is not a quantity — stop looking
-        }
-        qy = qy * sizeMul;
-        tot.kcal += e.kcal * qy; tot.p += e.p * qy; tot.c += e.c * qy; tot.f += e.f * qy; tot.s += e.s * qy;
-        items.push((qy !== 1 ? qy + ' ' : '') + e.n);
-        s = s.slice(0, idx + 1) + ' '.repeat(kw.length) + s.slice(idx + 1 + kw.length); // consume so 'butter' doesn't re-hit 'peanut butter'
-        break;
-      }
-    }
-    if (!items.length) return null;
-    const label = q.trim().replace(/\s+/g, ' ');
-    return { name: label.charAt(0).toUpperCase() + label.slice(1) + ' (est. · ' + items.join(' + ') + ')', kcal: Math.round(tot.kcal), protein: Math.round(tot.p), carbs: Math.round(tot.c), fat: Math.round(tot.f), sugar: Math.round(tot.s) };
-  }
-  async _estimateFood(q) {
-    const NUTRITION_API = '/api/nutrition'; // your deployed Vercel backend
-    if (NUTRITION_API) {
-      try {
-        const ctl = new AbortController();
-        const bail = setTimeout(() => ctl.abort(), 18000);   // 3 searches lands in ~5-9s; 18s is the safety net
-        const r = await fetch(NUTRITION_API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ q }), signal: ctl.signal }).finally(() => clearTimeout(bail));
-        if (r.ok) { const j = await r.json(); if (j && !j.error) return j; }
-      } catch (e) { /* backend not reachable (e.g. local preview) — fall through */ }
-    }
-    if (window.claude && window.claude.complete) {
-      try {
-        const res = await Promise.race([
-          window.claude.complete({ system: this._foodSystemPrompt(), messages: [{ role: 'user', content: q }] }),
-          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 12000)),
-        ]);
-        const m = res.match(/\{[\s\S]*\}/); if (m) return JSON.parse(m[0]);
-      } catch (e) { /* AI unavailable — fall through to offline DB */ }
-    }
-    const loc = this._localEstimate(q);
-    if (loc) return loc;
-    throw new Error('no_estimator');
-  }
-  async addFood() {
-    const q = (this.state.foodInput || '').trim();
-    if (!q || this.state.foodLoading) return;
-    this.setState({ foodLoading: true, foodErr: '', foodSuggest: '', foodStage: '' });
-    clearTimeout(this._stage1); clearTimeout(this._stage2);
-    this._stage1 = setTimeout(() => { if (this.state.foodLoading) this.setState({ foodStage: 'Reading the label…' }); }, 2500);
-    this._stage2 = setTimeout(() => { if (this.state.foodLoading) this.setState({ foodStage: 'Checking local stores…' }); }, 7000);
-    try {
-      const cacheKey = 'phntm-food-cache-v2';
-      const norm = q.toLowerCase().replace(/\s+/g, '').trim();   // spacing never splits the cache
-      let cache = {}; try { cache = JSON.parse(localStorage.getItem(cacheKey) || '{}'); } catch (e) {}
-      let j = cache[norm];
-      if (!j) {
-        j = await this._estimateFood(q);
-        try {
-          if (j && j.kcal > 0) cache[norm] = j;   // never cache a failed or empty estimate
-          const keys = Object.keys(cache);
-          if (keys.length > 400) keys.slice(0, keys.length - 400).forEach((k) => { delete cache[k]; }); // keep the cache from growing forever
-          localStorage.setItem(cacheKey, JSON.stringify(cache));
-        } catch (e) {}
-      }
-      if (j.suggest && String(j.suggest).trim().toLowerCase() !== norm) {
-        clearTimeout(this._stage1); clearTimeout(this._stage2);
-        this.setState({ foodLoading: false, foodStage: '', foodSuggest: String(j.suggest).trim() });
-        return;
-      }
-      const f = { id: Date.now(), name: String(j.name || q), kcal: Math.round(j.kcal) || 0, protein: Math.round(j.protein) || 0, carbs: Math.round(j.carbs) || 0, fat: Math.round(j.fat) || 0, sugar: Math.round(j.sugar) || 0, meal: this.state.meal };
-      this._saveFoods([...(this.state.foods || []), f]);
-      this._rememberUsual(f);
-      clearTimeout(this._stage1); clearTimeout(this._stage2);
-      this.setState({ foodInput: '', foodLoading: false, foodStage: '' });
-      this.animateNumbers();
-    } catch (e) {
-      clearTimeout(this._stage1); clearTimeout(this._stage2);
-      this.setState({ foodLoading: false, foodStage: '', foodErr: 'Couldn\'t estimate that — try rewording, e.g. "2 scrambled eggs" or "1 slice pepperoni pizza".' });
-    }
-  }
+
+  // Sleep-only day sync. The food half of this went with the Health tab; sleep still
+  // needs its record written, so this keeps that path alive without the food logic.
+
+
+
+
+
+
+
+
+
   _persist(key, val) {
     try { localStorage.setItem(key, val); } catch (e) {}
     try { if (window.PHNTM && window.PHNTM.cloud) window.PHNTM.cloud.set(key, val); } catch (e) {}
@@ -3012,7 +2697,7 @@ class Component extends DCLogic {
           if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
         } catch (e) {}
       });
-      if (changed) { this._loadLocal(); this.animateNumbers(); }   // refresh in place — no page reload
+      if (changed) { this._loadLocal(); this._stopNumbers(); if (this.state.prog !== 1) this.setState({ prog: 1 }); }   // refresh in place, but never replay the count-up
       // re-seed against the data that just arrived, so synced-in milestones don't pop
       this._badgesReady = false;
       setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 60);
@@ -3082,11 +2767,13 @@ class Component extends DCLogic {
     if (sl && typeof sl.sleepManualMin === 'number') this.setState({ sleepManualMin: sl.sleepManualMin });
     if (sl && typeof sl.sleepGoalMin === 'number') this.setState({ sleepGoalMin: sl.sleepGoalMin });
     if (sl && typeof sl.bedTime === 'string') this.setState({ bedTime: sl.bedTime });
-    setTimeout(() => this._syncToday(), 0);
+    
     let bd = null; try { bd = JSON.parse(localStorage.getItem('phntm-body-v1') || 'null'); } catch (e) {}
     if (bd) this.setState({ sex: bd.sex || 'male', htCm: bd.htCm || 178, wtKg: bd.wtKg || 78, goal: bd.goal || 'Maintain' });
   }
   componentDidMount() {
+    // arriving from an auto sign-in: the login screen already showed the mark
+    try { this._handoff = sessionStorage.getItem('phntm-handoff') === '1'; if (this._handoff) sessionStorage.removeItem('phntm-handoff'); } catch (e) {}
     // a reload should start at the top, not wherever the last session left off
     try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; window.scrollTo(0, 0); } catch (e) {}
     // A ticking seconds clock meant setState every second, which re-ran the whole
@@ -3112,28 +2799,39 @@ class Component extends DCLogic {
     this._cloudSync();
   }
   componentWillUnmount() {
-    clearInterval(this._ck); cancelAnimationFrame(this._nr);
+    clearInterval(this._ck); this._stopNumbers();
     [this._undoT, this._undoAllT, this._undoCT, this._as].forEach((t) => clearTimeout(t));
   }
   animateTab(tab) {
-    this._seenTabs = this._seenTabs || {};
-    if (this._seenTabs[tab]) { cancelAnimationFrame(this._nr); if (this.state.prog !== 1) this.setState({ prog: 1 }); return; }
-    this._seenTabs[tab] = true;
+    // Replay on every tab change, not just the first visit. Safe because animateNumbers
+    // is non-reentrant and the cloud sync no longer triggers it — the two causes of the
+    // figure appearing to roll twice.
+    this._stopNumbers();
     this.animateNumbers();
   }
-  animateNumbers() {
+  _stopNumbers() {
+    // cancel and reset together — a cancel that leaves the flag set would disable the
+    // count-up permanently
     cancelAnimationFrame(this._nr);
+    this._nrRunning = false;
+  }
+  animateNumbers() {
+    // ignore a second request while one is already running — restarting mid-count is
+    // what makes the figure appear to roll twice
+    if (this._nrRunning) return;
+    this._stopNumbers();
+    this._nrRunning = true;
     this.setState({ prog: 0 });          // start the count-up from zero
     const t0 = performance.now(), dur = 1300;
     const step = () => {
       const p = Math.min(1, (performance.now() - t0) / dur);
       this.setState({ prog: 1 - Math.pow(1 - p, 3) });
-      if (p < 1) this._nr = requestAnimationFrame(step);
+      if (p < 1) this._nr = requestAnimationFrame(step); else this._nrRunning = false;   // cleared on natural finish
     };
     step();
   }
   renderVals() {
-    // A raw-string key survives a JSON round-trip as '"#0b0b0b"', so unwrap it and
+    // A raw-string key survives a JSON round-trip as '"#0e0e0e"', so unwrap it and
     // validate before it reaches CSS — an invalid colour here blanks the whole shell.
     const _theme = (() => {
       let raw = null;
@@ -3143,14 +2841,14 @@ class Component extends DCLogic {
       if (v[0] === '"') { try { v = JSON.parse(v); } catch (e) { v = v.replace(/^"+|"+$/g, ''); } }
       return /^#[0-9a-f]{6}$/i.test(v) ? v : null;
     })();
-    const BG = _theme || this.props.pageBg || '#151515';
+    const BG = _theme || this.props.pageBg || '#0e0e0e';
     const INTRO = (() => {
       let raw = null;
       try { raw = localStorage.getItem('phntm-intro-bg-v1'); } catch (e) {}
-      if (!raw) return '#0b0b0b';   // the intro reads better a step darker than the app
+      if (!raw) return '#0a0a0a';   // the intro reads better a step darker than the app
       let v = String(raw).trim();
       if (v[0] === '"') { try { v = JSON.parse(v); } catch (e) { v = v.replace(/^"+|"+$/g, ''); } }
-      return /^#[0-9a-f]{6}$/i.test(v) ? v : '#0b0b0b';
+      return /^#[0-9a-f]{6}$/i.test(v) ? v : '#0a0a0a';
     })();
     const NAV = (() => {
       // the sticky nav sits over scrolling content, so it needs the page colour at
@@ -3192,19 +2890,19 @@ class Component extends DCLogic {
       pick: () => { this.setState({ range: r }); this.animateNumbers(); },
     }));
     const k = isFinite(this.state.prog) ? this.state.prog : 1;   // never let a stalled animation zero the hero
-    const tabs = ['Overview', 'Trades', 'Lot size', 'Backtest', 'Routine', 'Notes'].map((tab) => ({
+    const tabs = ['Overview', 'Trades', 'Lot size', 'Backtest', 'Notes'].map((tab) => ({
       label: tab,
       st: 'padding-bottom:5px;background-image:linear-gradient(#fff,#fff);background-repeat:no-repeat;background-position:0 100%;transition:background-size .45s cubic-bezier(.16,1,.3,1),color .3s;' +
         (tab === this.state.tab ? 'color:#fff;background-size:100% 1px' : 'color:#a0a0a0;background-size:0% 1px'),
       pick: (e) => { e.preventDefault(); if (tab === this.state.tab) return; this.setState({ tab, wipeN: (this.state.wipeN || 0) + 1 }); this.animateTab(tab); },
     }));
     // Phone navigation: four everyday tabs in a bottom bar, the rest behind More.
-    const MOB_MAIN = ['Overview', 'Trades', 'Lot size', 'Routine'];
+    const MOB_MAIN = ['Overview', 'Trades', 'Lot size', 'Backtest'];
     // derived, not hardcoded — a tab added to `tabs` can never go missing on phones again
     const MOB_MORE = tabs.map((t) => t.label).filter((l) => !MOB_MAIN.includes(l));
     // No icons: the wordmark is the brand, so the bar is set type — uppercase
     // Archivo with a hairline rule marking the active tab.
-    const mobLabel = { Overview: 'Home', Trades: 'Trades', 'Lot size': 'Lots', Backtest: 'Backtest', Routine: 'Routine', Notes: 'Notes' };
+    const mobLabel = { Overview: 'Home', Trades: 'Trades', 'Lot size': 'Lots', Backtest: 'Backtest', Notes: 'Notes' };
     const tabBase = 'position:relative;display:flex;align-items:center;justify-content:center;min-height:56px;padding:10px 2px;background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;transition:color .45s cubic-bezier(.32,.72,0,1);';
     const mobTabs = MOB_MAIN.map((t) => {
       const on = this.state.tab === t;
@@ -3251,13 +2949,13 @@ class Component extends DCLogic {
     const sleepMet = sleepMin >= sleepGoalMin - 30;
     const persistSleep = (patch) => { const next = { sleepManualMin: this.state.sleepManualMin, sleepGoalMin: this.state.sleepGoalMin, bedTime: this.state.bedTime, ...patch };
       this._persist('phntm-sleep-v1', JSON.stringify(next)); };
-    const setSleepMin = (mins) => { const v = Math.max(0, Math.min(720, mins)); this.setState({ sleepManualMin: v }); persistSleep({ sleepManualMin: v }); this._syncToday(null, v); };
+    const setSleepMin = (mins) => { const v = Math.max(0, Math.min(720, mins)); this.setState({ sleepManualMin: v }); persistSleep({ sleepManualMin: v });  };
     const setSleepGoal = (mins) => { const v = Math.max(240, Math.min(720, mins)); this.setState({ sleepGoalMin: v }); persistSleep({ sleepGoalMin: v }); };
     const bedTime = this.state.bedTime || '22:30';
     const bedMinNum = (() => { const [bh, bm] = bedTime.split(':').map(Number); return (bh || 0) * 60 + (bm || 0); })();
     const bedEff = (bedMinNum / 60) < 12 ? (bedMinNum / 60) + 24 : (bedMinNum / 60); // 00:30 -> 24.5
     const bedEarly = bedEff < 25; // asleep before ~1:00 AM
-    const setBedTime = (str) => { const v = String(str || '22:30'); this.setState({ bedTime: v }); persistSleep({ bedTime: v }); const [bh, bm] = v.split(':').map(Number); this._syncToday(null, null, (bh || 0) * 60 + (bm || 0)); };
+    const setBedTime = (str) => { const v = String(str || '22:30'); this.setState({ bedTime: v }); persistSleep({ bedTime: v }); const [bh, bm] = v.split(':').map(Number);  };
     const h = React.createElement;
     const goalSelect = h('select', { value: sleepGoalMin, onChange: (e) => setSleepGoal(parseInt(e.target.value)), style: { background: '#272727', color: '#fff', border: '1px solid rgba(255,255,255,.2)', borderRadius: '10px', padding: '9px 12px', fontFamily: 'JetBrains Mono,monospace', fontSize: '15px', cursor: 'pointer', colorScheme: 'dark' } },
       Array.from({ length: 17 }, (_, i) => 300 + i * 30).map((m) => h('option', { key: m, value: m }, fmtDur(m))));
@@ -3771,7 +3469,7 @@ class Component extends DCLogic {
               certNo: sel ? noOf(sel) : '', certAmount: sel ? money(sel.net || 0) : '',
               certGross: sel ? money(sel.gross || 0) + ' gross · 20% to the firm' : '',
               certFrom: sel ? fromOf(sel) : '', certDate: sel ? dateOf(sel) : '',
-              certCardSt: 'position:relative;overflow:hidden;border-radius:22px;padding:44px 46px;background:radial-gradient(120% 80% at 50% 0%,rgba(201,161,90,.1),transparent 58%),linear-gradient(180deg,#151515,#0b0b0b);border:1px solid rgba(201,161,90,.3);box-shadow:0 30px 90px rgba(0,0,0,.5);' +
+              certCardSt: 'position:relative;overflow:hidden;border-radius:22px;padding:44px 46px;background:radial-gradient(120% 80% at 50% 0%,rgba(201,161,90,.1),transparent 58%),linear-gradient(180deg,#0e0e0e,#0e0e0e);border:1px solid rgba(201,161,90,.3);box-shadow:0 30px 90px rgba(0,0,0,.5);' +
                 (sel && this.state.certifyId === sel.id ? 'animation:certIn 1s cubic-bezier(.32,.72,0,1) both' : 'animation:fadeUp .8s cubic-bezier(.16,1,.3,1) both'),
               hasCertRows: P.length > 1,
               certRows: P.filter((p) => !sel || p.id !== sel.id).map((p) => ({
@@ -3783,7 +3481,6 @@ class Component extends DCLogic {
         };
       })(),
       tabTrades: this.state.tab === 'Trades',
-      tabRoutine: this.state.tab === 'Routine',
       acctAnim: (this.state.scanN || 0) % 2 ? 'fadeUpB' : 'fadeUp',
       signOut: (e) => {
         if (e && e.preventDefault) e.preventDefault();
@@ -3806,6 +3503,7 @@ class Component extends DCLogic {
       },
       pageBg: BG,
       introBg: INTRO,
+      showIntro: !this._handoff,
       navBg: NAV,
       mobNavBg: NAV.replace(',.86)', ',.94)'),   // the bottom bar sits over content, so it needs more cover
       settingsOpen: !!this.state.settingsOpen,
@@ -3815,7 +3513,7 @@ class Component extends DCLogic {
       setName: this.state.userName || '',
       setNameNote: (this.state.userName || '').trim() ? 'Shown in your greeting on the Overview.' : 'Set from your sign-up — add it to personalise your greeting.',
       onSetName: (e) => { const v = e.target.value; this.setState({ userName: v }); this._persist('phntm-name', v); },
-      setThemes: ['#151515', '#0b0b0b', '#1b1b1b', '#1f1f1f'].map((hex) => ({
+      setThemes: ['#0e0e0e', '#0a0a0a', '#151515', '#1b1b1b'].map((hex) => ({
         hex,
         st: 'width:38px;height:38px;border-radius:11px;cursor:pointer;background:' + hex +
           ';border:1px solid ' + (BG.toLowerCase() === hex ? '#fff' : 'rgba(255,255,255,.18)') +
@@ -3823,7 +3521,7 @@ class Component extends DCLogic {
           ';transition:border-color .3s,box-shadow .3s,transform .18s cubic-bezier(.32,.72,0,1)',
         pick: () => { try { localStorage.setItem('phntm-theme-v1', hex); } catch (e) {} this._persist('phntm-theme-v1', hex); this.forceUpdate(); },
       })),
-      setIntroThemes: ['#151515', '#0b0b0b', '#1b1b1b', '#1f1f1f'].map((hex) => ({
+      setIntroThemes: ['#0e0e0e', '#0a0a0a', '#151515', '#1b1b1b'].map((hex) => ({
         hex,
         st: 'width:38px;height:38px;border-radius:11px;cursor:pointer;background:' + hex +
           ';border:1px solid ' + (INTRO.toLowerCase() === hex ? '#fff' : 'rgba(255,255,255,.18)') +
@@ -3859,11 +3557,8 @@ class Component extends DCLogic {
               ? (num(this.state.szRiskPct) || 0) + '% of ' + money(bal) + (balRaw === '' ? ' — your live balance' : '')
               : 'fixed amount per trade',
           szBal: this.state.szBal,
-          szUseEquity: () => this.setState({ szBal: String(Math.round(autoBal)) }),
-          szCanUseEquity: autoBal > 0 && String(this.state.szBal || '') === '',
           szBalPlaceholder: autoBal > 0 ? Math.round(autoBal).toLocaleString() : '10,000',
           szSetBal: (e) => this.setState({ szBal: e.target.value }),
-          szBalNote: balRaw === '' ? 'enter a balance to size a position' : 'sizing against this balance',
           szRiskPct: pctMode ? this.state.szRiskPct : this.state.szRiskUsd,
           szSetRiskPct: (e) => this.setState(pctMode ? { szRiskPct: e.target.value } : { szRiskUsd: e.target.value }),
           szToggleMode: () => this.setState({ szMode: pctMode ? 'usd' : 'pct' }),
@@ -3973,8 +3668,8 @@ class Component extends DCLogic {
           btEqJson: JSON.stringify(eq),
           btGoalAttr: String(start),
           btFailAttr: '',
-          btEqLabel: money(run),
-          btNetLabel: decided || chron.length ? signed(net) : '—',
+          btEqLabel: money(start + (run - start) * k),
+          btNetLabel: decided || chron.length ? signed(net * k) : '—',
           btNetStyle: 'font-family:JetBrains Mono,monospace;font-size:clamp(30px,4vw,50px);font-weight:200;letter-spacing:-.02em;color:#fff',
           btHasTrades: !!chron.length,
           btNoTrades: !chron.length && !all.length,
@@ -3993,13 +3688,13 @@ class Component extends DCLogic {
           btUndoLabel: this.state.btUndo ? 'Removed ' + this.state.btUndo.length + (this.state.btUndo.length === 1 ? ' trade' : ' trades') : '',
           btUndo: () => this._btUndoDelete(),
           btTotalLabel: all.length + (all.length === 1 ? ' trade' : ' trades') + ' logged in total',
-          btCount: String(chron.length),
-          btWinLabel: decided ? Math.round((wins / decided) * 100) + '%' : '—',
+          btCount: String(Math.round(chron.length * k)),
+          btWinLabel: decided ? Math.round((wins / decided) * 100 * k) + '%' : '—',
           btRecordLabel: wins + 'W · ' + losses + 'L',
-          btAvgRLabel: rs.length ? avgR.toFixed(2) + 'R' : '—',
-          btPfLabel: grossL ? (grossW / grossL).toFixed(2) : (grossW ? '∞' : '—'),
+          btAvgRLabel: rs.length ? (avgR * k).toFixed(2) + 'R' : '—',
+          btPfLabel: grossL ? ((grossW / grossL) * k).toFixed(2) : (grossW ? '∞' : '—'),
           btDDLabel: maxDD ? '−' + money(maxDD).replace('$', '$') : '—',
-          btExpLabel: chron.length ? signed(net / chron.length) : '—',
+          btExpLabel: chron.length ? signed((net / chron.length) * k) : '—',
           btScopeLabel: (sym === 'All' ? 'All symbols' : sym) + ' · ' +
             (yr === 'All' ? 'all time' : (mo === 'All' ? String(yr) : MON[mo] + ' ' + yr)),
           btYearChips: ['All'].concat(years.map(String)).map((y) => ({
@@ -4060,43 +3755,7 @@ class Component extends DCLogic {
         };
       })(),
       tabNotes: this.state.tab === 'Notes',
-      ...(() => {
-        const rlist = this.state.routines || [];
-        const tk = this._dayKey();
-        const doneToday = rlist.filter((r) => r.done[tk]).length;
-        const todayPct = rlist.length ? Math.round((doneToday / rlist.length) * 100) : 0;
-        // streak: consecutive days back from today where every routine was done
-        let streak = 0;
-        if (rlist.length) { for (let i = 0; i < 400; i++) { const d = new Date(); d.setDate(d.getDate() - i); const key = this._dayKey(d);
-          if (i === 0 && doneToday < rlist.length) continue; // today counts only once complete but doesn't break streak
-          const all = rlist.every((r) => r.done[key]); if (all) streak++; else if (i > 0) break; } }
-        const rnow = new Date(), ryr = rnow.getFullYear(), rmon = rnow.getMonth();
-        const rStart = (new Date(ryr, rmon, 1).getDay() + 6) % 7, rdim = new Date(ryr, rmon + 1, 0).getDate();
-        const rCells = [];
-        for (let i = 0; i < rStart; i++) rCells.push({ st: 'aspect-ratio:1;border-radius:8px', inner: '' });
-        for (let d = 1; d <= rdim; d++) { const key = ryr + '-' + String(rmon + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-          const done = rlist.length ? rlist.filter((r) => r.done[key]).length : 0; const frac = rlist.length ? done / rlist.length : 0;
-          const isToday = key === tk;
-          rCells.push({ st: 'display:flex;align-items:center;justify-content:center;aspect-ratio:1;border-radius:8px;font-family:JetBrains Mono,monospace;font-size:11px;border:1px solid ' + (isToday ? '#fff' : 'rgba(255,255,255,.08)') + ';background:rgba(255,255,255,' + (0.03 + frac * 0.22).toFixed(3) + ');color:' + (frac >= 1 ? '#fff' : '#a0a0a0'),
-            inner: frac >= 1 ? '◆' : String(d) });
-        }
-        return {
-          routineRows: rlist.map((r) => ({ name: r.name, done: !!r.done[tk],
-            boxStyle: 'width:26px;height:26px;flex:none;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .3s,border-color .3s;font-size:13px;' + (r.done[tk] ? 'background:#fff;color:#000;border:1px solid #fff' : 'background:none;color:transparent;border:1px solid rgba(255,255,255,.25)'),
-            nameStyle: 'flex:1;min-width:0;font-size:15px;transition:color .3s;background:none;border:none;outline:none;font-family:Archivo,sans-serif;padding:3px 0;border-bottom:1px solid transparent;color:' + (r.done[tk] ? '#fff' : '#c8c8c8'),
-            setName: (e) => this._renameRoutine(r.id, e.target.value),
-            toggle: () => this._toggleRoutine(r.id), remove: () => this._removeRoutine(r.id) })),
-          routineEmpty: rlist.length === 0,
-          todayPct: todayPct + '%', todayCount: doneToday + ' / ' + rlist.length,
-          ringStyle: 'background:conic-gradient(#fff ' + todayPct + '%, rgba(255,255,255,.1) 0)',
-          streakText: streak + (streak === 1 ? ' day' : ' days'),
-          rCells, rMonthLabel: rnow.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
-          newRoutine: this.state.newRoutine,
-          setNewRoutine: (e) => this.setState({ newRoutine: e.target.value }),
-          routineKey: (e) => { if (e.key === 'Enter') this._addRoutine(); },
-          addRoutine: () => this._addRoutine(),
-        };
-      })(),
+      
       ...(() => {
         const nlist = this.state.notes || [];
         const ed = this.state.ed || {};
@@ -4178,7 +3837,7 @@ class Component extends DCLogic {
           hiSwatches: ['#ffffff', '#e5c07b', '#8fc9a4', '#9fbfe0'].map((c) => ({ col: c, st: 'width:20px;height:20px;border-radius:50%;cursor:pointer;border:1px solid rgba(255,255,255,.25);background:' + c, apply: () => this._edHighlight(c) })),
           colSwatches: [['#ffffff', 'foreColor'], ['#e5c07b', 'foreColor'], ['#7fd1a0', 'foreColor'], ['#e8ab6a', 'foreColor']].map(([c, cmd]) => swatch(c, cmd)),
           edPics: (ed.pics || []).map((p, i) => ({
-            img: React.createElement('img', { src: p.src, draggable: false, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', pointerEvents: 'none', background: '#0b0b0b' } }),
+            img: React.createElement('img', { src: p.src, draggable: false, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', pointerEvents: 'none', background: '#0e0e0e' } }),
             cap: p.cap || '', setCap: (e) => this._edPicCap(i, e.target.value),
             w: p.w || 32, setW: (e) => this._edPicWidth(i, e.target.value), resizeStart: (e) => this._edPicGrab(i, e),
             itemStyle: 'display:flex;flex-direction:column;gap:8px;flex:0 0 calc(' + Math.max(18, Math.min(100, p.w || 32)) + '% - 16px);min-width:104px',
@@ -4220,7 +3879,7 @@ class Component extends DCLogic {
           annoSelOpen: this.state.annoSel != null,
           annoDeleteSel: () => this._annoDeleteSel(),
           annoDeselect: () => this.setState({ annoSel: null }, () => this._annoPaint()),
-          annoSelStyle: (() => { const a = this.state.annoSelAt || { x: 0, y: 0 }; return 'position:absolute;z-index:6;left:' + Math.round(a.x) + 'px;top:' + Math.round(a.y + 14) + 'px;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;background:linear-gradient(180deg,#1b1b1b,#151515);border:1px solid rgba(255,255,255,.16);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.55);animation:popIn .22s cubic-bezier(.32,.72,0,1) both'; })(),
+          annoSelStyle: (() => { const a = this.state.annoSelAt || { x: 0, y: 0 }; return 'position:absolute;z-index:6;left:' + Math.round(a.x) + 'px;top:' + Math.round(a.y + 14) + 'px;display:flex;align-items:center;gap:8px;padding:6px 8px 6px 12px;background:linear-gradient(180deg,#1b1b1b,#0e0e0e);border:1px solid rgba(255,255,255,.16);border-radius:10px;box-shadow:0 14px 34px rgba(0,0,0,.55);animation:popIn .22s cubic-bezier(.32,.72,0,1) both'; })(),
           canAnnoUndo: !!(this._annoStrokes && this._annoStrokes.length),
           annoRef: (el) => { if (el && this._annoEl !== el) { this._annoEl = el; setTimeout(() => this._annoSize(), 0); } },
           annoCanvasStyle: 'position:absolute;inset:0;width:100%;height:100%;z-index:2;touch-action:none;' + (this.state.annoOn ? 'pointer-events:auto;cursor:crosshair' : 'pointer-events:none'),
@@ -4254,7 +3913,7 @@ class Component extends DCLogic {
               dateSub: dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
               hasSource: !!n.source, source: n.source, sourceHost: (() => { try { return new URL(n.source).hostname.replace('www.', ''); } catch (e) { return n.source; } })(),
               hasThumb: !!thumbSrc,
-              thumbImg: thumbSrc ? React.createElement('img', { src: thumbSrc, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', background: '#0b0b0b' } }) : null,
+              thumbImg: thumbSrc ? React.createElement('img', { src: thumbSrc, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', background: '#0e0e0e' } }) : null,
               hasYt: !!yt,
               confirming: this.state.noteDelId === n.id, notConfirming: this.state.noteDelId !== n.id,
               askRemove: (e) => { e.stopPropagation(); this.setState({ noteDelId: n.id }); },
@@ -4264,7 +3923,8 @@ class Component extends DCLogic {
         };
       })(),
       allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = [this._acctName(t.acct), row.setup].filter(Boolean).join('  \u00b7  '); row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
-      tradeFilterTabs: (() => { const { accts, hasBt } = this._tradeView(); const tabs = [['All', 'All'], ['Live', 'Live']]; if (accts.length) tabs.push(['Prop', 'Prop firm']); if (hasBt) tabs.push(['Backtest', 'Backtest']); return tabs.map(([v, label]) => ({ label, value: v, st: 'border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s;' + ((this.state.tradeFilter || 'All') === v ? 'background:#fff;color:#000;font-weight:500' : 'background:none;color:#a0a0a0'), pick: () => this.setState({ tradeFilter: v, tradeSub: 'All' }) })); })(),
+      tradeFilterReset: (() => { const { hasBt, hasLive, accts } = this._tradeView(); const f = this.state.tradeFilter || 'All'; const ok = f === 'All' || (f === 'Live' && hasLive) || (f === 'Backtest' && hasBt) || (f === 'Prop' && accts.length); if (!ok && this.state.tradeFilter) setTimeout(() => this.setState({ tradeFilter: 'All' }), 0); return true; })(),
+      tradeFilterTabs: (() => { const { accts, hasBt, hasLive } = this._tradeView(); const tabs = [['All', 'All']]; if (hasLive) tabs.push(['Live', 'Live']); if (accts.length) tabs.push(['Prop', 'Prop firm']); if (hasBt) tabs.push(['Backtest', 'Backtest']); return tabs.map(([v, label]) => ({ label, value: v, st: 'border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s;' + ((this.state.tradeFilter || 'All') === v ? 'background:#fff;color:#000;font-weight:500' : 'background:none;color:#a0a0a0'), pick: () => this.setState({ tradeFilter: v, tradeSub: 'All' }) })); })(),
       tradeSubOpen: (this.state.tradeFilter === 'Prop') && this._tradeView().accts.length > 1,
       tradeSubTabs: (() => { const { accts } = this._tradeView(); return [['All', 'All prop firms']].concat(accts.map((t) => [t, this._firmLabel(t)])).map(([v, label]) => ({ label, value: v, st: 'cursor:pointer;font-family:Archivo,sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s,border-color .3s;border:1px solid ' + ((this.state.tradeSub || 'All') === v ? '#fff;background:#fff;color:#000;font-weight:500' : 'rgba(255,255,255,.18);background:none;color:#a0a0a0'), pick: () => this.setState({ tradeSub: v }) })); })(),
       tradeSortCols: [['sym', 'Symbol', 'l'], ['side', 'Side', 'l'], ['setup', 'Setup \u00b7 account', 'l'], ['ts', 'Time', 'l'], ['pnl', 'P&L', 'r'], ['r', 'R', 'r']].map(([k, label, al]) => { const on = (this.state.tradeSort || 'ts') === k; const dir = this.state.tradeDir == null ? -1 : this.state.tradeDir; return { label: label + (on ? (dir === -1 ? '  \u2193' : '  \u2191') : ''), st: 'cursor:pointer;user-select:none;transition:color .3s;text-align:' + (al === 'r' ? 'right' : 'left') + ';color:' + (on ? '#fff' : '#a0a0a0'), pick: () => this.setState((s) => ({ tradeSort: k, tradeDir: s.tradeSort === k ? -(s.tradeDir == null ? -1 : s.tradeDir) : -1 })) }; }),
@@ -4332,7 +3992,7 @@ class Component extends DCLogic {
             // bare figures — the units live in the column headers now
             kcalN: String(f.kcal), pN: String(f.protein), cN: String(f.carbs), fatN: String(f.fat),
             edit: () => this._openFoodEdit(f),
-            remove: () => this._saveFoods((this.state.foods || []).filter((x) => x.id !== f.id)),
+            remove: () => ((this.state.foods || []).filter((x) => x.id !== f.id)),
           })),
         };
       }),
@@ -4438,7 +4098,7 @@ class Component extends DCLogic {
       picThumbs: (this.state.draftPics || []).map((p, i) => {
         const src = typeof p === 'string' ? p : p.src;
         return {
-          img: React.createElement('img', { src, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', background: '#0b0b0b' } }),
+          img: React.createElement('img', { src, style: { width: '100%', height: '100%', objectFit: 'contain', imageRendering: 'auto', display: 'block', background: '#0e0e0e' } }),
           cap: typeof p === 'string' ? '' : (p.cap || ''),
           setCap: (e) => { const d = (this.state.draftPics || []).map((x) => typeof x === 'string' ? { src: x, cap: '' } : x); d[i] = { ...d[i], cap: e.target.value }; this.setState({ draftPics: d }); },
           open: (e) => { e.stopPropagation(); this.setState({ lightbox: src }); },
@@ -4472,7 +4132,6 @@ class Component extends DCLogic {
         pick: () => this.setState({ healthRange: r }),
       })),
       sleepDuration,
-      saveSleep: () => this._saveSleep(),
       sleepSaveLabel: this.state.sleepSaved ? 'Saved ✓' : 'Save sleep',
       sleepSaveStyle: 'border:none;font-family:Archivo,sans-serif;font-size:12px;font-weight:500;padding:8px 16px;border-radius:99px;cursor:pointer;transition:background .45s cubic-bezier(.32,.72,0,1),color .45s,transform .45s cubic-bezier(.32,.72,0,1);' +
         (this.state.sleepSaved ? 'background:#5fbf83;color:#04120a;transform:scale(1.04)' : 'background:#fff;color:#000;transform:scale(1)'),
