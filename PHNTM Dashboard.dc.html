@@ -73,6 +73,18 @@ button,input,select,textarea{font-family:inherit}
 [contenteditable] h1{font-size:26px;font-weight:600;margin:10px 0 4px;line-height:1.25;color:#fff}
 [contenteditable] h2{font-size:20px;font-weight:600;margin:8px 0 4px;line-height:1.3;color:#eaeaea}
 [contenteditable] p{margin:6px 0}
+[contenteditable] figure[data-fig]{max-width:100%}
+[contenteditable] figure[data-fig] img{border-radius:8px}
+[contenteditable] figure[data-fig]{position:relative}
+[contenteditable] figure[data-fig] img{pointer-events:auto}
+[contenteditable] figcaption[data-cap]{font-family:Archivo,sans-serif;font-size:13.5px;font-weight:500;letter-spacing:.005em;line-height:1.45;margin:0 0 9px;min-height:1.3em;outline:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;caret-color:#ffffff;background:linear-gradient(96deg,#ffffff 0%,#dcdcdc 42%,#8f8f8f 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+/* an empty caption must drop the gradient, or the placeholder is clipped to nothing */
+[contenteditable] figcaption[data-cap]:empty{background:none;-webkit-text-fill-color:#6f6f6f;color:#6f6f6f;font-weight:400}
+[contenteditable] figcaption[data-cap]:empty:before{content:'Add a title\2026';pointer-events:none}
+/* a pair sits in one flex row: no text node between them, so no tall caret, and they
+   reflow together when text is added above or below */
+[contenteditable] div[data-figrow]{display:flex;gap:10px;align-items:flex-start;margin:12px 0}
+[contenteditable] div[data-figrow] figure[data-fig]{margin:0;flex:1 1 0;min-width:0;width:auto !important}
 [contenteditable] hr{position:relative;border:none;height:19px;margin:8px 0;background:none;cursor:grab;touch-action:none}
 [contenteditable] hr[data-drag]{cursor:grabbing}
 [contenteditable] hr[data-drag]::before{background:#fff;box-shadow:0 0 0 4px rgba(255,255,255,.18)}
@@ -543,18 +555,17 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <span style="font-size:15px;color:#fff">Recent trades</span>
       <a href="#" onClick="{{ goTrades }}" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#a0a0a0;cursor:pointer;transition:color .3s,gap .3s" style-hover="color:#fff;gap:14px">View all <span>→</span></a>
     </div>
-    <div data-m="rowhead" style="display:grid;grid-template-columns:110px 90px 1fr 130px 110px 90px;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
-      <span>Symbol</span><span>Side</span><span>Setup</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span>
+    <div data-m="rowhead" style="display:grid;grid-template-columns:110px 96px minmax(150px,1fr) 128px 92px;gap:20px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
+      <span>Symbol</span><span>Position</span><span>Time</span><span>P&amp;L</span><span>R</span>
     </div>
     <sc-if value="{{ noTrades }}" hint-placeholder-val="{{ false }}">
       <div style="padding:26px 0;font-size:14px;color:#a0a0a0">No trades on record. Log one to begin.</div>
     </sc-if>
     <sc-for list="{{ trades }}" as="t" hint-placeholder-count="6">
-      <div onClick="{{ t.open }}" data-m="row" style="display:grid;grid-template-columns:110px 90px 1fr 130px 110px 90px;gap:12px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s" style-hover="padding-left:12px;background:rgba(255,255,255,.02)">
+      <div onClick="{{ t.open }}" data-m="row" style="display:grid;grid-template-columns:110px 96px minmax(150px,1fr) 128px 92px;gap:20px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s" style-hover="padding-left:12px;background:rgba(255,255,255,.02)">
         <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ t.sym }}</span>
         <span style="color:#a0a0a0">{{ t.side }}</span>
-        <span style="color:#a0a0a0">{{ t.setup }}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a0a0a0">{{ t.time }}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#a0a0a0;white-space:nowrap">{{ t.time }}</span>
         <span style="{{ t.pnlStyle }}">{{ t.pnl }}</span>
         <span style="{{ t.rStyle }}">{{ t.r }}</span>
       </div>
@@ -579,8 +590,8 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </section>
 
   <section data-m="pad" style="position:relative;z-index:1;padding:20px 48px 80px">
-    <div data-m="rowhead" style="display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
-      <span>Symbol</span><span>Side</span><span>Setup</span><span>Time</span><span style="text-align:right">P&amp;L</span><span style="text-align:right">R</span><span>Rules</span><span></span>
+    <div data-m="rowhead" style="display:grid;grid-template-columns:110px 96px minmax(140px,1fr) 124px 88px 92px 32px;gap:18px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.14);font-size:11.5px;color:#b0b0b0">
+      <span>Symbol</span><span>Position</span><span>Time</span><span>P&amp;L</span><span>R</span><span>Rules</span><span></span>
     </div>
     <sc-if value="{{ noAllTrades }}" hint-placeholder-val="{{ true }}">
       <div style="padding:34px 0;font-size:14px;color:#b0b0b0">Nothing here yet — log your first trade to begin the record.</div>
@@ -589,8 +600,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <div onClick="{{ t.open }}" data-m="row" style="{{ t.rowStyle }}" style-hover="padding-left:12px;background:rgba(255,255,255,.03)">
         <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ t.sym }}</span>
         <span style="color:#b0b0b0">{{ t.side }}</span>
-        <span style="color:#b0b0b0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.setup }}</span>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b0b0b0">{{ t.time }}</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#b0b0b0;white-space:nowrap">{{ t.time }}</span>
         <span style="{{ t.pnlStyle }}">{{ t.pnl }}</span>
         <span style="{{ t.rStyle }}">{{ t.r }}</span>
         <span style="display:flex;align-items:center;gap:4px">
@@ -760,18 +770,15 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#b0b0b0">{{ btScopeLabel }}</span>
     </div>
     <div style="display:flex;flex-direction:column">
-      <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;padding:0 4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
-        <span>Session</span><span>Win rate</span><span></span><span>%</span><span></span><span>Net</span><span></span>
+      <div style="display:grid;grid-template-columns:1fr 1.2fr .55fr .8fr;gap:16px;padding:0 4px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
+        <span>Session</span><span>Win rate</span><span>%</span><span>Net</span>
       </div>
       <sc-for list="{{ btSessions }}" as="s" hint-placeholder-count="3">
-        <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;align-items:center;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.07)">
-          <span style="font-size:14px;color:#fff">{{ s.name }}</span>
+        <div style="display:grid;grid-template-columns:1fr 1.2fr .55fr .8fr;gap:16px;align-items:center;padding:15px 4px;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-size:13.5px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ s.name }}</span>
           <div style="height:6px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden"><div style="{{ s.barStyle }}"></div></div>
-          <span></span>
-          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ s.win }} <span style="color:#a0a0a0;font-size:11.5px">{{ s.record }}</span></span>
-          <span></span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#fff">{{ s.win }}</span>
           <span style="{{ s.netStyle }}">{{ s.net }}</span>
-          <span></span>
         </div>
       </sc-for>
     </div>
@@ -779,16 +786,15 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </sc-if>
 
   <section data-m="pad" style="position:relative;z-index:1;padding:40px 48px 72px">
-    <div style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;padding:0 4px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
-      <span>Symbol</span><span>Date</span><span>Side</span><span>Setup</span><span>R</span><span>P&amp;L</span><span></span>
+    <div style="display:grid;grid-template-columns:1.3fr 1fr .8fr .8fr 1fr 72px;gap:18px;padding:0 4px 11px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,.1)">
+      <span>Symbol</span><span>Date</span><span>Side</span><span>R</span><span>P&amp;L</span><span></span>
     </div>
     <div style="display:flex;flex-direction:column">
       <sc-for list="{{ btRows }}" as="t" hint-placeholder-count="5">
-        <div onClick="{{ t.edit }}" title="Edit this trade" style="display:grid;grid-template-columns:1.5fr .9fr .6fr 1.1fr .7fr .9fr 72px;gap:14px;align-items:center;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;transition:background .3s" style-hover="background:rgba(255,255,255,.05)">
+        <div onClick="{{ t.edit }}" title="Edit this trade" style="display:grid;grid-template-columns:1.3fr 1fr .8fr .8fr 1fr 72px;gap:18px;align-items:center;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer;transition:background .3s" style-hover="background:rgba(255,255,255,.05)">
           <span style="font-size:14px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.sym }}</span>
           <span title="{{ t.dateTitle }}" style="{{ t.dateStyle }}">{{ t.date }}</span>
           <span style="font-size:12.5px;color:#c8c8c8">{{ t.side }}</span>
-          <span style="font-size:12.5px;color:#a0a0a0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.setup }}</span>
           <span style="font-family:'JetBrains Mono',monospace;font-size:12.5px;color:#c8c8c8">{{ t.r }}</span>
           <span style="{{ t.pnlStyle }}">{{ t.pnl }}</span>
           <div style="display:flex;gap:10px;justify-self:end">
@@ -977,95 +983,9 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <button onClick="{{ commitTrade }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;gap:10px;border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:14.5px;font-weight:500;padding:16px;border-radius:99px;cursor:pointer;transition:opacity .3s,gap .3s" style-hover="opacity:.85;gap:16px" style-active="opacity:.7">{{ commitLabel }} <span>→</span></button>
     </div>
   </sc-if>
-  <sc-if value="{{ dayEditOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeDayEdit }}" style="position:fixed;inset:0;z-index:298;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="max-width:420px;width:100%;box-sizing:border-box;background:linear-gradient(180deg,#1f1f1f,#1b1b1b);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:32px 34px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .45s cubic-bezier(.16,1,.3,1) both">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
-          <div>
-            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;color:#b0b0b0">DAY RECORD</div>
-            <div style="margin-top:9px;font-size:20px;font-weight:300;color:#fff">{{ dayEditLabel }}</div>
-          </div>
-          <button onClick="{{ closeDayEdit }}" style="border:none;background:none;color:#a0a0a0;font-size:20px;line-height:1;cursor:pointer;transition:color .3s" style-hover="color:#fff">×</button>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:9px;margin-top:22px">
-          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 15px">
-            <span style="font-size:13.5px;color:#c8c8c8">{{ dayEditKcal }}</span>
-            <sc-if value="{{ dayHasFood }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearDayFood }}" style="border:1px solid rgba(255,255,255,.18);background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#e8ab6a;border-color:rgba(232,171,106,.5)">Delete</button></sc-if>
-          </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:13px 15px">
-            <span style="font-size:13.5px;color:#c8c8c8">{{ dayEditSleep }}</span>
-            <sc-if value="{{ dayHasSleep }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearDaySleep }}" style="border:1px solid rgba(255,255,255,.18);background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:12px;padding:6px 13px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#e8ab6a;border-color:rgba(232,171,106,.5)">Delete</button></sc-if>
-          </div>
-        </div>
-        <div style="display:flex;align-items:center;gap:14px;margin-top:26px">
-          <button onClick="{{ clearDayAll }}" style="border:none;background:#e8ab6a;color:#171004;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;padding:12px 24px;border-radius:99px;cursor:pointer;transition:opacity .3s,transform .45s cubic-bezier(.32,.72,0,1)" style-hover="opacity:.9" style-active="transform:scale(.97)">Clear whole day</button>
-          <button onClick="{{ closeDayEdit }}" style="border:none;background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:13px;cursor:pointer;transition:color .3s" style-hover="color:#fff">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </sc-if>
-  <sc-if value="{{ manualOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeManual }}" style="position:fixed;inset:0;z-index:297;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="max-width:520px;width:100%;background:linear-gradient(180deg,#1f1f1f,#1b1b1b);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:34px 36px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .5s cubic-bezier(.16,1,.3,1) both">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-          <div>
-            <div style="font-size:17px;font-weight:500;color:#fff">Add it yourself</div>
-            <div style="margin-top:5px;font-size:12.5px;color:#a0a0a0">For anything unlisted. Read the figures off the label.</div>
-          </div>
-          <button onClick="{{ closeManual }}" style="border:none;background:none;color:#a0a0a0;font-size:22px;cursor:pointer;line-height:1;transition:color .3s" style-hover="color:#fff">×</button>
-        </div>
-        <div style="display:flex;gap:4px;padding:5px;margin:22px 0 20px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:99px;width:fit-content">
-          <sc-for list="{{ mKindTabs }}" as="kt" hint-placeholder-count="2"><button onClick="{{ kt.pick }}" style="{{ kt.st }}">{{ kt.label }}</button></sc-for>
-        </div>
-        <div data-m="col1" style="display:grid;grid-template-columns:1.5fr 1fr;gap:18px">
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Name</span><input value="{{ mName }}" onInput="{{ setMName }}" placeholder="e.g. Cocoball protein bar" autofocus="" style="background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:7px 0;outline:none" style-focus="border-color:#fff"></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Serving <span style="color:#a0a0a0">optional</span></span><input value="{{ mServing }}" onInput="{{ setMServing }}" placeholder="1 bar · 330ml" style="background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:15px;padding:7px 0;outline:none" style-focus="border-color:#fff"></label>
-        </div>
-        <div data-m="col2" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:24px">
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11.5px;color:#b0b0b0">Calories</span><div style="border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ mKcal }}" onInput="{{ setMKcal }}" inputmode="numeric" placeholder="0" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11.5px;color:#b0b0b0">Protein</span><div style="border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ mProtein }}" onInput="{{ setMProtein }}" inputmode="numeric" placeholder="0" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11.5px;color:#b0b0b0">Carbs</span><div style="border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ mCarbs }}" onInput="{{ setMCarbs }}" inputmode="numeric" placeholder="0" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11.5px;color:#b0b0b0">Fat</span><div style="border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ mFat }}" onInput="{{ setMFat }}" inputmode="numeric" placeholder="0" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:11.5px;color:#b0b0b0">Sugar</span><div style="border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ mSugar }}" onInput="{{ setMSugar }}" inputmode="numeric" placeholder="0" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"></div></label>
-        </div>
-        <div style="margin-top:26px;font-size:12px;color:#a0a0a0">Log to</div>
-        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
-          <sc-for list="{{ mMealTabs }}" as="mt" hint-placeholder-count="4"><button onClick="{{ mt.pick }}" style="{{ mt.st }}">{{ mt.label }}</button></sc-for>
-        </div>
-        <div onClick="{{ toggleMRemember }}" style="display:flex;align-items:center;gap:11px;margin-top:24px;cursor:pointer">
-          <span style="{{ mRememberDot }}"></span>
-          <span style="font-size:13px;color:#a0a0a0">Keep it in <span style="color:#eaeaea">Your usuals</span> for one-tap logging</span>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:28px">
-          <button onClick="{{ saveManual }}" style="border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:14px;font-weight:500;padding:13px 30px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="transform:scale(.96)">Add to log</button>
-          <button onClick="{{ closeManual }}" style="border:1px solid rgba(255,255,255,.2);background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:14px;padding:13px 24px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#fff;border-color:#fff">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </sc-if>
-  <sc-if value="{{ foodEditing }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeFoodEdit }}" style="position:fixed;inset:0;z-index:296;background:rgba(4,4,4,.8);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:32px;animation:fadeIn .3s ease both">
-      <div onClick="{{ stop }}" style="max-width:480px;width:100%;background:linear-gradient(180deg,#1f1f1f,#1b1b1b);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:34px 36px;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:failIn .5s cubic-bezier(.16,1,.3,1) both">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:22px">
-          <span style="font-size:17px;font-weight:500;color:#fff">Edit item</span>
-          <button onClick="{{ closeFoodEdit }}" style="border:none;background:none;color:#a0a0a0;font-size:22px;cursor:pointer;line-height:1;transition:color .3s" style-hover="color:#fff">×</button>
-        </div>
-        <label style="font-size:12px;color:#a0a0a0">Name</label>
-        <input value="{{ efName }}" onInput="{{ setEfName }}" style="width:100%;box-sizing:border-box;margin:8px 0 20px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:8px 0;outline:none" style-focus="border-color:#fff">
-        <div data-m="col1" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Calories</span><div style="display:flex;align-items:baseline;gap:5px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ efKcal }}" onInput="{{ setEfKcal }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"><span style="font-size:11px;color:#b0b0b0">kcal</span></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Protein</span><div style="display:flex;align-items:baseline;gap:5px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ efProtein }}" onInput="{{ setEfProtein }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"><span style="font-size:11px;color:#b0b0b0">g</span></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Carbs</span><div style="display:flex;align-items:baseline;gap:5px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ efCarbs }}" onInput="{{ setEfCarbs }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"><span style="font-size:11px;color:#b0b0b0">g</span></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Fat</span><div style="display:flex;align-items:baseline;gap:5px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ efFat }}" onInput="{{ setEfFat }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"><span style="font-size:11px;color:#b0b0b0">g</span></div></label>
-          <label style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;color:#a0a0a0">Sugar</span><div style="display:flex;align-items:baseline;gap:5px;border-bottom:1px solid rgba(255,255,255,.2)" style-focus-within="border-color:#fff"><input value="{{ efSugar }}" onInput="{{ setEfSugar }}" inputmode="numeric" style="width:100%;background:none;border:none;color:#fff;font-family:'JetBrains Mono',monospace;font-size:18px;padding:6px 0;outline:none"><span style="font-size:11px;color:#b0b0b0">g</span></div></label>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:30px">
-          <button onClick="{{ saveFoodEdit }}" style="border:none;background:#fff;color:#000;font-family:'Archivo',sans-serif;font-size:14px;font-weight:500;padding:12px 28px;border-radius:99px;cursor:pointer;transition:opacity .3s" style-hover="opacity:.85" style-active="transform:scale(.96)">Save changes</button>
-          <button onClick="{{ removeFoodEdit }}" style="border:1px solid rgba(255,255,255,.2);background:none;color:#a0a0a0;font-family:'Archivo',sans-serif;font-size:14px;padding:12px 22px;border-radius:99px;cursor:pointer;transition:color .3s,border-color .3s" style-hover="color:#e0a05a;border-color:#e0a05a">Remove</button>
-        </div>
-      </div>
-    </div>
-  </sc-if>
+  
+  
+  
   <sc-if value="{{ edOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:295;background:{{ noteEditorBg }};overflow-y:auto;animation:fadeIn .25s ease both">
       <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:22px 40px;background:{{ noteHeaderBg }};backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)">
@@ -1116,7 +1036,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
           </div>
         </sc-if>
         <div style="position:relative;margin-top:14px" ref="{{ bodyWrapRef }}">
-          <div contenteditable="true" ref="{{ bodyRef }}" onKeyUp="{{ syncFmt }}" onMouseUp="{{ syncFmt }}" onClick="{{ edBodyClick }}" onPointerDown="{{ edImgDown }}" style="min-height:150px;font-size:15px;line-height:1.7;color:#c8c8c8;font-family:'Archivo',sans-serif;outline:none;padding:4px 2px" data-ph="Write freely — timestamps, takeaways, ideas…"></div>
+          <div contenteditable="true" ref="{{ bodyRef }}" onKeyUp="{{ syncFmt }}" onMouseUp="{{ syncFmt }}" onClick="{{ edBodyClick }}" onDoubleClick="{{ edBodyDbl }}" onKeyDown="{{ edBodyKey }}" onInput="{{ edBodyInput }}" onDragStart="{{ edDragStart }}" onDragEnd="{{ edDragEnd }}" onPointerDown="{{ edImgDown }}" style="min-height:150px;font-size:15px;line-height:1.7;color:#c8c8c8;font-family:'Archivo',sans-serif;outline:none;padding:4px 2px" data-ph="Write freely — timestamps, takeaways, ideas…"></div>
           <canvas ref="{{ annoRef }}" onPointerDown="{{ annoStart }}" onPointerMove="{{ annoMove }}" onPointerUp="{{ annoEnd }}" onPointerLeave="{{ annoEnd }}" style="{{ annoCanvasStyle }}"></canvas>
           <sc-if value="{{ annoSelOpen }}" hint-placeholder-val="{{ false }}">
             <div data-anno-chip="1" onClick="{{ stop }}" style="{{ annoSelStyle }}">
@@ -1135,6 +1055,8 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
           <sc-if value="{{ imgToolShow }}" hint-placeholder-val="{{ false }}">
             <div style="{{ imgToolStyle }}">
               <span onPointerDown="{{ imgGrab }}" title="Drag to resize" style="min-width:22px;height:20px;padding:0 5px;border-radius:6px;cursor:ew-resize;touch-action:none;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#eaeaea">⤢</span>
+              <button onMouseDown="{{ tbDown }}" onClick="{{ imgZoom }}" title="View larger" style="min-width:22px;height:20px;padding:0 6px;border:none;border-radius:6px;cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#eaeaea">⤡</button>
+              <button onMouseDown="{{ tbDown }}" onClick="{{ imgHalf }}" title="{{ imgHalfTitle }}" style="min-width:22px;height:20px;padding:0 6px;border:none;border-radius:6px;cursor:pointer;font-size:11px;line-height:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.08);color:#eaeaea">{{ imgHalfLabel }}</button>
               <span style="{{ imgPctStyle }}">{{ imgPct }}</span>
               <span style="width:1px;align-self:stretch;background:rgba(255,255,255,.16);margin:0 2px"></span>
               <button onMouseDown="{{ tbDown }}" onClick="{{ imgRemove }}" title="Remove image" style="width:20px;height:20px;border:none;background:rgba(255,255,255,.08);color:#e8ab6a;border-radius:6px;cursor:pointer;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .18s" style-hover="background:rgba(224,160,90,.25)">✕</button>
@@ -1205,7 +1127,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1000},&quot;pageBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#0e0e0e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#272727&quot;,&quot;#272727&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1b1b1b&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;]},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#0e0e0e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Theme&quot;,&quot;options&quot;:[&quot;#272727&quot;,&quot;#272727&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1b1b1b&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;,&quot;#0e0e0e&quot;]}}">
 class Component extends DCLogic {
-  state = { range: 'D', tab: 'Overview', ovMonth: 0, szPairs: null, szStop: '20', szRiskPct: '1', szMode: 'pct', szRiskUsd: '500', szBal: '', rates: null, ratesDate: '', ratesErr: '', ratesVia: '', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: 'Sweep + FVG', clock: '', prog: 1, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
+  state = { range: 'D', tab: 'Overview', ovMonth: 0, szPairs: null, szStop: '20', szRiskPct: '1', szMode: 'pct', szRiskUsd: '500', szBal: '', rates: null, ratesDate: '', ratesErr: '', ratesVia: '', catDrag: null, catOver: null, fBtDate: '', btYear: 'All', btMonth: 'All', btSym: 'All', btAskDelete: false, btUndo: null, panelOpen: false, side: 'Long', setup: '', clock: '', prog: 1, foods: null, foodInput: '', foodLoading: false, foodErr: '', foodSuggest: '', meal: 'Breakfast', healthRange: 'Day', bedTime: '22:30', wakeTime: '05:45', sleepManualMin: 450, sleepGoalMin: 480, sex: 'male', htCm: 178, wtKg: 78, goal: 'Maintain', myTrades: null, session: 'NY', fSym: '', fSize: '', fEntry: '', fStop: '', fExit: '', fPnl: '', fNotes: '', draftPics: [], lightbox: '', acctType: 'Prop', acctFirm: 'Lucid', acctSize: 50000, acctPhase: 'Eval 1', acctCfg: {}, activeAcct: 'Live', viewAcct: 'Live', fAcct: 'Live', failOpen: false, failQuote: '', passOpen: false, passQuote: '', routines: null, newRoutine: '', notes: null, noteDraft: { title: '', body: '', source: '', pics: [], category: '' }, noteCats: null, noteFilter: 'All', addingCat: false, newCat: '', ed: { open: false, pics: [] }, penColor: '#ffffff', editFoodId: null, editFood: null };
   _openFoodEdit(f) { this.setState({ editFoodId: f.id, editFood: { name: f.name, kcal: f.kcal, protein: f.protein, carbs: f.carbs, fat: f.fat, sugar: f.sugar || 0 } }); }
 
 
@@ -1584,12 +1506,35 @@ class Component extends DCLogic {
   _edDragOver(ev) {
     const dt = ev.dataTransfer; if (!dt) return;
     ev.preventDefault();
-    try { dt.dropEffect = 'copy'; } catch (e) {}
     const el = this._bodyEl;
+    if (this._dragFig) {
+      // dragging one picture over another: mark the edge it would land on, and don't
+      // wash the whole body — the target is a specific side of a specific figure
+      ev.stopPropagation();
+      const hit = this._figDropTarget(ev);
+      this._paintFigHint(hit);
+      // 'none' tells the browser the drop is forbidden and it never fires the drop
+      // event — which is exactly why a picture could not be dragged out of a pair.
+      // A miss is a valid move-here, so every position must stay droppable.
+      try { dt.dropEffect = 'move'; } catch (e) {}
+      if (el) el.style.background = '';
+      return;
+    }
+    try { dt.dropEffect = 'copy'; } catch (e) {}
     if (el) { el.style.outline = ''; el.style.background = 'rgba(255,255,255,.05)'; }
   }
-  _edDragLeave() { const el = this._bodyEl; if (el) { el.style.outline = ''; el.style.background = ''; } }
+  _edDragLeave() { const el = this._bodyEl; if (el) { el.style.outline = ''; el.style.background = ''; } this._clearFigHint(); }
   async _edDrop(ev) {
+    if (this._dragFig) {
+      // our drag: we own the move entirely. Cancelling unconditionally is what stops
+      // the browser inserting its own copy when the drop misses a pairing target.
+      ev.preventDefault(); ev.stopPropagation();
+      try { if (!this._edDropFig(ev)) this._edMoveFigTo(ev); } catch (e) {}
+      this._clearFigHint();
+      this._dragFig = null;
+      this._unnestFigures();
+      return;
+    }
     const dt = ev.dataTransfer; if (!dt) return;
     const el = this._bodyEl;
     if (el) { el.style.outline = ''; el.style.background = ''; }
@@ -1604,7 +1549,11 @@ class Component extends DCLogic {
       if (range && el && el.contains(range.startContainer)) { el.focus(); const s = window.getSelection(); s.removeAllRanges(); s.addRange(range); }
       else if (el) { el.focus(); const s = window.getSelection(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); s.removeAllRanges(); s.addRange(r); }
     } catch (e) {}
-    const insert = (src) => document.execCommand('insertHTML', false, '<img src="' + src + '" style="width:60%" loading="lazy" decoding="async">');
+    const insert = (src) => document.execCommand('insertHTML', false,
+      '<figure data-fig draggable="true" style="display:inline-block;vertical-align:top;width:60%;margin:12px 8px 12px 0">' +
+        '<figcaption data-cap></figcaption>' +
+        '<img src="' + src + '" style="width:100%;display:block" loading="lazy" decoding="async">' +
+      '</figure>');
     if (inner) { insert(inner); this._syncFmt(); return; }
     for (const f of files) {
       const local = await this._shrinkFile(f, 2400);
@@ -1680,33 +1629,30 @@ class Component extends DCLogic {
   // produced widths like 676.381px), and the corner controls are repositioned on
   // every frame so they stay glued to the image instead of catching up at the end.
   _edImgDown(ev) {
+    // Only the divider still needs a pointer drag. The image had one too — a
+    // preventDefault() on pointerdown that resized it — and that call cancelled the
+    // native drag before it could begin, so no picture could be dragged at all.
+    // Resizing lives on the toolbar's grip now, so the image keeps its drag.
     const el0 = ev.target;
     if (el0 && el0.tagName === 'HR' && this._bodyEl && this._bodyEl.contains(el0)) { this._hrDrag(ev); return; }
-    const img = ev.target;
-    if (!img || img.tagName !== 'IMG') return;
-    ev.preventDefault();
-    const startX = ev.clientX;
-    const host = (this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 0) || img.getBoundingClientRect().width || 600;
-    const cur = img.style.width || '';
-    const startPct = /%$/.test(cur) ? parseFloat(cur) : Math.round((img.getBoundingClientRect().width / host) * 100);
-    let moved = false;
-    const move = (e) => {
-      const x = (e.touches && e.touches[0]) ? e.touches[0].clientX : e.clientX;
-      if (Math.abs(x - startX) > 2) moved = true;
-      const pct = Math.max(15, Math.min(100, Math.round(startPct + ((x - startX) / Math.max(200, host)) * 100)));
-      img.style.width = pct + '%';
-      img.style.height = 'auto';
-      this._positionImgTool(img);
-    };
-    const up = () => {
-      window.removeEventListener('pointermove', move);
-      window.removeEventListener('pointerup', up);
-      window.removeEventListener('pointercancel', up);
-      if (moved) { this._positionImgTool(img); this.forceUpdate(); }
-    };
-    window.addEventListener('pointermove', move);
-    window.addEventListener('pointerup', up);
-    window.addEventListener('pointercancel', up);
+  }
+  // Older notes hold bare <img> tags, and figures written before drag existed have no
+  // draggable flag — bring both up to date so every picture behaves the same.
+  _normaliseFigures(rootArg) {
+    const root = rootArg || this._bodyEl; if (!root) return;
+    root.querySelectorAll('figure[data-fig]').forEach((f) => { if (f.getAttribute('draggable') !== 'true') f.setAttribute('draggable', 'true'); });
+    root.querySelectorAll('img').forEach((im) => {
+      if (im.closest('figure[data-fig]')) return;
+      const fig = document.createElement('figure');
+      fig.setAttribute('data-fig', '');
+      fig.setAttribute('draggable', 'true');
+      fig.style.cssText = 'display:inline-block;vertical-align:top;width:' + (im.style.width || '60%') + ';margin:12px 8px 12px 0';
+      const cap = document.createElement('figcaption');
+      cap.setAttribute('data-cap', '');
+      im.parentNode.insertBefore(fig, im);
+      fig.appendChild(cap); fig.appendChild(im);
+      im.style.width = '100%'; im.style.height = 'auto'; im.style.display = 'block';
+    });
   }
   _edBodyClick(ev) {
     const t = ev.target;
@@ -1731,13 +1677,233 @@ class Component extends DCLogic {
       if (/^https?:/i.test(href)) window.open(href, '_blank', 'noopener,noreferrer');
       return;
     }
-    if (t && t.tagName === 'IMG' && this._bodyEl && this._bodyEl.contains(t)) {
+    if (t && t.tagName === 'IMG' && this._edRoot(t) && this._edRoot(t).contains(t)) {
       if (this._selImgEl && this._selImgEl !== t) { this._selImgEl.style.outline = ''; this._selImgEl.style.outlineOffset = ''; }
       this._selImgEl = t; t.style.outline = '2px solid rgba(255,255,255,.75)'; t.style.outlineOffset = '2px';
       this._positionImgTool(t);
     } else { this._hideImgTool(); }
   }
-  _positionImgTool(img) { const wrap = this._bodyWrap; if (!img || !wrap) return; this.setState({ imgTool: { top: img.offsetTop, left: img.offsetLeft + img.offsetWidth, show: true } }); }
+  _capOf(node) {
+    let n = node && node.nodeType === 3 ? node.parentNode : node;
+    return (n && n.closest) ? n.closest('figcaption[data-cap]') : null;
+  }
+  _edBodyKey(ev) {
+    // A caption is a one-line title. Left alone, Enter inserts a <br> inside the
+    // figcaption, which grows the caption box and shoves the image down.
+    const sel = window.getSelection();
+    const cap = (sel && sel.rangeCount) ? this._capOf(sel.getRangeAt(0).startContainer) : null;
+    if (!cap) return;
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      const fig = cap.closest('figure[data-fig]');
+      const root = this._bodyEl;
+      if (!fig || !root) return;
+      // step out to the block after the figure (or its row), creating one if needed
+      let anchor = fig.closest('div[data-figrow]') || fig;
+      while (anchor.parentNode && anchor.parentNode !== root) anchor = anchor.parentNode;
+      let next = anchor.nextElementSibling;
+      if (!next || next.tagName === 'FIGURE' || next.getAttribute('data-figrow') != null) {
+        next = document.createElement('p');
+        next.appendChild(document.createElement('br'));
+        root.insertBefore(next, anchor.nextSibling);
+      }
+      const r = document.createRange();
+      r.selectNodeContents(next); r.collapse(true);
+      sel.removeAllRanges(); sel.addRange(r);
+    }
+  }
+  _edBodyInput(ev) {
+    const r = (ev && ev.target && ev.target.closest) ? ev.target.closest('[contenteditable="true"]') : null;
+    [r, this._bodyEl, this._lessonEl].filter(Boolean).forEach((n, i, a) => { if (a.indexOf(n) === i) this._pruneFigures(n); });
+    // contenteditable leaves a stray <br> behind when you delete the last character,
+    // so :empty stops matching and the placeholder never comes back
+    const root = this._bodyEl; if (!root) return;
+    root.querySelectorAll('figcaption[data-cap]').forEach((c) => {
+      if (!c.textContent.trim() && c.innerHTML !== '') c.innerHTML = '';
+    });
+  }
+  _edBodyDbl(ev) {
+    const t = ev.target;
+    if (t && t.tagName === 'IMG' && this._edRoot(t)) {
+      ev.preventDefault();
+      this.setState({ lightbox: t.getAttribute('src') || '' });
+    }
+  }
+  // Dragging one picture onto another's edge is the natural way to say "put these
+  // side by side" — and it must work whatever widths they started at.
+  _edDragStart(ev) {
+    const fig = ev.target && ev.target.closest ? ev.target.closest('figure[data-fig]') : null;
+    const root = this._edRoot(fig);
+    if (!fig || !root || !root.contains(fig)) return;
+    this._dragRoot = root;
+    this._dragFig = fig;
+    try { ev.dataTransfer.effectAllowed = 'move'; ev.dataTransfer.setData('text/phntm-fig', '1'); } catch (e) {}
+  }
+  _figDropTarget(ev) {
+    if (!this._dragFig) return null;
+    let t = ev.target && ev.target.closest ? ev.target.closest('figure[data-fig]') : null;
+    if (!t) {
+      // forgiving: within 28px of a picture still counts, so the edge is easy to hit
+      const root = this._dragRoot || this._edRoot(ev.target);
+      if (root) {
+        // Pairing is a sideways gesture, so the cushion is horizontal only. Extending it
+        // vertically swallowed drops aimed at the text below — the gap under a row is
+        // barely 12px, well inside a 28px reach — and made a picture impossible to move
+        // out of a pair.
+        let best = null, bestD = 26;
+        root.querySelectorAll('figure[data-fig]').forEach((f) => {
+          if (f === this._dragFig) return;
+          const b = f.getBoundingClientRect();
+          if (ev.clientY < b.top || ev.clientY > b.bottom) return;   // must be level with it
+          const dx = ev.clientX < b.left ? b.left - ev.clientX : (ev.clientX > b.right ? ev.clientX - b.right : 0);
+          if (dx < bestD) { bestD = dx; best = f; }
+        });
+        t = best;
+      }
+    }
+    if (!t || t === this._dragFig) return null;
+    const r = t.getBoundingClientRect();
+    return { fig: t, after: ev.clientX > r.left + r.width / 2 };
+  }
+  _paintFigHint(hit) {
+    if (this._figHint && this._figHint !== (hit && hit.fig)) { this._figHint.style.boxShadow = ''; this._figHint = null; }
+    if (!hit) return;
+    this._figHint = hit.fig;
+    hit.fig.style.boxShadow = (hit.after ? '3px' : '-3px') + ' 0 0 0 rgba(255,255,255,.85)';
+  }
+  _clearFigHint() { if (this._figHint) { this._figHint.style.boxShadow = ''; this._figHint = null; } }
+  _pruneFigures(rootArg) {
+    const root = rootArg || this._bodyEl; if (!root) return;
+    // no image means no figure — otherwise an orphaned caption sits there alone
+    root.querySelectorAll('figure[data-fig]').forEach((f) => { if (!f.querySelector('img')) f.parentNode.removeChild(f); });
+    root.querySelectorAll('div[data-figrow]').forEach((r) => {
+      if (!r.children.length) r.parentNode.removeChild(r);
+      else if (r.children.length === 1) {
+        const solo = r.firstElementChild;
+        solo.style.flexGrow = ''; solo.style.width = solo.style.width || '60%'; solo.style.margin = '12px 8px 12px 0';
+        r.parentNode.insertBefore(solo, r); r.parentNode.removeChild(r);
+      }
+    });
+  }
+  _unnestFigures(rootArg) {
+    // a figure inside a figure is always wrong, and is how a stray native drop shows up
+    const root = rootArg || this._dragRoot || this._bodyEl; if (!root) return;
+    this._pruneFigures(root);
+    let guard = 0;
+    while (guard++ < 20) {
+      const bad = root.querySelector('figure[data-fig] figure[data-fig]');
+      if (!bad) break;
+      const outer = bad.parentNode.closest('figure[data-fig]');
+      if (!outer || !outer.parentNode) break;
+      outer.parentNode.insertBefore(bad, outer.nextSibling);
+      bad.style.width = bad.style.width || '60%';
+    }
+    root.querySelectorAll('div[data-figrow]').forEach((r) => {
+      if (!r.children.length) r.parentNode.removeChild(r);
+      else if (r.children.length === 1) { r.parentNode.insertBefore(r.firstElementChild, r); r.parentNode.removeChild(r); }
+      else this._rowCap(r);
+    });
+  }
+  _edMoveFigTo(ev) {
+    // dropped somewhere that is not another picture: move it to the caret under the
+    // pointer, lifting it out of any row it was sharing
+    const src = this._dragFig, root = this._dragRoot || this._edRoot(src);
+    if (!src || !root || !root.contains(src)) return false;
+    let range = null;
+    try { range = document.caretRangeFromPoint ? document.caretRangeFromPoint(ev.clientX, ev.clientY) : null; } catch (e) {}
+    let anchor = null, after = true;
+    if (range && root.contains(range.startContainer)) {
+      let n = range.startContainer;
+      if (n.nodeType === 3) n = n.parentNode;
+      while (n && n.parentNode !== root) n = n.parentNode;
+      const ownRow = src.closest('div[data-figrow]');
+      if (n && n !== src && n !== ownRow) { anchor = n; after = ev.clientY > n.getBoundingClientRect().top + n.getBoundingClientRect().height / 2; }
+    }
+    if (!anchor) {
+      // below everything: fall back to the block nearest the drop point
+      const blocks = Array.from(root.children).filter((b) => b !== src && !b.contains(src));   // never the row it is leaving
+      if (!blocks.length) return false;
+      anchor = blocks.reduce((best, b) => Math.abs(b.getBoundingClientRect().top - ev.clientY) < Math.abs(best.getBoundingClientRect().top - ev.clientY) ? b : best, blocks[0]);
+      const ar = anchor.getBoundingClientRect();
+      after = ev.clientY > ar.top + ar.height / 2;
+    }
+    const oldRow = src.closest('div[data-figrow]');
+    src.style.flexGrow = '';
+    src.style.width = src.style.width || '60%';
+    src.style.margin = '12px 8px 12px 0';
+    root.insertBefore(src, after ? anchor.nextSibling : anchor);
+    if (oldRow) {
+      // a row left with one picture is no longer a row
+      if (oldRow.children.length === 1) {
+        const solo = oldRow.firstElementChild;
+        solo.style.flexGrow = ''; solo.style.width = '60%'; solo.style.margin = '12px 8px 12px 0';
+        oldRow.parentNode.insertBefore(solo, oldRow);
+      }
+      if (oldRow.children.length <= 1) oldRow.parentNode.removeChild(oldRow);
+    }
+    this._hideImgTool();
+    this.forceUpdate();
+    return true;
+  }
+  _rowCap(row) {
+    // never more than two in a row: a third would shrink both and defeat the purpose
+    if (!row || row.children.length <= 2) return;
+    while (row.children.length > 2) {
+      const extra = row.lastElementChild;
+      extra.style.flexGrow = '';
+      extra.style.width = '60%';
+      extra.style.margin = '12px 8px 12px 0';
+      row.parentNode.insertBefore(extra, row.nextSibling);
+    }
+  }
+  _edDropFig(ev) {
+    const hit = this._figDropTarget(ev);
+    this._clearFigHint();
+    const src = this._dragFig;
+    if (!hit || !src) return false;
+    const target = hit.fig, root = this._dragRoot || this._edRoot(target);
+    if (!root || !root.contains(src) || !root.contains(target) || src.contains(target) || target.contains(src)) return false;
+    // lift both out of whatever rows they were in, then pair them fresh — this is what
+    // makes the result correct regardless of the two starting widths
+    [src, target].forEach((f) => {
+      const r = f.closest('div[data-figrow]');
+      if (r) { r.parentNode.insertBefore(f, r); if (!r.children.length) r.parentNode.removeChild(r); }
+    });
+    const orphan = root.querySelectorAll('div[data-figrow]');
+    Array.from(orphan).forEach((r) => { if (r.children.length === 1) { r.parentNode.insertBefore(r.firstElementChild, r); r.parentNode.removeChild(r); } else if (!r.children.length) r.parentNode.removeChild(r); });
+    const wrap = document.createElement('div');
+    wrap.setAttribute('data-figrow', '1');
+    target.parentNode.insertBefore(wrap, target);
+    if (hit.after) { wrap.appendChild(target); wrap.appendChild(src); }
+    else { wrap.appendChild(src); wrap.appendChild(target); }
+    Array.from(wrap.children).forEach((f) => { f.style.width = ''; f.style.margin = ''; const im = f.querySelector('img'); if (im) { im.style.width = '100%'; im.style.height = 'auto'; } });
+    let sib = wrap.nextSibling;
+    while (sib && sib.nodeType === 3 && !sib.textContent.trim()) { const nx = sib.nextSibling; sib.parentNode.removeChild(sib); sib = nx; }
+    this._rowCap(wrap);
+    this._hideImgTool();
+    this.forceUpdate();
+    return true;
+  }
+  _imgIsHalf(img) {
+    const box = this._figOf(img);
+    if (box && box.closest && box.closest('div[data-figrow]')) return true;
+    return parseFloat((box && box.style.width) || '100') <= 50;
+  }
+  _edRoot(node) {
+    // whichever editable the element actually lives in: the note body or Key Lessons
+    if (node && node.closest) { const r = node.closest('[contenteditable="true"]'); if (r) return r; }
+    return this._activeEditable || this._bodyEl;
+  }
+  _figOf(img) { return (img && img.closest) ? (img.closest('figure[data-fig]') || img) : img; }   // legacy notes have bare <img>
+  _positionImgTool(img) {
+    // offsetTop/Left only work when the image shares the toolbar's offset parent — an
+    // image in Key Lessons does not, which is why no toolbar appeared there. Measure
+    // against the wrapper's own rect so any editable can host a selection.
+    const wrap = this._bodyWrap; if (!img || !wrap) return;
+    const f = this._figOf(img);
+    const w = wrap.getBoundingClientRect(), r = f.getBoundingClientRect();
+    this.setState({ imgTool: { top: Math.round(r.top - w.top), left: Math.round(r.right - w.left), show: true } });
+  }
   // (top/left describe the image's top-right corner; the toolbar is anchored there)
   _hideImgTool() { if (this._selImgEl) { this._selImgEl.style.outline = ''; this._selImgEl.style.outlineOffset = ''; } this._selImgEl = null; if (this.state.imgTool) this.setState({ imgTool: null }); }
   _edImgMoveInText(dir) { const img = this._selImgEl, root = this._bodyEl; if (!img || !root) return; let node = img; while (node.parentNode && node.parentNode !== root) node = node.parentNode; if (node.parentNode !== root) return; if (dir < 0) { const prev = node.previousElementSibling; if (prev) root.insertBefore(node, prev); } else { const nxt = node.nextElementSibling; if (nxt) root.insertBefore(nxt, node); } setTimeout(() => this._positionImgTool(img), 0); }
@@ -1751,14 +1917,25 @@ class Component extends DCLogic {
   _edImgGrab(ev) {
     const img = this._selImgEl; if (!img) return;
     ev.preventDefault(); ev.stopPropagation();
-    const host = this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 600;
+    const box = this._figOf(img);
+    const row = box.closest ? box.closest('div[data-figrow]') : null;
+    const sib = row ? Array.from(row.children).find((c) => c !== box) : null;
+    const host = row ? row.getBoundingClientRect().width : (this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 600);
     const startX = ev.clientX;
-    const cur = img.style.width || '100%';
+    const cur = row ? (parseFloat(box.style.flexGrow || '1') / (parseFloat(box.style.flexGrow || '1') + parseFloat((sib && sib.style.flexGrow) || '1')) * 100) + '%' : (box.style.width || '100%');
     const startPct = /%$/.test(cur) ? parseFloat(cur) : Math.round((img.getBoundingClientRect().width / Math.max(1, host)) * 100);
     this.setState({ imgResizing: true });
     const move = (e) => {
       const pct = Math.max(15, Math.min(100, Math.round(startPct + ((e.clientX - startX) / Math.max(200, host)) * 100)));
-      img.style.width = pct + '%'; img.style.height = 'auto';
+      if (row) {
+        // both halves must keep a usable minimum, or one collapses to nothing
+        const a = Math.max(20, Math.min(80, pct));
+        box.style.flexGrow = String(a);
+        if (sib) sib.style.flexGrow = String(100 - a);
+      } else {
+        box.style.width = pct + '%';
+      }
+      if (box !== img) { img.style.width = '100%'; img.style.height = 'auto'; }
       this._positionImgTool(img);
       this.forceUpdate();
     };
@@ -1772,7 +1949,15 @@ class Component extends DCLogic {
     window.addEventListener('pointerup', up);
     window.addEventListener('pointercancel', up);
   }
-  _edImgRemoveInText() { const img = this._selImgEl; if (!img) return; const p = img.parentNode; if (p) p.removeChild(img); this._hideImgTool(); }
+  _edImgRemoveInText() {
+    const img = this._selImgEl; if (!img) return;
+    const root = this._edRoot(img);
+    const f = this._figOf(img);
+    if (f.parentNode) f.parentNode.removeChild(f);
+    this._pruneFigures(root);
+    this._hideImgTool();
+    this.forceUpdate();
+  }
   // Notes accept pasted rich text, which can carry executable markup (img
   // onerror handlers, iframes, javascript: URLs) from any page the user copied
   // from. The note HTML is later written back with innerHTML, so strip anything
@@ -2276,7 +2461,7 @@ class Component extends DCLogic {
     const saved = Array.isArray(t.rulesChecked) ? t.rulesChecked : null;
     const checks = {};
     if (saved) rules.forEach((label, i) => { if (saved.includes(label)) checks[i] = true; });
-    this.setState({ draftChecks: checks, editTradeId: t.id, panelOpen: true, acctMenuOpen: false, fBtDate: t.btDate || '', btDateErr: false, fSym: t.sym, side: t.side || 'Long', setup: t.setup || 'Sweep + FVG', session: t.session || 'NY', fPnl: String(t.pnl != null ? t.pnl : ''), fRR: t.r != null ? String(t.r) : '', fNotes: t.notes || '', draftPics: (t.pics || []).map((p) => typeof p === 'string' ? { src: p, cap: '' } : p), fEntry: '', fStop: '', fExit: '', fAcct: this._acctToPick(t.acct) }); }
+    this.setState({ draftChecks: checks, editTradeId: t.id, panelOpen: true, acctMenuOpen: false, fBtDate: t.btDate || '', btDateErr: false, fSym: t.sym, side: t.side || 'Long', setup: t.setup || '', session: t.session || 'NY', fPnl: String(t.pnl != null ? t.pnl : ''), fRR: t.r != null ? String(t.r) : '', fNotes: t.notes || '', draftPics: (t.pics || []).map((p) => typeof p === 'string' ? { src: p, cap: '' } : p), fEntry: '', fStop: '', fExit: '', fAcct: this._acctToPick(t.acct) }); }
   _setActCfgStr(field, val) {
     const ctx = this._actCtx();
     const key = ctx.type === 'Prop' ? 'Prop-' + ctx.firm + '-' + ctx.size + '-' + ctx.phase : ctx.type;
@@ -2735,7 +2920,7 @@ class Component extends DCLogic {
           if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
         } catch (e) {}
       });
-      if (changed) { this._loadLocal(); this._stopNumbers(); if (this.state.prog !== 1) this.setState({ prog: 1 }); }   // refresh in place, but never replay the count-up
+      if (changed) { this._loadLocal(); if (this._revealed) { this._stopNumbers(); if (this.state.prog !== 1) this.setState({ prog: 1 }); } }   // a LATER sync refreshes silently; the first one animates
       // re-seed against the data that just arrived, so synced-in milestones don't pop
       this._badgesReady = false;
       setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 60);
@@ -2841,15 +3026,32 @@ class Component extends DCLogic {
     this.setState({ meal: h < 11 ? 'Breakfast' : h < 15 ? 'Lunch' : 'Dinner' });
     try { const p = JSON.parse(localStorage.getItem('phntm-sz-pairs-v1') || 'null'); if (Array.isArray(p) && p.length) this.setState({ szPairs: p }); } catch (e) {}   // empty array = reset to defaults
     this._szLoadRates();
-    setTimeout(() => this.animateTab(this.state.tab), 1900); // count up once, after the intro veil lifts
+    this._mountAt = Date.now();
+    setTimeout(() => { this._dataReady = true; this._revealNumbers(); }, 3200);   // fallback: never wait on a hung network
     setTimeout(() => this.setState({ rolled: true }), 1650); // odometer digits roll in
     try { if (sessionStorage.getItem('phntm-welcome') === '1') { sessionStorage.removeItem('phntm-welcome'); this.setState({ welcomeOpen: true }); } } catch (e) {}
     try { if (location.hash === '#welcome') { if (!(this.state.userName || '').trim()) this.setState({ userName: 'Trader' }); this.setState({ welcomeOpen: true }); } } catch (e) {}
-    this._cloudSync();
+    this._onVis = () => { if (!document.hidden && this.state.prog !== 1 && !this._nrRunning) this._settleNumbers(); };
+    document.addEventListener('visibilitychange', this._onVis);
+    this._cloudSync().then(() => { this._dataReady = true; this._revealNumbers(); }, () => { this._dataReady = true; this._revealNumbers(); });
   }
   componentWillUnmount() {
     clearInterval(this._ck); this._stopNumbers();
-    [this._undoT, this._undoAllT, this._undoCT, this._as].forEach((t) => clearTimeout(t));
+    [this._undoT, this._undoAllT, this._undoCT, this._as, this._revealT, this._nrSafety].forEach((t) => clearTimeout(t));
+    if (this._onVis) document.removeEventListener('visibilitychange', this._onVis);
+  }
+  _revealNumbers() {
+    // Play the count-up exactly once, and only when both are true: the intro veil has
+    // lifted, and hydration has settled. Whichever lands last starts it.
+    if (this._revealed || !this._dataReady) return;
+    const wait = Math.max(0, (this._mountAt || 0) + 1900 - Date.now());
+    clearTimeout(this._revealT);
+    this._revealT = setTimeout(() => {
+      if (this._revealed) return;
+      this._revealed = true;
+      this._stopNumbers();
+      this.animateNumbers();
+    }, wait);
   }
   animateTab(tab) {
     // Replay on every tab change, not just the first visit. Safe because animateNumbers
@@ -2862,20 +3064,34 @@ class Component extends DCLogic {
     // cancel and reset together — a cancel that leaves the flag set would disable the
     // count-up permanently
     cancelAnimationFrame(this._nr);
+    clearTimeout(this._nrSafety);
     this._nrRunning = false;
   }
+  _settleNumbers() {
+    // land on the true figure, whatever happened to the animation
+    cancelAnimationFrame(this._nr);
+    clearTimeout(this._nrSafety);
+    this._nrRunning = false;
+    if (this.state.prog !== 1) this.setState({ prog: 1 });
+  }
   animateNumbers() {
-    // ignore a second request while one is already running — restarting mid-count is
-    // what makes the figure appear to roll twice
+    // The count-up multiplies the REAL figures by state.prog, so prog must never be
+    // able to strand below 1 — a stranded 0 renders a $4,000 day as $0. requestAnimation-
+    // Frame is suspended while a tab is hidden, so it cannot be the only thing that
+    // walks prog back up. Two guarantees below: never start blind, always finish.
     if (this._nrRunning) return;
     this._stopNumbers();
+    if (typeof document !== 'undefined' && document.hidden) { this._settleNumbers(); return; }
     this._nrRunning = true;
     this.setState({ prog: 0 });          // start the count-up from zero
     const t0 = performance.now(), dur = 1300;
+    // wall-clock backstop: fires even if rAF is throttled or never delivers a frame
+    this._nrSafety = setTimeout(() => this._settleNumbers(), dur + 600);
     const step = () => {
       const p = Math.min(1, (performance.now() - t0) / dur);
       this.setState({ prog: 1 - Math.pow(1 - p, 3) });
-      if (p < 1) this._nr = requestAnimationFrame(step); else this._nrRunning = false;   // cleared on natural finish
+      if (p < 1) this._nr = requestAnimationFrame(step);
+      else this._settleNumbers();        // natural finish clears the backstop too
     };
     step();
   }
@@ -3072,8 +3288,8 @@ class Component extends DCLogic {
       bar: 'width:100%;height:6px;border-radius:3px;background:' + (gym ? '#fff' : 'rgba(255,255,255,.14)'),
       tag: 'font-size:10.5px;color:' + (gym ? '#eaeaea' : '#a0a0a0'),
     }));
-    const win = 'text-align:right;font-family:JetBrains Mono,monospace;font-size:13px;color:#fff;';
-    const loss = 'text-align:right;font-family:JetBrains Mono,monospace;font-size:13px;color:#a0a0a0;';
+    const win = 'font-family:JetBrains Mono,monospace;font-size:13px;color:#fff;';
+    const loss = 'font-family:JetBrains Mono,monospace;font-size:13px;color:#a0a0a0;';
     const fmtT = (ts) => { const d = new Date(ts); const p = (n) => String(n).padStart(2, '0');
       const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
       const wk = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
@@ -3081,7 +3297,7 @@ class Component extends DCLogic {
     const fmt$ = (v) => (Math.round(v) === 0 ? '$' : (v < 0 ? '-$' : '+$')) + Math.abs(Math.round(v)).toLocaleString();
     const mkRow = (t) => ({
       sym: t.sym, side: t.side,
-      setup: t.setup || '',
+      setup: this._acctName(t.acct) || '',
       pics: (t.pics && t.pics.length ? t.pics.length + ' pic' + (t.pics.length > 1 ? 's' : '') : ''),
       time: fmtT(t.ts), pnl: fmt$(t.pnl), r: t.r ? ((t.r > 0 ? '+' : '') + t.r.toFixed(1) + 'R') : '',
       pnlStyle: t.pnl >= 0 ? win : loss, rStyle: t.pnl >= 0 ? win : loss,
@@ -3114,7 +3330,6 @@ class Component extends DCLogic {
         const sum = g.reduce((a, t) => a + (t.pnl || 0), 0);
         return { name, wr, n: g.length,
           wrText: dec ? wr + '%' : '—',
-          record: wins + 'W · ' + losses + 'L',
           net: (sum < 0 ? '−$' : '+$') + Math.abs(Math.round(sum)).toLocaleString(),
           netStyle: 'font-family:JetBrains Mono,monospace;font-size:13px;color:' + (sum > 0 ? '#7fd1a0' : sum < 0 ? '#e0a05a' : '#a0a0a0'),
           barStyle: 'height:100%;border-radius:99px;width:' + (dec ? Math.max(3, wr) : 0) + '%;background:' + (sum > 0 ? '#7fd1a0' : '#e0a05a') + ';transition:width .6s cubic-bezier(.16,1,.3,1)' };
@@ -3861,8 +4076,8 @@ class Component extends DCLogic {
           setEdCat: (e) => this._edSet('cat', e.target.value),
           setEdSource: (e) => this._edSet('source', e.target.value),
           catPicks, hasCatPicks: catPicks.length > 0,
-          bodyRef: (el) => { this._bodyEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
-          lessonRef: (el) => { this._lessonEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; } if (el && this._lessonMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.lessonHtml) || ''); this._lessonMountedFor = this._edKey; } },
+          bodyRef: (el) => { this._bodyEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._normaliseFigures(); this._pruneFigures(el); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
+          lessonRef: (el) => { this._lessonEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondragstart = (e) => this._edDragStart(e); el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); el.ondragend = () => { this._clearFigHint(); this._dragFig = null; setTimeout(() => this._unnestFigures(), 0); }; el.oninput = () => this._edBodyInput(); el.onkeydown = (e) => this._edBodyKey(e); el.ondblclick = (e) => { this._edBodyDbl(e); if (!e.defaultPrevented) this._wordAt(e.clientX, e.clientY); }; el.onclick = (e) => { this._edBodyClick(e); if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; } if (el && this._lessonMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.lessonHtml) || ''); this._normaliseFigures(el); this._pruneFigures(el); this._lessonMountedFor = this._edKey; } },
           syncFmt: () => this._syncFmt(),
           insertDivider: () => this._edInsertHr(),
           hrToolShow: !!(this.state.hrTool && this.state.hrTool.show && this._selHr && this._bodyEl && this._bodyEl.contains(this._selHr)),
@@ -3875,13 +4090,69 @@ class Component extends DCLogic {
           edImgDown: (e) => this._edImgDown(e),
           edBodyClick: (e) => this._edBodyClick(e),
           bodyWrapRef: (el) => { this._bodyWrap = el; if (el) el.onclick = (ev) => this._annoPick(ev); },
-          imgToolShow: !!(this.state.imgTool && this.state.imgTool.show && this._selImgEl && this._bodyEl && this._bodyEl.contains(this._selImgEl)),
+          imgToolShow: !!(this.state.imgTool && this.state.imgTool.show && this._selImgEl && ((this._bodyEl && this._bodyEl.contains(this._selImgEl)) || (this._lessonEl && this._lessonEl.contains(this._selImgEl)))),
           imgToolStyle: (() => { const t = this.state.imgTool || {}; return 'position:absolute;z-index:5;top:' + ((t.top || 0) + 7) + 'px;left:' + ((t.left || 0) - 7) + 'px;transform:translateX(-100%);display:flex;align-items:center;gap:4px;background:rgba(10,10,10,.9);border:1px solid rgba(255,255,255,.16);border-radius:8px;padding:3px 4px;box-shadow:0 6px 20px rgba(0,0,0,.5);backdrop-filter:blur(6px)'; })(),
           imgMoveUp: () => this._edImgMoveInText(-1),
           imgMoveDown: () => this._edImgMoveInText(1),
           imgRemove: () => this._edImgRemoveInText(),
+      edBodyKey: (e) => this._edBodyKey(e),
+      edDragStart: (e) => this._edDragStart(e),
+      edDragEnd: () => { this._clearFigHint(); this._dragFig = null; setTimeout(() => this._unnestFigures(), 0); },
+      edBodyInput: () => this._edBodyInput(),
+      edBodyDbl: (e) => this._edBodyDbl(e),
+      imgZoom: () => { const el = this._selImgEl; if (el) this.setState({ lightbox: el.getAttribute('src') || '' }); },
+      imgHalfLabel: (() => { const el = this._selImgEl; if (!el) return '◫'; return this._imgIsHalf(el) ? '▭' : '◫'; })(),
+      imgHalfTitle: (() => { const el = this._selImgEl; if (!el) return ''; return this._imgIsHalf(el) ? 'Full width' : 'Half width — a second image can sit beside it'; })(),
+      imgHalf: () => {
+        const el = this._selImgEl; if (!el) return;
+        const box = this._figOf(el), root = this._bodyEl;
+        if (!root || box === el) return;
+        const HALF = '48%', FULL = '100%';
+        const row = box.closest('div[data-figrow]');
+        const isHalf = row ? true : parseFloat(box.style.width || '100') <= 50;
+        if (isHalf) {
+          if (row) {
+            Array.from(row.children).forEach((f) => { f.style.width = FULL; f.style.margin = '12px 0'; f.style.flexGrow = ''; row.parentNode.insertBefore(f, row); });
+            row.parentNode.removeChild(row);
+          } else { box.style.width = FULL; }
+        } else {
+          // Only build a row when there is genuinely something to pair with. Wrapping a
+          // lone figure hands it to flex:1, which stretches it to full width — the exact
+          // opposite of "half". A solo figure takes a 48% inline width instead, so the
+          // next image can come and sit beside it later.
+          const nearest = (dir) => {
+            let n = box[dir];
+            while (n && ((n.nodeType === 3 && !n.textContent.trim()) || (n.nodeType === 1 && n.tagName === 'BR'))) n = n[dir];
+            return (n && n.nodeType === 1 && n.matches && n.matches('figure[data-fig]')) ? n : null;
+          };
+          const partner = nearest('nextSibling') || nearest('previousSibling');
+          if (!partner) { box.style.width = HALF; }
+          else {
+            const wrap = document.createElement('div');
+            wrap.setAttribute('data-figrow', '1');
+            box.parentNode.insertBefore(wrap, box);
+            const boxFirst = !!(partner.compareDocumentPosition(box) & Node.DOCUMENT_POSITION_PRECEDING);
+            const first = boxFirst ? box : partner, second = boxFirst ? partner : box;
+            wrap.appendChild(first); wrap.appendChild(second);
+            Array.from(wrap.children).forEach((f) => { f.style.width = ''; f.style.margin = ''; f.style.flexGrow = '1'; });
+            let sib = wrap.nextSibling;
+            while (sib && sib.nodeType === 3 && !sib.textContent.trim()) { const nx = sib.nextSibling; sib.parentNode.removeChild(sib); sib = nx; }
+          }
+        }
+        el.style.width = FULL; el.style.height = 'auto';
+        this._positionImgTool(el);
+        this.forceUpdate();
+      },
           imgGrab: (e) => this._edImgGrab(e),
-          imgPct: (() => { const el = this._selImgEl; if (!el) return ''; const w = el.style.width || ''; if (/%$/.test(w)) return Math.round(parseFloat(w)) + '%'; const host = this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 0; return host ? Math.round((el.getBoundingClientRect().width / host) * 100) + '%' : ''; })(),
+          imgPct: (() => {
+        const el = this._selImgEl; if (!el) return '';
+        const bx = this._figOf(el), rw = bx.closest ? bx.closest('div[data-figrow]') : null;
+        if (rw) {
+          const sb = Array.from(rw.children).find((c) => c !== bx);
+          const g = parseFloat(bx.style.flexGrow || '1'), gs = parseFloat((sb && sb.style.flexGrow) || '1');
+          return Math.round((g / (g + gs)) * 100) + '%';
+        }
+        const w = bx.style.width || ''; if (/%$/.test(w)) return Math.round(parseFloat(w)) + '%'; const host = this._bodyEl ? this._bodyEl.getBoundingClientRect().width : 0; return host ? Math.round((el.getBoundingClientRect().width / host) * 100) + '%' : ''; })(),
           imgPctStyle: 'font-family:"JetBrains Mono",monospace;font-size:10px;color:#b0b0b0;padding:0 3px;align-self:center;transition:opacity .3s;opacity:' + (this.state.imgResizing ? '1' : '.55'),
           imgSizes: [['S', '40%', 'Small'], ['M', '66%', 'Medium'], ['L', '100%', 'Full width']].map(([label, pct, title]) => {
             const cur = this._selImgEl ? (this._selImgEl.style.width || '100%') : '';
@@ -3993,7 +4264,7 @@ class Component extends DCLogic {
           }),
         };
       })(),
-      allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = [this._acctName(t.acct), t.setup].filter(Boolean).join('  \u00b7  '); row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:100px 76px 1fr 132px 96px 56px 104px 40px;gap:16px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
+      allTrades: (() => { const { fl } = this._tradeView(); return fl.map((t, i) => { const row = mkRow(t); row.setup = this._acctName(t.acct) || ''; row.open = () => this._editTrade(t); row.remove = (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._deleteTrade(t.id); }; row.rowStyle = 'display:grid;grid-template-columns:110px 96px minmax(140px,1fr) 124px 88px 92px 32px;gap:18px;padding:19px 0;border-bottom:1px solid rgba(255,255,255,.07);align-items:baseline;font-size:14px;cursor:pointer;transition:padding-left .45s cubic-bezier(.16,1,.3,1),background .3s;animation:rowIn .5s cubic-bezier(.16,1,.3,1) ' + Math.min(i * 0.035, 0.5).toFixed(3) + 's both'; return row; }); })(),
       tradeFilterReset: (() => { const { hasBt, hasLive, accts } = this._tradeView(); const f = this.state.tradeFilter || 'All'; const ok = f === 'All' || (f === 'Live' && hasLive) || (f === 'Backtest' && hasBt) || (f === 'Prop' && accts.length); if (!ok && this.state.tradeFilter) setTimeout(() => this.setState({ tradeFilter: 'All' }), 0); return true; })(),
       tradeFilterTabs: (() => { const { accts, hasBt, hasLive } = this._tradeView(); const tabs = [['All', 'All']]; if (hasLive) tabs.push(['Live', 'Live']); if (accts.length) tabs.push(['Prop', 'Prop firm']); if (hasBt) tabs.push(['Backtest', 'Backtest']); return tabs.map(([v, label]) => ({ label, value: v, st: 'border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 15px;border-radius:99px;white-space:nowrap;transition:background .3s,color .3s;' + ((this.state.tradeFilter || 'All') === v ? 'background:#fff;color:#000;font-weight:500' : 'background:none;color:#a0a0a0'), pick: () => this.setState({ tradeFilter: v, tradeSub: 'All' }) })); })(),
       tradeSubOpen: (this.state.tradeFilter === 'Prop') && this._tradeView().accts.length > 1,
@@ -4067,9 +4338,6 @@ class Component extends DCLogic {
           })),
         };
       }),
-      openManual: () => this._openManual(),
-      manualOpen: !!this.state.manualOpen,
-      closeManual: () => this.setState({ manualOpen: false, manual: null }),
       mName: (this.state.manual || {}).name || '',
       mServing: (this.state.manual || {}).serving || '',
       mKcal: (this.state.manual || {}).kcal || '',
@@ -4084,7 +4352,6 @@ class Component extends DCLogic {
       setMCarbs: (e) => this._setManual('carbs', e.target.value),
       setMFat: (e) => this._setManual('fat', e.target.value),
       setMSugar: (e) => this._setManual('sugar', e.target.value),
-      saveManual: () => this._saveManual(),
       mKindTabs: ['Food', 'Drink'].map((kk) => ({
         label: kk,
         st: 'background:none;border:none;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;padding:8px 18px;border-radius:99px;transition:background .45s cubic-bezier(.32,.72,0,1),color .45s;' +
@@ -4116,22 +4383,6 @@ class Component extends DCLogic {
           })),
           forget: (e) => { e.stopPropagation(); this._saveUsuals((this.state.usuals || []).filter((x) => x.id !== u.id)); },
         })),
-      foodEditing: !!this.state.editFoodId,
-      closeFoodEdit: () => this.setState({ editFoodId: null, editFood: null }),
-      efName: this.state.editFood ? this.state.editFood.name : '',
-      efKcal: this.state.editFood ? String(this.state.editFood.kcal) : '',
-      efProtein: this.state.editFood ? String(this.state.editFood.protein) : '',
-      efCarbs: this.state.editFood ? String(this.state.editFood.carbs) : '',
-      efFat: this.state.editFood ? String(this.state.editFood.fat) : '',
-      efSugar: this.state.editFood ? String(this.state.editFood.sugar) : '',
-      setEfName: (e) => this._setEditFood('name', e.target.value),
-      setEfKcal: (e) => this._setEditFood('kcal', e.target.value),
-      setEfProtein: (e) => this._setEditFood('protein', e.target.value),
-      setEfCarbs: (e) => this._setEditFood('carbs', e.target.value),
-      setEfFat: (e) => this._setEditFood('fat', e.target.value),
-      setEfSugar: (e) => this._setEditFood('sugar', e.target.value),
-      saveFoodEdit: () => this._saveEditFood(),
-      removeFoodEdit: () => this._removeEditFood(),
       panelOpen: this.state.panelOpen,
       togglePanel: () => { const opening = !this.state.panelOpen; this.setState(opening ? { panelOpen: true, acctMenuOpen: false, fAcct: ((this.state.challenges || []).length ? null : 'Live'), tradeAcctErr: false, draftChecks: {}, newRule: '' } : { panelOpen: false, editTradeId: null }); },
       ruleChecklist: (this.state.tradeRules || []).map((label, i) => { const on = !!(this.state.draftChecks || {})[i]; return { label, check: on ? '\u2713' : '', toggle: () => this._toggleRuleCheck(i), remove: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this._removeRule(i); },
@@ -4206,16 +4457,8 @@ class Component extends DCLogic {
       sleepSaveLabel: this.state.sleepSaved ? 'Saved ✓' : 'Save sleep',
       sleepSaveStyle: 'border:none;font-family:Archivo,sans-serif;font-size:12px;font-weight:500;padding:8px 16px;border-radius:99px;cursor:pointer;transition:background .45s cubic-bezier(.32,.72,0,1),color .45s,transform .45s cubic-bezier(.32,.72,0,1);' +
         (this.state.sleepSaved ? 'background:#5fbf83;color:#04120a;transform:scale(1.04)' : 'background:#fff;color:#000;transform:scale(1)'),
-      dayEditOpen: !!this.state.dayEdit,
       dayEditLabel: (this.state.dayEdit || {}).label || '',
-      dayEditKcal: (this.state.dayEdit || {}).kcal ? (this.state.dayEdit.kcal.toLocaleString() + ' kcal logged') : 'No food logged',
       dayEditSleep: (this.state.dayEdit || {}).sleep ? ((this.state.dayEdit || {}).sleep + ' of sleep') : 'No sleep recorded',
-      dayHasFood: !!((this.state.dayEdit || {}).kcal),
-      dayHasSleep: !!((this.state.dayEdit || {}).sleep),
-      closeDayEdit: () => this.setState({ dayEdit: null }),
-      clearDayFood: () => this._clearDay((this.state.dayEdit || {}).key, 'food'),
-      clearDaySleep: () => this._clearDay((this.state.dayEdit || {}).key, 'sleep'),
-      clearDayAll: () => this._clearDay((this.state.dayEdit || {}).key, 'all'),
       sleepVsGoal: sleepMet ? 'goal met' : (Math.round((sleepGoalMin - sleepMin) / 60 * 10) / 10) + 'h under goal',
       sleepMetColor: sleepMet ? '#eaeaea' : '#a0a0a0',
       sleepDotStyle: 'width:8px;height:8px;transform:rotate(45deg);flex:none;background:' + (sleepMet ? '#fff' : 'rgba(255,255,255,.3)'),

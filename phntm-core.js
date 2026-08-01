@@ -178,10 +178,31 @@
           this._p = el >= 1 ? 1 : (1 - Math.pow(1 - el, 3));
           draw();
           this._raf = requestAnimationFrame(tick);
-        } else { this._raf = null; }
+        } else { this._raf = null; clearTimeout(this._drawSafety); this._drawSafety = null; }
       };
-      this._run = () => { if (!this._raf) this._raf = requestAnimationFrame(tick); };
+      // The reveal is only ever entered through requestAnimationFrame, and browsers
+      // suspend rAF while a tab is hidden — so a chart that loads in a background tab
+      // never receives a single paint. The animation must not be the only path to a
+      // drawn canvas: skip it when hidden, and back it with a wall clock either way.
+      const paintFinal = () => {
+        clearTimeout(this._drawSafety); this._drawSafety = null;
+        if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
+        const key = [this.getAttribute('start'), this.getAttribute('goal'), this.getAttribute('fail'), this.getAttribute('eq'), W, H].join('|');
+        if (key !== this._key || this._dirty) { this._key = key; this._dirty = false; parse(); }
+        this._p = 1;
+        draw();
+      };
+      this._paintFinal = paintFinal;
+      this._run = () => {
+        if (typeof document !== 'undefined' && document.hidden) { paintFinal(); return; }
+        clearTimeout(this._drawSafety);
+        this._drawSafety = setTimeout(paintFinal, 1600);   // rAF throttled or never delivered
+        if (!this._raf) this._raf = requestAnimationFrame(tick);
+      };
       this._replay = () => { this._p = 0; this._pStart = performance.now(); this._run(); };
+      // returning to the tab must repair a canvas that never got to paint
+      this._onVis = () => { if (!document.hidden && this._p !== 1) this._replay(); };
+      document.addEventListener('visibilitychange', this._onVis);
       // restart the reveal whenever the data or the box changes
       this._mo = new MutationObserver(() => this._replay());
       this._mo.observe(this, { attributes: true, attributeFilter: ['start', 'goal', 'fail', 'eq', 'goallabel', 'faillabel'] });
@@ -189,6 +210,8 @@
     }
     disconnectedCallback() {
       if (this._raf) { cancelAnimationFrame(this._raf); this._raf = null; }
+      clearTimeout(this._drawSafety); this._drawSafety = null;
+      if (this._onVis) { document.removeEventListener('visibilitychange', this._onVis); this._onVis = null; }
       if (this._ro) this._ro.disconnect();
       if (this._mo) this._mo.disconnect();
     }
