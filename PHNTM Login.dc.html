@@ -254,10 +254,10 @@ class Component extends DCLogic {
         }
       } catch (e) {}
     })();
-    // Full intro on a first visit; brief on every later one in the same session.
-    let seen = false; try { seen = sessionStorage.getItem('phntm-intro') === '1'; } catch (e) {}
-    try { sessionStorage.setItem('phntm-intro', '1'); } catch (e) {}
-    const dur = seen ? 650 : 2000, t0 = performance.now();
+    // One duration, always. Shortening it on repeat visits made the intro look random —
+    // whether you saw the count depended on whether the page had loaded before in this
+    // session, which is invisible to the person watching.
+    const dur = 1500, t0 = performance.now();
     const tick = (now) => {
       const p = Math.min(1, (now - t0) / dur);
       const eased = 1 - Math.pow(1 - p, 3);
@@ -269,8 +269,17 @@ class Component extends DCLogic {
       }
     };
     this._raf = requestAnimationFrame(tick);
+    // a hidden tab suspends rAF, which would leave the intro frozen mid-count
+    this._t3 = setTimeout(() => {
+      if (this.state.phase === 'load' && !this.state.resuming) {
+        cancelAnimationFrame(this._raf);
+        this.setState({ pct: 100 });
+        this._t1 = setTimeout(() => this.setState({ phase: 'reveal' }), 120);
+        this._t2 = setTimeout(() => this.setState({ phase: 'done' }), 120 + 620);
+      }
+    }, dur + 700);
   }
-  componentWillUnmount() { cancelAnimationFrame(this._raf); clearTimeout(this._t1); clearTimeout(this._t2); }
+  componentWillUnmount() { cancelAnimationFrame(this._raf); [this._t1, this._t2, this._t3].forEach((t) => clearTimeout(t)); }
   renderVals() {
     const keep = this.state.keepSignedIn !== false;
     // the intro colour is chosen in Settings; a raw-string key can come back JSON-quoted

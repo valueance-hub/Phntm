@@ -2041,7 +2041,7 @@ class Component extends DCLogic {
       this._saveNotes((this.state.notes || []).map((n) => n.id === id ? { ...n, bodyHtml, lessonHtml, anno, pics } : n));
     } catch (e) { /* stays inline until the next save */ }
   }
-  _removeNote(id) { this._saveNotes((this.state.notes || []).filter((n) => n.id !== id)); if (this.state.ed && this.state.ed.id === id) this._closeEditor(); }
+  _removeNote(id) { this._tombstone('phntm-notes-v1', id); this._saveNotes((this.state.notes || []).filter((n) => n.id !== id)); if (this.state.ed && this.state.ed.id === id) this._closeEditor(); }
   // Sketch pad — same stroke model as draw-over-text: device-resolution canvas,
   // one smooth path per stroke, undo, and an eraser that paints the pad colour
   // (the pad has an opaque background, so erasing means painting it back).
@@ -2442,6 +2442,7 @@ class Component extends DCLogic {
     this.setState({ acctCfg: cfg, ovDrafts: drafts }); this._saveAccount(cfg);
   }
   _deleteTrade(id) {
+    this._tombstone('phntm-my-trades-v1', id);
     const list = this.state.myTrades || [];
     const removed = list.find((t) => t.id === id);
     this._saveTrades(list.filter((t) => t.id !== id)); this.animateNumbers();
@@ -2751,6 +2752,7 @@ class Component extends DCLogic {
   _btTrades() { return (this.state.myTrades || []).filter((t) => t.acct === 'Backtest'); }
   _btDeleteSlice(ids) {
     if (!ids || !ids.length) return;
+    this._tombstone('phntm-my-trades-v1', ids);
     const set = new Set(ids);
     const all = this.state.myTrades || [];
     const removed = all.filter((t) => set.has(t.id));
@@ -2888,7 +2890,20 @@ class Component extends DCLogic {
 
   _persist(key, val) {
     try { localStorage.setItem(key, val); } catch (e) {}
-    try { if (window.PHNTM && window.PHNTM.cloud) window.PHNTM.cloud.set(key, val); } catch (e) {}
+    this._pushCloud(key, val);
+  }
+  // cloud.set() resolves false when it fails, and nothing used to check it — a failed
+  // write left the cloud holding stale data, which then overwrote the good local copy
+  // on the next load. Verify, and retry with backoff.
+  async _pushCloud(key, val, attempt) {
+    const C = window.PHNTM && window.PHNTM.cloud; if (!C || !C.set) return;
+    const n = attempt || 0;
+    let ok = false;
+    try { ok = (await C.set(key, val)) !== false; } catch (e) { ok = false; }
+    if (ok) { this._pending && this._pending.delete(key); return; }
+    this._pending = this._pending || new Map();
+    this._pending.set(key, val);
+    if (n < 4) setTimeout(() => this._pushCloud(key, val, n + 1), 400 * Math.pow(2, n));
   }
   async _cloudSync() {
     try {
@@ -2914,8 +2929,24 @@ class Component extends DCLogic {
       // the quote characters and hand invalid data back to the UI on the next load
       const raw = { 'phntm-name': 1, 'phntm-theme-v1': 1, 'phntm-intro-bg-v1': 1, 'phntm-risk-v1': 1 };
       let changed = false;
+      // A record that exists on only one side must survive. Overwriting local with the
+      // cloud copy is what destroyed a freshly-logged trade whenever its own upload had
+      // not landed yet: the stale cloud array simply replaced the good local one.
+      const MERGE = { 'phntm-my-trades-v1': 1, 'phntm-notes-v1': 1, 'phntm-payouts-v1': 1 };
+      const tombs = this._tombstones();
       keys.forEach((k) => {
         try {
+          if (MERGE[k]) {
+            const cloudArr = Array.isArray(data[k]) ? data[k] : JSON.parse(data[k] || '[]');
+            let localArr = [];
+            try { localArr = JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) {}
+            const merged = this._mergeById(localArr, cloudArr, tombs[k] || []);
+            const next = JSON.stringify(merged);
+            if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
+            // if the merge added anything the cloud lacked, push the union back up
+            if (merged.length !== cloudArr.length) this._pushCloud(k, next);
+            return;
+          }
           const next = raw[k] ? String(data[k]) : JSON.stringify(data[k]);
           if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
         } catch (e) {}
@@ -2925,6 +2956,27 @@ class Component extends DCLogic {
       this._badgesReady = false;
       setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 60);
     } catch (e) { console.warn('[PHNTM] cloud sync error', e); }
+  }
+  _tombstones() {
+    try { return JSON.parse(localStorage.getItem('phntm-deleted-v1') || '{}'); } catch (e) { return {}; }
+  }
+  // A pure union would resurrect anything you deleted, so a delete records the id.
+  _tombstone(key, ids) {
+    const all = this._tombstones();
+    const set = new Set(all[key] || []);
+    (Array.isArray(ids) ? ids : [ids]).forEach((i) => set.add(String(i)));
+    all[key] = [...set].slice(-500);
+    const s = JSON.stringify(all);
+    try { localStorage.setItem('phntm-deleted-v1', s); } catch (e) {}
+    this._pushCloud('phntm-deleted-v1', s);
+  }
+  _mergeById(localArr, cloudArr, tombIds) {
+    const dead = new Set((tombIds || []).map(String));
+    const out = new Map();
+    // cloud first, then local — a local edit is the more recent intent
+    (Array.isArray(cloudArr) ? cloudArr : []).forEach((r) => { if (r && !dead.has(String(r.id))) out.set(String(r.id), r); });
+    (Array.isArray(localArr) ? localArr : []).forEach((r) => { if (r && !dead.has(String(r.id))) out.set(String(r.id), r); });
+    return [...out.values()].sort((a, b) => (b.ts || 0) - (a.ts || 0));
   }
   async _migrateLocalToCloud() {
     const C = window.PHNTM && window.PHNTM.cloud; if (!C) return;
