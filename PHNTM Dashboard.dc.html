@@ -402,6 +402,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <div style="display:flex;align-items:baseline;gap:22px;margin-top:10px">
         <span data-m="hero" style="font-size:88px;font-weight:200;letter-spacing:-.03em;line-height:1;color:#fff">{{ pnl }}</span>
       </div>
+      <div style="margin-top:11px;font-size:13px;color:#b0b0b0;min-height:1.2em">{{ heroSub }}</div>
       <div style="position:relative;height:1px;max-width:340px;margin-top:16px;overflow:hidden;background:rgba(255,255,255,.14)">
         <div style="position:absolute;inset:0;width:34%;background:linear-gradient(90deg,transparent,#fff,transparent);animation:chargeGlow 1.6s .45s cubic-bezier(.32,.72,0,1) both"></div>
       </div>
@@ -3187,9 +3188,22 @@ class Component extends DCLogic {
     const _ac = this._activeChallenge();
     const pacct = this._evalAccount(this.state.myTrades || [], _ac ? { type: 'Prop', firm: _ac.token, market: _ac.market, size: _ac.size, phase: _ac.phase } : { type: 'Prop', firm: this.state.acctFirm, size: this.state.acctSize, phase: this.state.acctPhase });
     const mts = acct.scoped;
-    const spans = { D: 864e5, W: 6048e5, M: 26784e5, Y: 31536e6, A: Infinity };
+    // Rolling windows are wrong for a trading journal: a trade logged at 20:00 yesterday
+    // fell out of "D" at 20:00 today, so the dashboard read $0 while the trade was still
+    // sitting in the list. Traders think in calendar periods — today, this week, this
+    // month, this year — so cut on real boundaries instead.
     const nowTs = Date.now();
-    const inRange = mts.filter((t) => nowTs - t.ts <= spans[this.state.range]);
+    const rangeStart = (() => {
+      const n = new Date();
+      switch (this.state.range) {
+        case 'D': return new Date(n.getFullYear(), n.getMonth(), n.getDate()).getTime();
+        case 'W': { const dow = (n.getDay() + 6) % 7; return new Date(n.getFullYear(), n.getMonth(), n.getDate() - dow).getTime(); }   // Monday
+        case 'M': return new Date(n.getFullYear(), n.getMonth(), 1).getTime();
+        case 'Y': return new Date(n.getFullYear(), 0, 1).getTime();
+        default: return -Infinity;
+      }
+    })();
+    const inRange = mts.filter((t) => t.ts >= rangeStart);
     const winsL = inRange.filter((t) => t.pnl > 0), lossL = inRange.filter((t) => t.pnl < 0);
     const gw = winsL.reduce((a, t) => a + t.pnl, 0), gl = -lossL.reduce((a, t) => a + t.pnl, 0);
     const data = {
@@ -3450,7 +3464,9 @@ class Component extends DCLogic {
       clock: this.state.clock, chips, chipLabel: labels[this.state.range],
       tabLabel: String(this.state.tab || '').toUpperCase(),
       pnl: fmt$(Math.round(data.pnl * k)),
-      heroSub: inRange.length ? (Math.round(data.trades * k) + (Math.round(data.trades * k) === 1 ? ' trade logged · avg ' : ' trades logged · avg ') + ((data.avgR >= 0 ? '+' : '') + data.avgR.toFixed(1)) + 'R') : '',
+      heroSub: inRange.length
+        ? (Math.round(data.trades * k) + (Math.round(data.trades * k) === 1 ? ' trade logged · avg ' : ' trades logged · avg ') + ((data.avgR >= 0 ? '+' : '') + data.avgR.toFixed(1)) + 'R')
+        : (mts.length ? ('nothing in this period — ' + mts.length + (mts.length === 1 ? ' trade' : ' trades') + ' on record, try a wider range') : ''),
       tradeCount: Math.round(data.trades * k),
       eqJson, noTrades: !inRange.length,
       ovNoCurve: !inRange.length, ovStartLabel: '$' + Math.round(acct.startBal || 0).toLocaleString(),
