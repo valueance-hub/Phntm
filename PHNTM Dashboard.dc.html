@@ -2354,6 +2354,7 @@ class Component extends DCLogic {
     this._annoROTarget = b;
     this._annoRO = new ResizeObserver(() => {
       clearTimeout(this._annoROT);
+    clearInterval(this._rateTimer);
       this._annoROT = setTimeout(() => this._annoSize(), 60);
     });
     try { this._annoRO.observe(b); } catch (e) {}
@@ -3134,7 +3135,10 @@ class Component extends DCLogic {
           if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
         } catch (e) {}
       });
-      if (changed) { this._loadLocal(); if (this._revealed) { this._stopNumbers(); if (this.state.prog !== 1) this.setState({ prog: 1 }); } }   // a LATER sync refreshes silently; the first one animates
+      // always re-read: state can be older than storage even when this pass changed
+      // nothing, which showed as a note list rendering fewer notes than exist
+      this._loadLocal();
+      if (this._revealed) { this._stopNumbers(); if (this.state.prog !== 1) this.setState({ prog: 1 }); }   // a LATER sync refreshes silently; the first one animates
       // re-seed against the data that just arrived, so synced-in milestones don't pop
       this._badgesReady = false;
       setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 60);
@@ -3294,7 +3298,12 @@ class Component extends DCLogic {
     setTimeout(() => this.setState({ rolled: true }), 1650); // odometer digits roll in
     try { if (sessionStorage.getItem('phntm-welcome') === '1') { sessionStorage.removeItem('phntm-welcome'); this.setState({ welcomeOpen: true }); } } catch (e) {}
     try { if (location.hash === '#welcome') { if (!(this.state.userName || '').trim()) this.setState({ userName: 'Trader' }); this.setState({ welcomeOpen: true }); } } catch (e) {}
-    this._onVis = () => { if (!document.hidden && this.state.prog !== 1 && !this._nrRunning) this._settleNumbers(); };
+    this._onVis = () => {
+      if (document.hidden) return;
+      if (this.state.prog !== 1 && !this._nrRunning) this._settleNumbers();
+      this._szLoadRates();          // the cache is keyed by date, so this is a no-op until a new day
+    };
+    this._rateTimer = setInterval(() => { if (!document.hidden) this._szLoadRates(); }, 36e5);
     document.addEventListener('visibilitychange', this._onVis);
     this._onKeyDoc = (e) => {
       if (!this.state.annoOn) return;
@@ -3310,6 +3319,7 @@ class Component extends DCLogic {
     if (this._onKeyDoc) document.removeEventListener('keydown', this._onKeyDoc, true);
     if (this._annoRO) { try { this._annoRO.disconnect(); } catch (e) {} }
     clearTimeout(this._annoROT);
+    clearInterval(this._rateTimer);
   }
   _revealNumbers() {
     // Play the count-up exactly once, and only when both are true: the intro veil has
