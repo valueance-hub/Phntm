@@ -1634,6 +1634,45 @@ class Component extends DCLogic {
       rd.readAsDataURL(f);
     });
   }
+  async _liftInlineImages() {
+    // One-time repair: notes saved before images went to Storage still embed them as
+    // base64, which is why 11 notes weigh 10.3MB and cannot survive a cloud round trip.
+    // Upload each embedded image, swap in its URL, and re-save the note.
+    const S = window.PHNTM && window.PHNTM.storage;
+    if (!S || this._lifting) return;
+    const notes = this.state.notes || [];
+    const heavy = notes.filter((n) => /src="data:image\//.test((n.bodyHtml || '') + (n.lessonHtml || '')) || (n.anno || '').startsWith('data:'));
+    if (!heavy.length) return;
+    this._lifting = true;
+    try {
+      const swap = async (html) => {
+        if (!html) return html;
+        const srcs = [...new Set((html.match(/src="data:image\/[^"]+"/g) || []).map((s) => s.slice(5, -1)))];
+        let out = html;
+        for (const src of srcs) {
+          const url = await this._cloudImg(src);
+          if (url && url !== src) out = out.split(src).join(url);
+        }
+        return out;
+      };
+      let list = this.state.notes || [];
+      for (const n of heavy) {
+        const bodyHtml = await swap(n.bodyHtml);
+        const lessonHtml = await swap(n.lessonHtml);
+        let anno = n.anno;
+        if (anno && anno.startsWith('data:')) { const u = await this._cloudImg(anno); if (u && u !== anno) anno = u; }
+        const pics = await Promise.all((n.pics || []).map(async (p) => {
+          const src = typeof p === 'string' ? p : p.src;
+          if (!src || !src.startsWith('data:')) return p;
+          const u = await this._cloudImg(src);
+          return typeof p === 'string' ? (u || p) : { ...p, src: u || src };
+        }));
+        list = list.map((x) => x.id === n.id ? { ...x, bodyHtml, lessonHtml, anno, pics } : x);
+        this._saveNotes(list);
+      }
+    } catch (e) {}
+    this._lifting = false;
+  }
   async _cloudImg(dataUrl) {
     try { const S = window.PHNTM && window.PHNTM.storage; if (!S) return dataUrl; return (await S.upload(dataUrl, 'jpg')) || dataUrl; }
     catch (e) { return dataUrl; }
@@ -3138,6 +3177,7 @@ class Component extends DCLogic {
       // always re-read: state can be older than storage even when this pass changed
       // nothing, which showed as a note list rendering fewer notes than exist
       this._loadLocal();
+      setTimeout(() => this._liftInlineImages(), 1200);
       if (this._revealed) { this._stopNumbers(); if (this.state.prog !== 1) this.setState({ prog: 1 }); }   // a LATER sync refreshes silently; the first one animates
       // re-seed against the data that just arrived, so synced-in milestones don't pop
       this._badgesReady = false;
