@@ -93,7 +93,7 @@ button,input,select,textarea{font-family:inherit}
 [contenteditable] hr[data-sel]::before{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.14)}
 [contenteditable] a{color:#9cc4e8;text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 [contenteditable] a:hover{color:#c3dcf2}
-[contenteditable] img{content-visibility:auto}
+
 /* ---- Phone & tablet layer -------------------------------------------------
    Desktop styling is untouched. These rules only fire below 900px and re-flow
    the same markup: gutters shrink, multi-column blocks stack, wide tables turn
@@ -626,7 +626,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
   </section>
 
   <section data-m="pad" style="position:relative;z-index:1;padding:0 48px 8px;animation:fadeUp .6s .06s cubic-bezier(.16,1,.3,1) both">
-    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;align-items:end">
+    <div style="background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:20px;align-items:start">
       <div>
         <label style="font-size:12px;color:#b0b0b0">Balance</label>
         <input placeholder="{{ szBalPlaceholder }}" value="{{ szBal }}" onInput="{{ szSetBal }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 14px;outline:none;transition:border-color .3s,background .3s" style-focus="border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.06)">
@@ -1007,7 +1007,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
           </div>
         </div>
         <sc-if value="{{ hasCatPicks }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px"><sc-for list="{{ catPicks }}" as="c" hint-placeholder-count="0"><button onClick="{{ c.pick }}" style="{{ c.st }}">{{ c.label }}</button></sc-for></div></sc-if>
-        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:20px;padding:8px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:12px">
+        <div style="position:sticky;top:80px;z-index:40;display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:20px;padding:8px;background:rgba(27,27,27,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);border-radius:12px">
           <sc-for list="{{ blockBtns }}" as="b" hint-placeholder-count="3"><button onMouseDown="{{ tbDown }}" onClick="{{ b.apply }}" style="{{ b.st }}">{{ b.label }}</button></sc-for>
           <select onMouseDown="{{ saveSel }}" onChange="{{ setFontSize }}" title="Text size" style="height:32px;background:#1b1b1b;color:#eaeaea;border:1px solid rgba(255,255,255,.18);border-radius:8px;font-family:Archivo,sans-serif;font-size:12.5px;padding:0 8px;cursor:pointer"><option value="">Size</option><option value="2">14</option><option value="3">18</option><option value="5">24</option><option value="7">32</option></select>
           <span style="width:1px;height:20px;background:rgba(255,255,255,.12);margin:0 4px"></span>
@@ -1037,7 +1037,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
           </div>
         </sc-if>
         <div style="position:relative;margin-top:14px" ref="{{ bodyWrapRef }}">
-          <div contenteditable="true" ref="{{ bodyRef }}" onKeyUp="{{ syncFmt }}" onMouseUp="{{ syncFmt }}" onClick="{{ edBodyClick }}" onDoubleClick="{{ edBodyDbl }}" onKeyDown="{{ edBodyKey }}" onInput="{{ edBodyInput }}" onDragStart="{{ edDragStart }}" onDragEnd="{{ edDragEnd }}" onPointerDown="{{ edImgDown }}" style="min-height:150px;font-size:15px;line-height:1.7;color:#c8c8c8;font-family:'Archivo',sans-serif;outline:none;padding:4px 2px" data-ph="Write freely — timestamps, takeaways, ideas…"></div>
+          <div contenteditable="true" ref="{{ bodyRef }}" onKeyUp="{{ syncFmt }}" onMouseUp="{{ syncFmt }}" onClick="{{ edBodyClick }}" onDoubleClick="{{ edBodyDbl }}" onKeyDown="{{ edBodyKey }}" onInput="{{ edBodyInput }}" onDragStart="{{ edDragStart }}" onDragEnd="{{ edDragEnd }}" onPointerDown="{{ edImgDown }}" style="min-height:150px;font-size:15px;line-height:1.7;color:#c8c8c8;font-family:'Archivo',sans-serif;outline:none;padding:4px 2px 24px" data-ph="Write freely — timestamps, takeaways, ideas…"></div>
           <canvas ref="{{ annoRef }}" onPointerDown="{{ annoStart }}" onPointerMove="{{ annoMove }}" onPointerUp="{{ annoEnd }}" onPointerLeave="{{ annoEnd }}" style="{{ annoCanvasStyle }}"></canvas>
           <sc-if value="{{ annoSelOpen }}" hint-placeholder-val="{{ false }}">
             <div data-anno-chip="1" onClick="{{ stop }}" style="{{ annoSelStyle }}">
@@ -1553,7 +1553,7 @@ class Component extends DCLogic {
     const insert = (src) => document.execCommand('insertHTML', false,
       '<figure data-fig draggable="true" style="display:inline-block;vertical-align:top;width:60%;margin:12px 8px 12px 0">' +
         '<figcaption data-cap></figcaption>' +
-        '<img src="' + src + '" style="width:100%;display:block" loading="lazy" decoding="async">' +
+        '<img src="' + src + '" style="width:100%;display:block" decoding="async">' +
       '</figure>');
     if (inner) { insert(inner); this._syncFmt(); return; }
     for (const f of files) {
@@ -1567,12 +1567,37 @@ class Component extends DCLogic {
     }
     this._syncFmt();
   }
+  async _edInsertFile(f) {
+    const local = await this._shrinkFile(f, 2400);
+    if (!local) return;
+    const fig = (src) => '<figure data-fig draggable="true" style="display:inline-block;vertical-align:top;width:60%;margin:12px 8px 12px 0">' +
+      '<figcaption data-cap></figcaption>' +
+      '<img src="' + src + '" style="width:100%;display:block" decoding="async">' +
+      '</figure>';
+    document.execCommand('insertHTML', false, fig(local));
+    this._syncFmt();
+    try {
+      const url = await this._cloudImg(local);
+      if (url) {
+        const root = this._activeEditable || this._bodyEl;
+        if (root) root.querySelectorAll('img[src="' + local + '"]').forEach((im) => { im.src = url; });
+      }
+    } catch (e) {}
+  }
   _edPaste(ev) {
     try {
       const dt = ev.clipboardData || (window.event && window.event.clipboardData);
       if (!dt) return;
+      const files = Array.from((dt.files && dt.files.length) ? dt.files : (dt.items ? Array.from(dt.items).filter((i) => i.kind === 'file').map((i) => i.getAsFile()) : [])).filter(Boolean);
+      const imgs = files.filter((f) => /^image\//.test(f.type));
+      if (imgs.length) {
+        // own the whole paste — otherwise the browser adds its own copy of the file
+        ev.preventDefault();
+        imgs.forEach((f) => this._edInsertFile(f));
+        return;
+      }
       const html = dt.getData('text/html');
-      if (!html) return; // plain text and image files are handled safely by default
+      if (!html) return; // plain text is handled safely by default
       ev.preventDefault();
       const safe = this._clean(html);
       document.execCommand('insertHTML', false, safe);
@@ -1642,6 +1667,9 @@ class Component extends DCLogic {
   _normaliseFigures(rootArg) {
     const root = rootArg || this._bodyEl; if (!root) return;
     root.querySelectorAll('figure[data-fig]').forEach((f) => { if (f.getAttribute('draggable') !== 'true') f.setAttribute('draggable', 'true'); });
+    // stored notes still carry loading="lazy" — inside a scroller these never enter the
+    // viewport, so they never load and contribute zero height
+    root.querySelectorAll('img[loading]').forEach((im) => im.removeAttribute('loading'));
     root.querySelectorAll('img').forEach((im) => {
       if (im.closest('figure[data-fig]')) return;
       const fig = document.createElement('figure');
@@ -1689,6 +1717,19 @@ class Component extends DCLogic {
     return (n && n.closest) ? n.closest('figcaption[data-cap]') : null;
   }
   _edBodyKey(ev) {
+    // a selected picture should answer to the Delete key like anything else
+    if ((ev.key === 'Delete' || ev.key === 'Backspace') && this._selImgEl) {
+      const s = window.getSelection();
+      const collapsed = !s || !s.rangeCount || s.getRangeAt(0).collapsed;
+      if (collapsed) { ev.preventDefault(); this._edImgRemoveInText(); return; }
+    }
+    // While the drawing layer is open it owns undo — otherwise the browser undoes the
+    // TEXT and the stroke you just drew stays on the canvas.
+    if ((ev.metaKey || ev.ctrlKey) && String(ev.key).toLowerCase() === 'z' && this.state.annoOn) {
+      ev.preventDefault(); ev.stopPropagation();
+      this._annoUndo();
+      return;
+    }
     // A caption is a one-line title. Left alone, Enter inserts a <br> inside the
     // figcaption, which grows the caption box and shoves the image down.
     const sel = window.getSelection();
@@ -1713,7 +1754,71 @@ class Component extends DCLogic {
       sel.removeAllRanges(); sel.addRange(r);
     }
   }
+  _autoList() {
+    // typing "- " (or "* ") at the start of a line turns it into a bullet — the shortcut
+    // every editor has, so nobody has to reach for the toolbar mid-sentence
+    try {
+      const s = window.getSelection();
+      if (!s || !s.rangeCount || !s.isCollapsed) return;
+      const r = s.getRangeAt(0);
+      const node = r.startContainer;
+      if (!node || node.nodeType !== 3) return;
+      const root = this._edRoot(node.parentNode);
+      if (!root) return;
+      if (node.parentNode && node.parentNode.closest('li,figcaption')) return;   // already a list
+      const text = node.nodeValue || '';
+      if (r.startOffset !== 2 || !/^[-*]\s$/.test(text.slice(0, 2))) return;
+      // Build the list while the selection is still valid — emptying the text node first
+      // detaches the range, so execCommand silently does nothing and the characters are
+      // simply lost. Select the marker, convert, then delete it.
+      const sel = document.createRange();
+      sel.setStart(node, 0); sel.setEnd(node, 2);
+      s.removeAllRanges(); s.addRange(sel);
+      document.execCommand('insertUnorderedList');
+      // the node may have been re-parented into the new <li>
+      const li = (s.anchorNode && s.anchorNode.parentElement) ? s.anchorNode.parentElement.closest('li') : null;
+      const target = li ? (li.firstChild && li.firstChild.nodeType === 3 ? li.firstChild : null) : node;
+      if (target && /^[-*]\s/.test(target.nodeValue || '')) {
+        target.nodeValue = target.nodeValue.slice(2);
+        const after = document.createRange();
+        after.setStart(target, 0); after.collapse(true);
+        s.removeAllRanges(); s.addRange(after);
+      } else {
+        document.execCommand('delete');
+      }
+      this._syncFmt();
+    } catch (e) {}
+  }
+  _keepCaretVisible() {
+    // The editor sits inside its own fixed, full-screen scroll container, so scrolling
+    // the WINDOW does nothing useful — it hits max scroll while the caret stays far
+    // below the fold. Find the actual scroller and move that instead.
+    try {
+      const s = window.getSelection(); if (!s || !s.rangeCount) return;
+      const range = s.getRangeAt(0);
+      const r = range.getClientRects()[0] || range.getBoundingClientRect();
+      if (!r || (!r.top && !r.bottom)) return;
+      const margin = 120;
+      let node = range.startContainer;
+      if (node && node.nodeType === 3) node = node.parentNode;
+      let sc = null;
+      for (let n = node; n && n !== document.body; n = n.parentElement) {
+        const cs = getComputedStyle(n);
+        if (/auto|scroll/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 1) { sc = n; break; }
+      }
+      if (sc) {
+        const b = sc.getBoundingClientRect();
+        if (r.bottom > b.bottom - margin) sc.scrollTop += r.bottom - (b.bottom - margin);
+        else if (r.top < b.top + margin) sc.scrollTop -= (b.top + margin) - r.top;
+        return;
+      }
+      if (r.bottom > window.innerHeight - margin) window.scrollBy({ top: r.bottom - (window.innerHeight - margin), behavior: 'auto' });
+      else if (r.top < margin) window.scrollBy({ top: r.top - margin, behavior: 'auto' });
+    } catch (e) {}
+  }
   _edBodyInput(ev) {
+    this._keepCaretVisible();
+    this._autoList();
     const r = (ev && ev.target && ev.target.closest) ? ev.target.closest('[contenteditable="true"]') : null;
     [r, this._bodyEl, this._lessonEl].filter(Boolean).forEach((n, i, a) => { if (a.indexOf(n) === i) this._pruneFigures(n); });
     // contenteditable leaves a stray <br> behind when you delete the last character,
@@ -1751,11 +1856,11 @@ class Component extends DCLogic {
         // vertically swallowed drops aimed at the text below — the gap under a row is
         // barely 12px, well inside a 28px reach — and made a picture impossible to move
         // out of a pair.
-        let best = null, bestD = 26;
+        let best = null, bestD = Infinity;
         root.querySelectorAll('figure[data-fig]').forEach((f) => {
           if (f === this._dragFig) return;
           const b = f.getBoundingClientRect();
-          if (ev.clientY < b.top || ev.clientY > b.bottom) return;   // must be level with it
+          if (ev.clientY < b.top - 8 || ev.clientY > b.bottom + 8) return;   // must be level with it
           const dx = ev.clientX < b.left ? b.left - ev.clientX : (ev.clientX > b.right ? ev.clientX - b.right : 0);
           if (dx < bestD) { bestD = dx; best = f; }
         });
@@ -1764,7 +1869,8 @@ class Component extends DCLogic {
     }
     if (!t || t === this._dragFig) return null;
     const r = t.getBoundingClientRect();
-    return { fig: t, after: ev.clientX > r.left + r.width / 2 };
+    const after = ev.clientX >= r.right ? true : (ev.clientX <= r.left ? false : ev.clientX > r.left + r.width / 2);
+    return { fig: t, after: after };
   }
   _paintFigHint(hit) {
     if (this._figHint && this._figHint !== (hit && hit.fig)) { this._figHint.style.boxShadow = ''; this._figHint = null; }
@@ -2122,6 +2228,19 @@ class Component extends DCLogic {
     ctx.lineTo(last.x, last.y);
     ctx.stroke();
   }
+  _fittedStrokes() {
+    // Painting and hit-testing must share one coordinate space, or a stroke is clickable
+    // somewhere other than where you can see it.
+    const cw = this._annoW || 1, ch = this._annoH || 1;
+    return (this._annoStrokes || []).map((st) => {
+      if (!st.cw || !st.ch || (st.cw === cw && st.ch === ch)) return st;
+      // Width only: a document reflows to a width and its height follows, so the width
+      // ratio is the true old→new mapping. Involving height let a note whose image had
+      // not loaded (178px tall) shrink the whole drawing to 7% in the corner.
+      const k = cw / st.cw;
+      return { ...st, pts: (st.pts || []).map((p) => ({ ...p, x: p.x * k, y: p.y * k })) };
+    });
+  }
   _annoPaint() {
     const c = this._annoEl; if (!c) return;
     const dpr = this._annoDPR(), ctx = c.getContext('2d');
@@ -2131,7 +2250,7 @@ class Component extends DCLogic {
     ctx.globalCompositeOperation = 'source-over';
     if (this._annoBase) { try { ctx.drawImage(this._annoBase, 0, 0, this._annoW, this._annoH); } catch (e) {} }
     const sel = this.state.annoSel;
-    (this._annoStrokes || []).forEach((st, i) => {
+    this._fittedStrokes().forEach((st, i) => {
       if (i === sel && !st.erase) {
         // selection halo, drawn under the stroke itself
         this._annoDraw(ctx, { color: 'rgba(255,255,255,.32)', width: (st.width || 2) + 9, erase: false, pts: st.pts });
@@ -2144,7 +2263,7 @@ class Component extends DCLogic {
     if (!this._annoEl) return;
     e.preventDefault();
     this._annoStrokes = this._annoStrokes || [];
-    this._annoStrokes.push({
+    this._annoStrokes.push({ cw: this._annoW, ch: this._annoH,
       color: this.state.penColor || '#ffffff',
       width: this.state.annoErase ? 24 : 2.4,
       erase: !!this.state.annoErase,
@@ -2180,7 +2299,7 @@ class Component extends DCLogic {
     return Math.hypot(px - (a.x + t * dx), py - (a.y + t * dy));
   }
   _annoHit(x, y) {
-    const strokes = this._annoStrokes || [];
+    const strokes = this._fittedStrokes();
     for (let i = strokes.length - 1; i >= 0; i--) {
       const st = strokes[i]; if (st.erase) continue;
       const pts = st.pts || []; const r = Math.max(9, (st.width || 2) * 2.2);
@@ -2225,8 +2344,51 @@ class Component extends DCLogic {
     this._annoPaint();
     this._edSet('anno', '');
   }
+  _annoWatch() {
+    // Watch the body itself rather than individual images: a decode, a reflow, a font
+    // swap or a text edit all change the height, and some of those fire no event at all.
+    const b = this._bodyEl; if (!b) return;
+    if (this._annoRO && this._annoROTarget === b) return;
+    if (this._annoRO) { try { this._annoRO.disconnect(); } catch (e) {} }
+    if (typeof ResizeObserver === 'undefined') return;
+    this._annoROTarget = b;
+    this._annoRO = new ResizeObserver(() => {
+      clearTimeout(this._annoROT);
+      this._annoROT = setTimeout(() => this._annoSize(), 60);
+    });
+    try { this._annoRO.observe(b); } catch (e) {}
+  }
+  _backfillStrokeSizes() {
+    // Strokes saved before this build carry no canvas size, so they paint at raw
+    // coordinates and land wherever the old layout put them. The flattened PNG was
+    // rendered at exactly that size — decode it purely to measure. This must stay
+    // separate from _annoBase: assigning it would paint every stroke twice.
+    if (this._backfilling) return;
+    const strokes = this._annoStrokes || [];
+    if (!strokes.length || !strokes.some((s) => !s.cw || !s.ch)) return;
+    const ed = this.state.ed;
+    const rec = (this.state.notes || []).find((n) => ed && String(n.id) === String(ed.id));
+    const png = (ed && ed.anno) || (rec && rec.anno);
+    if (!png) return;
+    this._backfilling = true;
+    const img = new Image();
+    img.onload = () => {
+      const dpr = this._annoDPR();
+      const bw = img.naturalWidth / dpr, bh = img.naturalHeight / dpr;
+      if (bw > 1 && bh > 1) {
+        this._annoStrokes = (this._annoStrokes || []).map((st) => (st.cw && st.ch) ? st : { ...st, cw: bw, ch: bh });
+        this._edSet('annoStrokes', this._annoStrokes);
+        this._annoPaint();
+      }
+      this._backfilling = false;
+    };
+    img.onerror = () => { this._backfilling = false; };
+    img.src = png;
+  }
   _annoSize() {
     const c = this._annoEl, b = this._bodyEl; if (!c || !b) return;
+    this._annoWatch();          // before any early return, or a later growth is missed
+    this._backfillStrokeSizes();
     const w = b.clientWidth, h = Math.max(b.scrollHeight, b.clientHeight, 150);
     const dpr = this._annoDPR(), pw = Math.round(w * dpr), ph = Math.round(h * dpr);
     if (c.width === pw && c.height === ph) return;
@@ -2236,17 +2398,35 @@ class Component extends DCLogic {
     const data = this._annoLegacy ? (this.state.ed && this.state.ed.anno) : null;
     if (data && !this._annoBase) {
       const img = new Image();
-      img.onload = () => { this._annoBase = img; this._annoPaint(); };
+      img.onload = () => {
+        this._annoBase = img;
+        // Strokes saved before this build carry no canvas size, so they paint at raw
+        // coordinates and land wherever the old layout put them. The flattened PNG was
+        // rendered at that exact size — recover it and stamp the strokes once.
+        const bw = img.naturalWidth / this._annoDPR(), bh = img.naturalHeight / this._annoDPR();
+        if (bw > 1 && bh > 1) {
+          let stamped = false;
+          this._annoStrokes = (this._annoStrokes || []).map((st) => {
+            if (st.cw && st.ch) return st;
+            stamped = true;
+            return { ...st, cw: bw, ch: bh };
+          });
+          if (stamped) this._edSet('annoStrokes', this._annoStrokes);
+        }
+        this._annoPaint();
+      };
       img.src = data;
     } else this._annoPaint();
   }
   _toggleAnno() {
     const on = !this.state.annoOn;
-    this.setState({ annoOn: on });
+    // leaving the pad has to clear everything it owns — an erase mode or a lingering
+    // selection left the editor still behaving as though you were drawing
+    this.setState(on ? { annoOn: true } : { annoOn: false, annoErase: false, annoSel: null });
     // hide the text cursor while drawing — clicking the button focuses the body and
     // left a caret blinking as though it were waiting for typing
     const el = this._bodyEl;
-    if (el) { el.style.caretColor = on ? 'transparent' : ''; if (on) { try { el.blur(); } catch (e) {} } }
+    if (el) { el.style.caretColor = on ? 'transparent' : ''; if (on) { try { el.blur(); } catch (e) {} } else { try { el.focus(); } catch (e) {} } }
     if (on) setTimeout(() => this._annoSize(), 0);
   }
   _saveSel() { try { const s = window.getSelection(); if (s && s.rangeCount) { const r = s.getRangeAt(0), t = this._activeEditable || this._bodyEl; if (t && t.contains(r.commonAncestorContainer)) this._savedRange = r.cloneRange(); } } catch (e) {} }
@@ -2449,9 +2629,10 @@ class Component extends DCLogic {
     this._saveTrades(list.filter((t) => t.id !== id)); this.animateNumbers();
     if (removed) { this.setState({ lastDeleted: removed }); clearTimeout(this._undoT); this._undoT = setTimeout(() => this.setState({ lastDeleted: null }), 7000); }
   }
-  _undoDelete() { const d = this.state.lastDeleted; if (!d) return; clearTimeout(this._undoT); this._saveTrades([...(this.state.myTrades || []), d]); this.setState({ lastDeleted: null }); this.animateNumbers(); }
-  _clearAllTrades() { const all = this.state.myTrades || []; if (!all.length) return; this._saveTrades([]); this.setState({ lastClearedAll: all }); clearTimeout(this._undoAllT); this._undoAllT = setTimeout(() => this.setState({ lastClearedAll: null }), 9000); this.animateNumbers(); }
-  _undoClearAll() { const a = this.state.lastClearedAll; if (!a) return; clearTimeout(this._undoAllT); this._saveTrades(a); this.setState({ lastClearedAll: null }); this.animateNumbers(); }
+  _undoDelete() { const d = this.state.lastDeleted; if (!d) return; this._untombstone('phntm-my-trades-v1', d.id); clearTimeout(this._undoT); this._saveTrades([...(this.state.myTrades || []), d]); this.setState({ lastDeleted: null }); this.animateNumbers(); }
+  _clearAllTrades() {
+    this._tombstone('phntm-my-trades-v1', (this.state.myTrades || []).map((t) => t.id)); const all = this.state.myTrades || []; if (!all.length) return; this._saveTrades([]); this.setState({ lastClearedAll: all }); clearTimeout(this._undoAllT); this._undoAllT = setTimeout(() => this.setState({ lastClearedAll: null }), 9000); this.animateNumbers(); }
+  _undoClearAll() { const a = this.state.lastClearedAll; if (!a) return; this._untombstone('phntm-my-trades-v1', a.map((t) => t.id)); clearTimeout(this._undoAllT); this._saveTrades(a); this.setState({ lastClearedAll: null }); this.animateNumbers(); }
   _acctToPick(key) { if (key === 'Backtest') return 'Backtest'; return (!key || key === 'Live') ? 'Live' : 'Challenge'; }
   _saveRules(list) { this.setState({ tradeRules: list }); this._persist('phntm-rules-v1', JSON.stringify(list)); }
   _addRule() { const n = (this.state.newRule || '').trim(); if (!n) return; this._saveRules([...(this.state.tradeRules || []), n]); this.setState({ newRule: '' }); }
@@ -2934,6 +3115,7 @@ class Component extends DCLogic {
       // cloud copy is what destroyed a freshly-logged trade whenever its own upload had
       // not landed yet: the stale cloud array simply replaced the good local one.
       const MERGE = { 'phntm-my-trades-v1': 1, 'phntm-notes-v1': 1, 'phntm-payouts-v1': 1 };
+      this._pruneTombstones();
       const tombs = this._tombstones();
       keys.forEach((k) => {
         try {
@@ -2961,7 +3143,35 @@ class Component extends DCLogic {
   _tombstones() {
     try { return JSON.parse(localStorage.getItem('phntm-deleted-v1') || '{}'); } catch (e) { return {}; }
   }
+  _pruneTombstones() {
+    // an id that is still present locally was restored after its delete — an undo before
+    // _untombstone existed. Drop the stale entry so the merge stops re-deleting it.
+    const all = this._tombstones();
+    let dirty = false;
+    for (const [key, ids] of Object.entries(all)) {
+      let live = [];
+      try { live = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) {}
+      if (!Array.isArray(live) || !live.length) continue;
+      const present = new Set(live.map((r) => String(r && r.id)));
+      const next = (ids || []).filter((x) => !present.has(String(x)));
+      if (next.length !== (ids || []).length) { all[key] = next; dirty = true; }
+    }
+    if (dirty) {
+      const s = JSON.stringify(all);
+      try { localStorage.setItem('phntm-deleted-v1', s); } catch (e) {}
+      this._pushCloud('phntm-deleted-v1', s);
+    }
+  }
   // A pure union would resurrect anything you deleted, so a delete records the id.
+  _untombstone(key, ids) {
+    // a restore must withdraw the tombstone, or the next merge deletes it again
+    const all = this._tombstones();
+    const dead = new Set((Array.isArray(ids) ? ids : [ids]).map(String));
+    all[key] = (all[key] || []).filter((x) => !dead.has(String(x)));
+    const s = JSON.stringify(all);
+    try { localStorage.setItem('phntm-deleted-v1', s); } catch (e) {}
+    this._pushCloud('phntm-deleted-v1', s);
+  }
   _tombstone(key, ids) {
     const all = this._tombstones();
     const set = new Set(all[key] || []);
@@ -3086,12 +3296,20 @@ class Component extends DCLogic {
     try { if (location.hash === '#welcome') { if (!(this.state.userName || '').trim()) this.setState({ userName: 'Trader' }); this.setState({ welcomeOpen: true }); } } catch (e) {}
     this._onVis = () => { if (!document.hidden && this.state.prog !== 1 && !this._nrRunning) this._settleNumbers(); };
     document.addEventListener('visibilitychange', this._onVis);
+    this._onKeyDoc = (e) => {
+      if (!this.state.annoOn) return;
+      if ((e.metaKey || e.ctrlKey) && String(e.key).toLowerCase() === 'z') { e.preventDefault(); this._annoUndo(); }
+    };
+    document.addEventListener('keydown', this._onKeyDoc, true);
     this._cloudSync().then(() => { this._dataReady = true; this._revealNumbers(); }, () => { this._dataReady = true; this._revealNumbers(); });
   }
   componentWillUnmount() {
     clearInterval(this._ck); this._stopNumbers();
     [this._undoT, this._undoAllT, this._undoCT, this._as, this._revealT, this._nrSafety].forEach((t) => clearTimeout(t));
     if (this._onVis) document.removeEventListener('visibilitychange', this._onVis);
+    if (this._onKeyDoc) document.removeEventListener('keydown', this._onKeyDoc, true);
+    if (this._annoRO) { try { this._annoRO.disconnect(); } catch (e) {} }
+    clearTimeout(this._annoROT);
   }
   _revealNumbers() {
     // Play the count-up exactly once, and only when both are true: the intro veil has
@@ -3474,7 +3692,6 @@ class Component extends DCLogic {
       acctFail: acct.isProp ? String(acct.mll) : '',
       acctFailLabel: 'DRAWDOWN LIMIT',
       acctGoalLabel: 'GOAL',
-      setGoalLabel: (e) => this._setActCfgStr('goalLabel', e.target.value),
       vitalsBig: [
         ['Win rate', !inRange.length ? '—' : (data.wr * k).toFixed(1) + '%', '.2s'],
         ['Profit factor', (!inRange.length || gl === 0) ? '—' : (data.pf * k).toFixed(2), '.25s'],
@@ -4144,7 +4361,7 @@ class Component extends DCLogic {
           setEdCat: (e) => this._edSet('cat', e.target.value),
           setEdSource: (e) => this._edSet('source', e.target.value),
           catPicks, hasCatPicks: catPicks.length > 0,
-          bodyRef: (el) => { this._bodyEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._normaliseFigures(); this._pruneFigures(el); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
+          bodyRef: (el) => { this._bodyEl = el; if (el) { this._annoWatch(); el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._normaliseFigures(); this._pruneFigures(el); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
           lessonRef: (el) => { this._lessonEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondragstart = (e) => this._edDragStart(e); el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); el.ondragend = () => { this._clearFigHint(); this._dragFig = null; setTimeout(() => this._unnestFigures(), 0); }; el.oninput = () => this._edBodyInput(); el.onkeydown = (e) => this._edBodyKey(e); el.ondblclick = (e) => { this._edBodyDbl(e); if (!e.defaultPrevented) this._wordAt(e.clientX, e.clientY); }; el.onclick = (e) => { this._edBodyClick(e); if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; } if (el && this._lessonMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.lessonHtml) || ''); this._normaliseFigures(el); this._pruneFigures(el); this._lessonMountedFor = this._edKey; } },
           syncFmt: () => this._syncFmt(),
           insertDivider: () => this._edInsertHr(),
@@ -4309,7 +4526,7 @@ class Component extends DCLogic {
           showDeleteAllBtn: (this.state.notes || []).length > 0 && !this.state.notesDelAllConfirm,
           askDeleteAllNotes: () => this.setState({ notesDelAllConfirm: true }),
           cancelDeleteAllNotes: () => this.setState({ notesDelAllConfirm: false }),
-          confirmDeleteAllNotes: () => { this._saveNotes([]); this.setState({ notesDelAllConfirm: false }); },
+          confirmDeleteAllNotes: () => { this._tombstone('phntm-notes-v1', (this.state.notes || []).map((n) => n.id)); this._saveNotes([]); this.setState({ notesDelAllConfirm: false }); },
           notesEmpty: shown.length === 0,
           noteCards: shown.map((n) => {
             const yt = this._ytId(n.source);
@@ -4536,7 +4753,26 @@ class Component extends DCLogic {
       bedDotStyle: 'width:8px;height:8px;transform:rotate(45deg);flex:none;background:' + (bedEarly ? '#fff' : 'rgba(255,255,255,.3)'),
       sleepBarStyle: 'height:3px;border-radius:2px;background:#fff;width:' + sleepPct + '%;transform-origin:left;animation:growBar 1s .2s cubic-bezier(.16,1,.3,1) both',
       lightbox: !!this.state.lightbox,
-      lightboxImg: this.state.lightbox ? React.createElement('img', { src: this.state.lightbox, onClick: (e) => e.stopPropagation(), style: { maxHeight: '90vh', maxWidth: '94vw', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 40px 120px rgba(0,0,0,.8)', cursor: 'default' } }) : null,
+      lightboxImg: this.state.lightbox ? React.createElement('img', {
+        src: this.state.lightbox,
+        onClick: (e) => e.stopPropagation(),
+        // upscale small images to fill the binding dimension, but keep the box hugging
+        // the picture so the radius and shadow frame the image, not dead space
+        // a cached image fires no load event, so size it the moment the node exists —
+        // otherwise it paints full width first and only snaps down on a later decode
+        ref: (im) => {
+          if (!im) return;
+          const fit = () => {
+            const nw = im.naturalWidth || 0, nh = im.naturalHeight || 0;
+            if (!nw || !nh) return false;
+            im.style.width = Math.round(Math.min(window.innerWidth * 0.96, window.innerHeight * 0.94 * (nw / nh))) + 'px';
+            im.style.visibility = 'visible';
+            return true;
+          };
+          if (!fit()) { im.style.visibility = 'hidden'; im.onload = fit; }
+        },
+        style: { maxHeight: '94vh', maxWidth: '96vw', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', boxShadow: '0 40px 120px rgba(0,0,0,.8)', cursor: 'default' },
+      }) : null,
       closeLightbox: () => this.setState({ lightbox: '' }),
       eatClick: (e) => { e.stopPropagation(); if (this.state.acctMenuOpen) this.setState({ acctMenuOpen: false }); },
       commitTrade: () => {
