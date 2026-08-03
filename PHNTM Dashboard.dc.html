@@ -1165,7 +1165,18 @@ class Component extends DCLogic {
     // and if the open editor was using it, drop the stale selection too
     if (this.state.ed && (this.state.ed.cat || '') === name) this.setState({ ed: { ...this.state.ed, cat: '' } });
   }
-  _saveNotes(list) { this.setState({ notes: list }); this._persist('phntm-notes-v1', JSON.stringify(list)); }
+  _saveNotes(list) {
+    // stamp each record so the merge can tell which copy is actually newer
+    const now = Date.now();
+    const prev = this.state.notes || [];
+    const stamped = (list || []).map((n) => {
+      const was = prev.find((p) => p.id === n.id);
+      const same = was && JSON.stringify({ ...was, mts: 0 }) === JSON.stringify({ ...n, mts: 0 });
+      return same ? { ...n, mts: was.mts || now } : { ...n, mts: now };
+    });
+    this.setState({ notes: stamped });
+    this._persist('phntm-notes-v1', JSON.stringify(stamped));
+  }
   _openEditor(note) {
     this._edKey = Date.now();
     // fresh drawing session per note: strokes reset, saved artwork becomes the base layer
@@ -3251,9 +3262,18 @@ class Component extends DCLogic {
   _mergeById(localArr, cloudArr, tombIds) {
     const dead = new Set((tombIds || []).map(String));
     const out = new Map();
-    // cloud first, then local — a local edit is the more recent intent
-    (Array.isArray(cloudArr) ? cloudArr : []).forEach((r) => { if (r && !dead.has(String(r.id))) out.set(String(r.id), r); });
-    (Array.isArray(localArr) ? localArr : []).forEach((r) => { if (r && !dead.has(String(r.id))) out.set(String(r.id), r); });
+    // The newer EDIT wins, not whichever side happens to be local: preferring local
+    // unconditionally meant a note edited on one device was overwritten by an older
+    // copy sitting on another, so the edit silently disappeared.
+    const take = (r) => {
+      if (!r || dead.has(String(r.id))) return;
+      const k = String(r.id), cur = out.get(k);
+      if (!cur) { out.set(k, r); return; }
+      const a = +(r.mts || r.ts || 0), b = +(cur.mts || cur.ts || 0);
+      if (a >= b) out.set(k, r);   // ties fall to whichever is applied last (local)
+    };
+    (Array.isArray(cloudArr) ? cloudArr : []).forEach(take);
+    (Array.isArray(localArr) ? localArr : []).forEach(take);
     return [...out.values()].sort((a, b) => (b.ts || 0) - (a.ts || 0));
   }
   async _migrateLocalToCloud() {
