@@ -28,6 +28,9 @@ a{color:#eaeaea;text-decoration:none}a:hover{color:#fff}
 ::selection{background:rgba(255,255,255,.2)}
 input{outline:none}
 input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{-webkit-text-fill-color:#fff;-webkit-box-shadow:0 0 0 1000px #171717 inset;caret-color:#fff;transition:background-color 9999s ease-in-out 0s}
+/* Safari paints a filled-looking field on load even when it is empty — strip the
+   highlight so an untouched password reads as empty, which is what it is */
+input:-internal-autofill-selected{-webkit-box-shadow:0 0 0 1000px #171717 inset !important;background-image:none !important;background-color:#171717 !important;color:#fff !important}
 @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes spinRing{to{transform:rotate(360deg)}}
@@ -65,6 +68,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
   <div style="position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden"><span style="position:absolute;top:0;left:0;width:1px;height:1px;border-radius:50%;background:transparent;box-shadow:7vw 14vh 0 0 rgba(255,255,255,0.5),31vw 9vh 0 0 rgba(255,255,255,0.5),58vw 12vh 0 0 rgba(255,255,255,0.5),83vw 54vh 0 0 rgba(255,255,255,0.5),22vw 44vh 0 0 rgba(255,255,255,0.5),68vw 88vh 0 0 rgba(255,255,255,0.5),44vw 21vh 0 0 rgba(255,255,255,0.5),94vw 44vh 0 0 rgba(255,255,255,0.5),12vw 62vh 0 0 rgba(255,255,255,0.5),76vw 25vh 0 0 rgba(255,255,255,0.5),38vw 71vh 0 0 rgba(255,255,255,0.5),61vw 33vh 0 0 rgba(255,255,255,0.5),3vw 29vh 0 0 rgba(255,255,255,0.5),49vw 58vh 0 0 rgba(255,255,255,0.5),87vw 37vh 0 0 rgba(255,255,255,0.5),27vw 16vh 0 0 rgba(255,255,255,0.5),70vw 61vh 0 0 rgba(255,255,255,0.5),17vw 76vh 0 0 rgba(255,255,255,0.5);animation:twinkle0 4.2s 0s ease-in-out infinite"></span><span style="position:absolute;top:0;left:0;width:1px;height:1px;border-radius:50%;background:transparent;box-shadow:19vw 31vh 0 0 rgba(255,255,255,0.34),52vw 67vh 0 0 rgba(255,255,255,0.34),89vw 16vh 0 0 rgba(255,255,255,0.34),4vw 78vh 0 0 rgba(255,255,255,0.34),35vw 66vh 0 0 rgba(255,255,255,0.34),71vw 73vh 0 0 rgba(255,255,255,0.34),26vw 78vh 0 0 rgba(255,255,255,0.34),80vw 36vh 0 0 rgba(255,255,255,0.34),15vw 88vh 0 0 rgba(255,255,255,0.34),48vw 86vh 0 0 rgba(255,255,255,0.34),64vw 19vh 0 0 rgba(255,255,255,0.34),97vw 72vh 0 0 rgba(255,255,255,0.34),9vw 52vh 0 0 rgba(255,255,255,0.34),43vw 41vh 0 0 rgba(255,255,255,0.34),74vw 14vh 0 0 rgba(255,255,255,0.34),56vw 92vh 0 0 rgba(255,255,255,0.34),30vw 35vh 0 0 rgba(255,255,255,0.34),85vw 66vh 0 0 rgba(255,255,255,0.34);animation:twinkle1 5.6s 1.3s ease-in-out infinite"></span><span style="position:absolute;top:0;left:0;width:1px;height:1px;border-radius:50%;background:transparent;box-shadow:12vw 24vh 0 0 rgba(255,255,255,0.24),41vw 52vh 0 0 rgba(255,255,255,0.24),57vw 35vh 0 0 rgba(255,255,255,0.24),86vw 82vh 0 0 rgba(255,255,255,0.24),29vw 61vh 0 0 rgba(255,255,255,0.24),73vw 47vh 0 0 rgba(255,255,255,0.24),9vw 41vh 0 0 rgba(255,255,255,0.24),50vw 8vh 0 0 rgba(255,255,255,0.24),92vw 28vh 0 0 rgba(255,255,255,0.24),33vw 92vh 0 0 rgba(255,255,255,0.24),66vw 63vh 0 0 rgba(255,255,255,0.24),21vw 7vh 0 0 rgba(255,255,255,0.24),46vw 74vh 0 0 rgba(255,255,255,0.24),79vw 21vh 0 0 rgba(255,255,255,0.24),5vw 66vh 0 0 rgba(255,255,255,0.24),62vw 80vh 0 0 rgba(255,255,255,0.24),37vw 27vh 0 0 rgba(255,255,255,0.24),96vw 57vh 0 0 rgba(255,255,255,0.24);animation:twinkle2 7.1s 2.6s ease-in-out infinite"></span><span style="position:absolute;top:0;left:0;width:1px;height:1px;border-radius:50%;background:transparent;box-shadow:24vw 19vh 0 0.5px rgba(255,255,255,0.8),66vw 58vh 0 0.5px rgba(255,255,255,0.8),91vw 69vh 0 0.5px rgba(255,255,255,0.8),41vw 82vh 0 0.5px rgba(255,255,255,0.8),54vw 48vh 0 0.5px rgba(255,255,255,0.8),16vw 54vh 0 0.5px rgba(255,255,255,0.8),78vw 9vh 0 0.5px rgba(255,255,255,0.8),46vw 36vh 0 0.5px rgba(255,255,255,0.8),8vw 88vh 0 0.5px rgba(255,255,255,0.8),88vw 48vh 0 0.5px rgba(255,255,255,0.8),34vw 49vh 0 0.5px rgba(255,255,255,0.8),69vw 31vh 0 0.5px rgba(255,255,255,0.8);animation:twinkle3 3.4s .7s ease-in-out infinite"></span></div>
   <sc-if value="{{ loaderPresent }}" hint-placeholder-val="{{ true }}">
     <div style="position:absolute;inset:0;z-index:5;background:{{ introBg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:44px;padding:60px 54px;opacity:{{ loaderOpacity }};transition:opacity .55s cubic-bezier(.16,1,.3,1)">
+      <sc-if value="{{ markVisible }}" hint-placeholder-val="{{ true }}">
       <div style="position:relative;display:grid;place-items:center;overflow:hidden;padding:34px 0">
         <span style="position:absolute;bottom:0;width:2px;height:54%;background:linear-gradient(180deg,rgba(255,255,255,.5),transparent);transform-origin:bottom;animation:asTrail 1.5s cubic-bezier(.32,.72,0,1) both"></span>
         <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:14px;animation:mdMark 1.5s cubic-bezier(.16,1,.3,1) both">
@@ -72,13 +76,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
           <div style="width:150px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.65),transparent);transform-origin:center;animation:mdRule 1.7s .24s cubic-bezier(.16,1,.3,1) both"></div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:14px;line-height:1">
-        <span style="font-family:'Archivo',sans-serif;font-size:16px;color:#b0b0b0">{{ resumeLabel }}</span>
-        <div style="font-family:'Archivo',sans-serif;font-size:16px;color:#fff;font-variant-numeric:tabular-nums">{{ pctLabel }}</div>
-        <svg width="20" height="20" viewBox="0 0 60 60" style="display:block;animation:spinRing 1.4s linear infinite;overflow:visible">
-          <circle cx="30" cy="30" r="27" fill="none" stroke="rgba(255,255,255,.78)" stroke-width="3" stroke-linecap="round" stroke-dasharray="60 25 60 25"></circle>
-        </svg>
-      </div>
+      </sc-if>
     </div>
   </sc-if>
   <sc-if value="{{ loginMounted }}" hint-placeholder-val="{{ false }}">
@@ -100,7 +98,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
             <a href="#" onClick="{{ openForgot }}" style="font-size:12px;color:#a0a0a0;transition:color .3s" style-hover="color:#fff">Forgot?</a>
           </div>
           <div style="position:relative">
-            <input type="{{ passType }}" name="password" autocomplete="current-password" placeholder="••••••••••" value="{{ password }}" onChange="{{ setPassword }}" onKeyDown="{{ onPassKey }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 32px 10px 0;transition:border-color .3s" style-focus="border-color:#fff">
+            <input type="{{ passType }}" name="password" autocomplete="new-password" placeholder="Your password" value="{{ password }}" onChange="{{ setPassword }}" onKeyDown="{{ onPassKey }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.2);color:#fff;font-family:'Archivo',sans-serif;font-size:16px;padding:10px 32px 10px 0;transition:border-color .3s" style-focus="border-color:#fff">
             <button type="button" onClick="{{ togglePass }}" aria-label="Show or hide password" style="position:absolute;right:0;bottom:9px;background:none;border:none;padding:2px;margin:0;cursor:pointer;color:#a0a0a0;display:flex;align-items:center;transition:color .25s" style-hover="color:#fff">
               <sc-if value="{{ notShowPass }}" hint-placeholder-val="{{ true }}">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -180,7 +178,7 @@ input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900},&quot;noteBg&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#272727&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#1b1b1b&quot;,&quot;#1f1f1f&quot;,&quot;#1b1b1b&quot;,&quot;#1f1f1f&quot;,&quot;#272727&quot;],&quot;section&quot;:&quot;Note editor&quot;}}">
 class Component extends DCLogic {
-  state = { name: '', email: '', password: '', loading: false, phase: 'load', pct: 0, forgotLabel: 'Forgot?', forgotOpen: false, forgotEmail: '', forgotSent: false, signupOpen: false, suName: '', suEmail: '', suPass: '' };
+  state = { name: '', email: '', password: '', loading: false, phase: 'load', forgotLabel: 'Forgot?', forgotOpen: false, forgotEmail: '', forgotSent: false, signupOpen: false, suName: '', suEmail: '', suPass: '' };
   _authMsg(err) {
     const m = (err && err.message) || 'Something went wrong.';
     if (/invalid login credentials|invalid credentials|bad credential/i.test(m)) return 'Incorrect email or password.';
@@ -246,7 +244,6 @@ class Component extends DCLogic {
         if (s) {
           // keep the loader up and skip the reveal entirely — no form flash
           this.setState({ resuming: true, phase: 'load' });
-          if (this._raf) cancelAnimationFrame(this._raf);
           // the mark is already on screen — let the dashboard pick it up instead of
           // playing the same intro a second time
           try { sessionStorage.setItem('phntm-handoff', '1'); } catch (e) {}
@@ -257,29 +254,17 @@ class Component extends DCLogic {
     // One duration, always. Shortening it on repeat visits made the intro look random —
     // whether you saw the count depended on whether the page had loaded before in this
     // session, which is invisible to the person watching.
-    const dur = 1500, t0 = performance.now();
-    const tick = (now) => {
-      const p = Math.min(1, (now - t0) / dur);
-      const eased = 1 - Math.pow(1 - p, 3);
-      this.setState({ pct: Math.round(eased * 100) });
-      if (p < 1) { this._raf = requestAnimationFrame(tick); }
-      else {
-        this._t1 = setTimeout(() => this.setState({ phase: 'reveal' }), 220);
-        this._t2 = setTimeout(() => this.setState({ phase: 'done' }), 220 + 620);
-      }
-    };
-    this._raf = requestAnimationFrame(tick);
-    // a hidden tab suspends rAF, which would leave the intro frozen mid-count
+    // No counter: a percentage implies work being measured, and nothing here is.
+    // The mark simply holds, then hands over.
+    const dur = 1150;
+    this._t1 = setTimeout(() => this.setState({ phase: 'reveal' }), dur);
+    this._t2 = setTimeout(() => this.setState({ phase: 'done' }), dur + 620);
+    // safety net: if the reveal timers are ever starved, land on the form anyway
     this._t3 = setTimeout(() => {
-      if (this.state.phase === 'load' && !this.state.resuming) {
-        cancelAnimationFrame(this._raf);
-        this.setState({ pct: 100 });
-        this._t1 = setTimeout(() => this.setState({ phase: 'reveal' }), 120);
-        this._t2 = setTimeout(() => this.setState({ phase: 'done' }), 120 + 620);
-      }
-    }, dur + 700);
+      if (this.state.phase !== 'done' && !this.state.resuming) this.setState({ phase: 'done' });
+    }, dur + 1400);
   }
-  componentWillUnmount() { cancelAnimationFrame(this._raf); [this._t1, this._t2, this._t3].forEach((t) => clearTimeout(t)); }
+  componentWillUnmount() { [this._t1, this._t2, this._t3].forEach((t) => clearTimeout(t)); }
   renderVals() {
     const keep = this.state.keepSignedIn !== false;
     // the intro colour is chosen in Settings; a raw-string key can come back JSON-quoted
@@ -354,11 +339,12 @@ class Component extends DCLogic {
 
       loading: this.state.loading,
       notLoading: !this.state.loading,
-      loaderPresent: this.state.resuming || this.state.phase !== 'done',
+      loaderPresent: this.state.phase !== 'done',
+      markVisible: !this.state.resuming,
       loginMounted: !this.state.resuming && this.state.phase !== 'load',
       loaderOpacity: (this.state.resuming || this.state.phase === 'load') ? 1 : 0,
-      resumeLabel: this.state.resuming ? 'Welcome back' : 'Loading',
-      pctLabel: this.state.pct + '%',
+
+
       submit: () => this._submit(),
       googleIn: this._g || (this._g = (e) => { if (e && e.preventDefault) e.preventDefault(); this._oauth('google'); }),
       appleIn: this._a || (this._a = (e) => { if (e && e.preventDefault) e.preventDefault(); this._oauth('apple'); }),
