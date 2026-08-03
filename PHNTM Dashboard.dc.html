@@ -3169,14 +3169,37 @@ class Component extends DCLogic {
       // not landed yet: the stale cloud array simply replaced the good local one.
       const MERGE = { 'phntm-my-trades-v1': 1, 'phntm-notes-v1': 1, 'phntm-payouts-v1': 1 };
       this._pruneTombstones();
-      const tombs = this._tombstones();
+      // Adopt the cloud's tombstones BEFORE merging: a delete made on another device
+      // lives only there, and merging without it resurrects the record.
+      const tombs = (() => {
+        const local = this._tombstones();
+        let remote = {};
+        try {
+          const rawT = data[this._k('phntm-deleted-v1')] || data['phntm-deleted-v1'];
+          remote = rawT ? (typeof rawT === 'string' ? JSON.parse(rawT) : rawT) : {};
+        } catch (e) {}
+        const union = { ...local };
+        Object.keys(remote || {}).forEach((k) => {
+          union[k] = [...new Set([...(local[k] || []), ...(remote[k] || [])])].slice(-500);
+        });
+        const s = JSON.stringify(union);
+        try { localStorage.setItem(this._k('phntm-deleted-v1'), s); } catch (e) {}
+        if (s !== JSON.stringify(remote || {})) this._pushCloud(this._k('phntm-deleted-v1'), s);
+        return union;
+      })();
       keys.forEach((k) => {
         try {
+          // the adopt-step above already owns the tombstone list; letting the generic
+          // branch touch it replaces the union with the cloud's older copy
+          if (k === this._k('phntm-deleted-v1') || k === 'phntm-deleted-v1') return;
           if (MERGE[k]) {
             const cloudArr = Array.isArray(data[k]) ? data[k] : JSON.parse(data[k] || '[]');
             let localArr = [];
             try { localArr = JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) {}
             const merged = this._mergeById(localArr, cloudArr, tombs[k] || []);
+            // a local record that is tombstoned anywhere must not be re-uploaded
+            const deadSet = new Set((tombs[k] || []).map(String));
+            if (localArr.some((r) => r && deadSet.has(String(r.id)))) changed = true;
             const next = JSON.stringify(merged);
             if (localStorage.getItem(k) !== next) { localStorage.setItem(k, next); changed = true; }
             // if the merge added anything the cloud lacked, push the union back up
@@ -3201,23 +3224,10 @@ class Component extends DCLogic {
     try { return JSON.parse(localStorage.getItem(this._k('phntm-deleted-v1')) || '{}'); } catch (e) { return {}; }
   }
   _pruneTombstones() {
-    // an id that is still present locally was restored after its delete — an undo before
-    // _untombstone existed. Drop the stale entry so the merge stops re-deleting it.
-    const all = this._tombstones();
-    let dirty = false;
-    for (const [key, ids] of Object.entries(all)) {
-      let live = [];
-      try { live = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) {}
-      if (!Array.isArray(live) || !live.length) continue;
-      const present = new Set(live.map((r) => String(r && r.id)));
-      const next = (ids || []).filter((x) => !present.has(String(x)));
-      if (next.length !== (ids || []).length) { all[key] = next; dirty = true; }
-    }
-    if (dirty) {
-      const s = JSON.stringify(all);
-      try { localStorage.setItem(this._k('phntm-deleted-v1'), s); } catch (e) {}
-      this._pushCloud(this._k('phntm-deleted-v1'), s);
-    }
+    // Deliberately a no-op. It used to drop any tombstone whose record was still present
+    // locally, on the assumption that meant an undo — but that is also exactly what a
+    // delete made on ANOTHER device looks like here, so it wiped the tombstone and the
+    // note came back everywhere. Undo now withdraws its own tombstone via _untombstone.
   }
   // A pure union would resurrect anything you deleted, so a delete records the id.
   _untombstone(key, ids) {
