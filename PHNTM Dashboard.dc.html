@@ -479,7 +479,12 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
         <sc-for list="{{ vitalsBig }}" as="v" hint-placeholder-count="3">
           <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:15px 0;border-bottom:1px solid rgba(255,255,255,.07)">
             <span style="font-size:13px;color:#a0a0a0;white-space:nowrap">{{ v.label }}</span>
-            <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:300;line-height:1;color:#fff">{{ v.val }}</span>
+            <span style="display:flex;align-items:baseline;min-width:0">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:300;line-height:1;color:#fff">{{ v.val }}</span>
+              <sc-if value="{{ v.hasNote }}" hint-placeholder-val="{{ false }}">
+                <span style="{{ v.noteStyle }}">{{ v.note }}</span>
+              </sc-if>
+            </span>
           </div>
         </sc-for>
         <div style="margin-top:auto;padding-top:16px;font-size:11.5px;color:#a0a0a0;line-height:1.5;text-wrap:pretty">{{ pfNote }}</div>
@@ -552,9 +557,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
             </div>
           </sc-for>
         </sc-if>
-        <sc-if value="{{ noSymRows }}" hint-placeholder-val="{{ true }}">
-          <div style="padding:26px 0;font-size:13px;color:#a0a0a0">No trades in this range yet.</div>
-        </sc-if>
+
       </div>
   </section>
 
@@ -765,9 +768,9 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <div style="font-size:11.5px;color:#b0b0b0;margin-top:6px">Mean multiple of risk</div>
     </div>
     <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:18px 22px">
-      <div style="font-size:11px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase">Expectancy</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:300;color:#fff;margin-top:7px">{{ btExpLabel }}</div>
-      <div style="font-size:11.5px;color:#b0b0b0;margin-top:6px">Average per trade — net ÷ trades</div>
+      <div style="font-size:11px;letter-spacing:.14em;color:#b0b0b0;text-transform:uppercase">Total R</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:300;color:#fff;margin-top:7px">{{ btTotalRLabel }}</div>
+      <div style="font-size:11.5px;color:#b0b0b0;margin-top:6px">Sum of R across the slice</div>
     </div>
   </section>
 
@@ -3776,8 +3779,15 @@ class Component extends DCLogic {
       tabLabel: String(this.state.tab || '').toUpperCase(),
       pnl: fmt$(Math.round(data.pnl * k)),
       heroSub: inRange.length
-        ? (Math.round(data.trades * k) + (Math.round(data.trades * k) === 1 ? ' trade logged · avg ' : ' trades logged · avg ') + ((data.avgR >= 0 ? '+' : '') + data.avgR.toFixed(1)) + 'R')
-        : (mts.length ? ('nothing in this period — ' + mts.length + (mts.length === 1 ? ' trade' : ' trades') + ' on record, try a wider range') : ''),
+        ? (() => {
+            const rs = inRange.map((t) => t.r).filter((r) => isFinite(r) && r !== 0);
+            const sum = rs.reduce((a, b) => a + b, 0) * k;
+            const n = Math.round(data.trades * k);
+            return (rs.length ? ((sum >= 0 ? '+' : '') + sum.toFixed(1) + 'R total · ') : '')
+              + n + (n === 1 ? ' trade' : ' trades')
+              + (rs.length ? (' · avg ' + (data.avgR >= 0 ? '+' : '') + data.avgR.toFixed(1) + 'R') : '');
+          })()
+        : '',
       tradeCount: Math.round(data.trades * k),
       eqJson, noTrades: !inRange.length,
       ovNoCurve: !inRange.length, ovStartLabel: '$' + Math.round(acct.startBal || 0).toLocaleString(),
@@ -3785,21 +3795,40 @@ class Component extends DCLogic {
       acctFail: acct.isProp ? String(acct.mll) : '',
       acctFailLabel: 'DRAWDOWN LIMIT',
       acctGoalLabel: 'GOAL',
-      vitalsBig: [
+      vitalsBig: (() => {
+        const chron = inRange.slice().sort((a, b) => (a.ts || 0) - (b.ts || 0));
+        let run = 0, worst = 0, cur = 0;
+        chron.forEach((t) => { const p = t.pnl || 0; if (p < 0) { run += 1; if (run > worst) worst = run; } else if (p > 0) run = 0; });
+        for (let i = chron.length - 1; i >= 0; i--) { const p = chron[i].pnl || 0; if (p < 0) cur += 1; else if (p > 0) break; }
+        const streakVal = !chron.length ? '—' : (worst ? (worst + (worst === 1 ? ' loss' : ' in a row')) : 'none yet');
+        const streakNote = !chron.length ? '' : (cur > 0 ? ('on ' + cur + ' now') : '');
+        const streakNoteColor = cur >= 3 ? '#e0a05a' : '#a0a0a0';
+        return [
         ['Win rate', !inRange.length ? '—' : (data.wr * k).toFixed(1) + '%', '.2s'],
         ['Profit factor', (!inRange.length || gl === 0) ? '—' : (data.pf * k).toFixed(2), '.25s'],
         ['Average R', !inRange.length ? '—' : ((data.avgR >= 0 ? '+' : '') + (data.avgR * k).toFixed(1) + 'R'), '.3s'],
-      ].map(([label, val, delay]) => ({
-        label, val,
-        wrapStyle: 'background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 26px;animation:fadeUp .9s ' + delay + ' cubic-bezier(.16,1,.3,1) both',
-      })),
+        ['Total R', (() => {
+          const rs = inRange.map((t) => t.r).filter((r) => isFinite(r) && r !== 0);
+          if (!rs.length) return '—';
+          const sum = rs.reduce((a, b) => a + b, 0) * k;
+          return (sum >= 0 ? '+' : '') + sum.toFixed(1) + 'R';
+        })(), '.35s'],
+        ['Max consecutive losses', streakVal, '.4s', streakNote, streakNoteColor],
+        ].map(([label, val, delay, note, noteColor]) => ({
+          label, val,
+          note: note || '',
+          hasNote: !!note,
+          noteStyle: 'margin-left:9px;font-size:11.5px;color:' + (noteColor || '#a0a0a0'),
+          wrapStyle: 'background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.012));border:1px solid rgba(255,255,255,.09);border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06);padding:24px 26px;animation:fadeUp .9s ' + delay + ' cubic-bezier(.16,1,.3,1) both',
+        }));
+      })(),
       trades, setups, tabs, tabWipe, acctScan,
       mobTabs, mobMore, moreItems,
       moreOpen: !!this.state.moreOpen,
       closeMore: () => this.setState({ moreOpen: false }),
       sessRows, symRows, hasSymRows: symRows.length > 0, noSymRows: symRows.length === 0,
       pfNote: !inRange.length
-        ? 'No trades in this range yet.'
+        ? ''
         : (gl === 0
             ? 'Profit factor needs at least one loss to divide by — it appears once you have one.'
             : 'Profit factor is gross profit ÷ gross loss. Above 1 means you are net ahead.'), sessInsight, setupRows, setupInsight, dayRows, dayInsight,
@@ -4358,9 +4387,11 @@ class Component extends DCLogic {
           btWinLabel: decided ? Math.round((wins / decided) * 100 * k) + '%' : '—',
           btRecordLabel: wins + 'W · ' + losses + 'L',
           btAvgRLabel: rs.length ? (avgR * k).toFixed(2) + 'R' : '—',
+          // sum of R — the figure that says how much the edge actually produced, which
+          // an average cannot: 4 trades at +2R and 400 at +2R read identically
+          btTotalRLabel: rs.length ? (((rs.reduce((a, b) => a + b, 0)) * k >= 0 ? '+' : '') + ((rs.reduce((a, b) => a + b, 0)) * k).toFixed(1) + 'R') : '—',
           btPfLabel: grossL ? ((grossW / grossL) * k).toFixed(2) : (grossW ? '∞' : '—'),
           btDDLabel: maxDD ? '−' + money(maxDD).replace('$', '$') : '—',
-          btExpLabel: chron.length ? signed((net / chron.length) * k) : '—',
           btScopeLabel: (sym === 'All' ? 'All symbols' : sym) + ' · ' +
             (yr === 'All' ? 'all time' : (mo === 'All' ? String(yr) : MON[mo] + ' ' + yr)),
           btYearChips: ['All'].concat(years.map(String)).map((y) => ({
