@@ -1794,7 +1794,44 @@ class Component extends DCLogic {
     // figcaption, which grows the caption box and shoves the image down.
     const sel = window.getSelection();
     const cap = (sel && sel.rangeCount) ? this._capOf(sel.getRangeAt(0).startContainer) : null;
-    if (!cap) return;
+    if (!cap) {
+      // A figure is inline-block sitting directly in the root, so clicking beside or
+      // under one puts the caret in the root itself with no block to split — Enter then
+      // does nothing at all. Give it a paragraph after the figure and move there.
+      if (ev.key === 'Enter' && !ev.shiftKey && sel && sel.rangeCount) {
+        const root = this._bodyEl;
+        const r = sel.getRangeAt(0);
+        if (!root || !r.collapsed || !root.contains(r.startContainer)) return;
+        let node = r.startContainer;
+        if (node.nodeType === 3) node = node.parentNode;
+        // only step in when there is no real block between the caret and the root
+        let block = node;
+        while (block && block !== root && !/^(P|H1|H2|H3|LI|BLOCKQUOTE|DIV)$/.test(block.tagName || '')) block = block.parentNode;
+        const inFigure = node && node.closest ? node.closest('figure[data-fig]') : null;
+        if (block !== root && !inFigure) return;   // a normal block handles Enter itself
+        ev.preventDefault();
+        const p = document.createElement('p');
+        p.appendChild(document.createElement('br'));
+        if (inFigure) {
+          // caret sits in the picture itself — the new line belongs after it
+          let anchor = inFigure.closest('div[data-figrow]') || inFigure;
+          while (anchor.parentNode && anchor.parentNode !== root) anchor = anchor.parentNode;
+          root.insertBefore(p, anchor.nextSibling);
+        } else {
+          // Caret is loose text in the root. Insert AT the caret, splitting the text node
+          // at that point — appending to the end would drop the new line below the
+          // picture instead of between the text and the picture.
+          const at = r.cloneRange();
+          at.collapse(true);
+          at.insertNode(p);
+        }
+        const rr = document.createRange();
+        rr.selectNodeContents(p); rr.collapse(true);
+        sel.removeAllRanges(); sel.addRange(rr);
+        this._keepCaretVisible();
+      }
+      return;
+    }
     if (ev.key === 'Enter') {
       ev.preventDefault();
       const fig = cap.closest('figure[data-fig]');
