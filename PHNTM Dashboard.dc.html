@@ -653,7 +653,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
       <div>
         <label style="font-size:12px;color:#b0b0b0">Stop</label>
         <input placeholder="20" value="{{ szStop }}" onInput="{{ szSetStop }}" style="width:100%;box-sizing:border-box;margin-top:8px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);border-radius:11px;color:#fff;font-family:'JetBrains Mono',monospace;font-size:15px;padding:11px 14px;outline:none;transition:border-color .3s,background .3s" style-focus="border-color:rgba(255,255,255,.32);background:rgba(255,255,255,.06)">
-        <div style="margin-top:7px;font-size:11.5px;color:#b0b0b0">pips, entry to stop</div>
+        <div style="margin-top:7px;font-size:11.5px;color:#b0b0b0">pips · points on indices</div>
       </div>
     </div>
   </section>
@@ -665,7 +665,7 @@ button:focus-visible,a:focus-visible,[contenteditable]:focus-visible{outline:1px
     <div style="display:flex;flex-direction:column">
       <sc-for list="{{ szRows }}" as="r" hint-placeholder-count="7">
         <div style="{{ r.rowSt }}">
-          <span style="font-size:15px;color:#fff">{{ r.sym }}</span>
+          <span style="display:flex;align-items:baseline;gap:7px;font-size:15px;color:#fff">{{ r.sym }}<span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#8a8a8a">{{ r.unit }}</span></span>
           <span style="{{ r.lotsSt }}">{{ r.lots }}</span>
           <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#c8c8c8">{{ r.pipAmt }}</span>
           <button onClick="{{ r.remove }}" title="Remove pair" style="justify-self:end;background:none;border:none;color:#a0a0a0;font-size:15px;line-height:1;padding:8px 9px;margin:-8px 0 -8px -9px;cursor:pointer;transition:color .3s" style-hover="color:#e0a05a">×</button>
@@ -2920,18 +2920,23 @@ class Component extends DCLogic {
   // A pip is worth its quote currency, so only pairs quoted in USD have a fixed
   // dollar value. Everything else has to be converted at the live rate — which is
   // why this fetches ECB daily rates instead of trusting a memorised number.
-  _szDefaultPairs() { return ['GBPUSD', 'USDCAD', 'EURUSD', 'NZDJPY', 'USDJPY', 'EURJPY', 'USDCHF']; }
+  // Watchlist as traded: the 30-min and 5-min FX lists merged, duplicates collapsed.
+  _szDefaultPairs() { return ['GBPNZD', 'GBPCAD', 'AUDNZD', 'EURAUD', 'EURUSD', 'CHFJPY', 'GBPJPY', 'USDJPY', 'NZDCAD', 'DE30EUR', 'UK100GBP', 'HK33HKD']; }
   _szSetPairs(next) {
     const list = next && next.length ? next : null;
     this.setState({ szPairs: list || this._szDefaultPairs() });
     try {
       // route through _persist so the pair list follows you across devices
-      this._persist('phntm-sz-pairs-v1', JSON.stringify(list || []));
+      this._persist('phntm-sz-pairs-v2', JSON.stringify(list || []));
     } catch (e) {}
   }
   _szInstruments() {
-    const FX = (sym, quote, jpy) => ({ sym, quote, pip: jpy ? 0.01 : 0.0001, contract: 100000, digits: jpy ? 3 : 5 });
+    const FX = (sym, quote, jpy) => ({ sym, quote, pip: jpy ? 0.01 : 0.0001, contract: 100000, digits: jpy ? 3 : 5, unit: 'pips' });
+    // Index CFDs are quoted in points, one contract per lot, so a 1-point move is
+    // worth one unit of the quote currency per lot. Same conversion, different unit.
+    const IDX = (sym, quote) => ({ sym, quote, pip: 1, contract: 1, digits: 1, unit: 'pts' });
     return [
+      IDX('DE30EUR', 'EUR'), IDX('UK100GBP', 'GBP'), IDX('HK33HKD', 'HKD'),
       FX('EURUSD', 'USD'), FX('GBPUSD', 'USD'), FX('AUDUSD', 'USD'), FX('NZDUSD', 'USD'),
       FX('USDJPY', 'JPY', 1), FX('EURJPY', 'JPY', 1), FX('GBPJPY', 'JPY', 1),
       FX('NZDJPY', 'JPY', 1), FX('AUDJPY', 'JPY', 1), FX('CADJPY', 'JPY', 1), FX('CHFJPY', 'JPY', 1),
@@ -2949,7 +2954,7 @@ class Component extends DCLogic {
   // yields a slightly SMALL lot, so being stale leaves you under-risked, not over.
   _szFallback() {
     return { USD: 1, JPY: 1 / 160.3, CAD: 1 / 1.403, CHF: 1 / 0.807, GBP: 1.34, EUR: 1.16,
-             AUD: 0.655, NZD: 0.6, SGD: 0.74, MXN: 0.054, ZAR: 0.055, SEK: 0.094,
+             AUD: 0.655, NZD: 0.6, SGD: 0.74, HKD: 1 / 7.78, MXN: 0.054, ZAR: 0.055, SEK: 0.094,
              NOK: 0.092, PLN: 0.27, TRY: 0.024 };
   }
   // Three sources, tried in order, so a missing serverless function or one dead
@@ -2962,7 +2967,10 @@ class Component extends DCLogic {
     const today = new Date().toISOString().slice(0, 10);
     try {
       const c = JSON.parse(localStorage.getItem(this._k('phntm-rates-v1')) || 'null');
-      if (c && c.fetched === today && c.usdPer) {
+      // a cache written before a currency was added is incomplete, not fresh —
+      // otherwise a newly listed instrument reads "no rate" until tomorrow
+      const complete = (o) => !!o && ['JPY','CAD','CHF','GBP','EUR','AUD','NZD','HKD'].every((k) => o[k] != null);
+      if (c && c.fetched === today && complete(c.usdPer)) {
         this.setState({ rates: c.usdPer, ratesDate: c.date || today, ratesErr: '' });
         return;
       }
@@ -2977,11 +2985,11 @@ class Component extends DCLogic {
       try { return await fetch(url, { signal: ctl.signal }); }
       finally { clearTimeout(bail); }
     };
-    const CUR = ['JPY','CAD','CHF','GBP','EUR','AUD','NZD','SEK','NOK','MXN','ZAR','SGD','PLN','TRY'];
+    const CUR = ['JPY','CAD','CHF','GBP','EUR','AUD','NZD','HKD','SEK','NOK','MXN','ZAR','SGD','PLN','TRY'];
     const fromQuotePerUsd = (q) => { const o = { USD: 1 }; CUR.forEach((c) => { if (q[c]) o[c] = 1 / q[c]; }); return o; };
     const tries = [
       async () => { const r = await grab('/api/rates'); if (!r.ok) throw 0;
-        const j = await r.json(); if (!j || !j.usdPer || !j.usdPer.JPY) throw 0;
+        const j = await r.json(); if (!j || !j.usdPer || !j.usdPer.JPY || !j.usdPer.HKD) throw 0;   // an older deployed function lacks HKD
         return { usdPer: j.usdPer, date: j.date || today, via: 'ECB' }; },
       async () => { const r = await grab('https://api.frankfurter.app/latest?base=USD&symbols=' + CUR.join(',')); if (!r.ok) throw 0;
         const j = await r.json(); if (!j || !j.rates || !j.rates.JPY) throw 0;
@@ -3414,7 +3422,7 @@ class Component extends DCLogic {
     this._loadLocal();
     const h = new Date().getHours();
     this.setState({ meal: h < 11 ? 'Breakfast' : h < 15 ? 'Lunch' : 'Dinner' });
-    try { const p = JSON.parse(localStorage.getItem(this._k('phntm-sz-pairs-v1')) || 'null'); if (Array.isArray(p) && p.length) this.setState({ szPairs: p }); } catch (e) {}   // empty array = reset to defaults
+    try { const p = JSON.parse(localStorage.getItem(this._k('phntm-sz-pairs-v2')) || 'null'); if (Array.isArray(p) && p.length) this.setState({ szPairs: p }); } catch (e) {}   // empty array = reset to defaults
     this._szLoadRates();
     this._mountAt = Date.now();
     setTimeout(() => { this._dataReady = true; this._revealNumbers(); }, 3200);   // fallback: never wait on a hung network
@@ -4310,6 +4318,8 @@ class Component extends DCLogic {
             const tiny = pv > 0 && stop > 0 && riskUsd > 0 && lots < 0.01;
             return {
               sym,
+              // indices measure the stop in points, not pips — say so on the row
+              unit: it && it.unit === 'pts' ? 'pts' : '',
               lots: pv <= 0 ? 'no rate' : lots > 0 ? lots.toFixed(2) : tiny ? '< 0.01' : '—',
               lotsSt: 'font-family:JetBrains Mono,monospace;font-size:15px;color:' + (tiny || pv <= 0 ? '#e0a05a' : lots > 0 ? '#fff' : '#a0a0a0'),
               pipAmt: pv > 0 ? '$' + pv.toFixed(2) : '—',
@@ -4324,7 +4334,7 @@ class Component extends DCLogic {
           szAdd: (e) => { const v = e.target.value; if (v) this._szSetPairs(pairs.concat([v])); },
           szCanReset: JSON.stringify(pairs) !== JSON.stringify(this._szDefaultPairs()),
           szReset: () => this._szSetPairs(null),
-          szFootnote: 'A pip pays out in the quote currency, so only USD-quoted pairs are fixed at $10. The rest move with the rate and are refreshed for you daily. Lots round down, so you are never over-risked.',
+          szFootnote: 'A pip pays out in the quote currency, so only USD-quoted pairs are fixed at $10. The rest move with the rate and are refreshed for you daily. Index rows are marked pts — one point per contract in DAX euros, FTSE pounds or Hang Seng dollars. Lots round down, so you are never over-risked.',
 
           ...(() => {
             // Freshness has to be legible at a glance: a green dot and the word
@@ -4346,9 +4356,9 @@ class Component extends DCLogic {
               szRatesWhen: this.state.ratesErr ? 'saved copy' : dt ? (isToday ? 'today, ' + nice(dt) : nice(dt)) : 'loading',
               // showing the actual conversion rates is the only real proof the
               // figures above came from live data rather than a hardcoded table
-              szRateChips: [['USD/JPY', 'JPY'], ['USD/CAD', 'CAD'], ['USD/CHF', 'CHF'], ['GBP/USD', 'GBP'], ['EUR/USD', 'EUR']].map(([pair, cur]) => {
+              szRateChips: [['USD/JPY', 'JPY'], ['USD/CAD', 'CAD'], ['USD/HKD', 'HKD'], ['GBP/USD', 'GBP'], ['EUR/USD', 'EUR'], ['AUD/USD', 'AUD'], ['NZD/USD', 'NZD']].map(([pair, cur]) => {
                 const up = rates[cur];
-                const inv = cur === 'JPY' || cur === 'CAD' || cur === 'CHF';
+                const inv = cur === 'JPY' || cur === 'CAD' || cur === 'CHF' || cur === 'HKD';
                 return { pair, rate: up ? (inv ? (1 / up).toFixed(cur === 'JPY' ? 2 : 4) : up.toFixed(4)) : '—' };
               }),
             };
