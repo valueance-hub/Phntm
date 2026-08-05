@@ -11,7 +11,7 @@
 // CommonJS on purpose: a static repo with no package.json is treated as CommonJS by
 // Vercel's Node runtime, so `export default` fails to build and the route 404s.
 
-const CURRENCIES = ['JPY', 'CAD', 'CHF', 'GBP', 'EUR', 'AUD', 'NZD', 'SEK', 'NOK', 'MXN', 'ZAR', 'SGD', 'PLN', 'TRY', 'HUF', 'CZK'];
+const CURRENCIES = ['JPY', 'CAD', 'CHF', 'GBP', 'EUR', 'AUD', 'NZD', 'HKD', 'SEK', 'NOK', 'MXN', 'ZAR', 'SGD', 'PLN', 'TRY', 'HUF', 'CZK'];
 
 // Cached per warm instance so a burst of page loads costs one upstream call.
 let cache = null;           // { at, payload }
