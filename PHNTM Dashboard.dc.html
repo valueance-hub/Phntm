@@ -3318,6 +3318,18 @@ class Component extends DCLogic {
     try { localStorage.setItem(this._k('phntm-deleted-v1'), s); } catch (e) {}
     this._pushCloud(this._k('phntm-deleted-v1'), s);
   }
+  // Read-time guard. The merge already honours tombstones, but a pull that arrives
+  // before the deleting device's tombstone push has landed can still write a deleted
+  // record back to localStorage. Anything tombstoned is dropped here and the corrected
+  // list is re-persisted, so it is also removed from the cloud rather than re-uploaded.
+  _dropDead(key, arr) {
+    if (!Array.isArray(arr)) return arr;
+    const dead = new Set(((this._tombstones() || {})[key] || []).map(String));
+    if (!dead.size) return arr;
+    const live = arr.filter((r) => !(r && dead.has(String(r.id))));
+    if (live.length !== arr.length) { try { this._persist(key, JSON.stringify(live)); } catch (e) {} }
+    return live;
+  }
   _tombstone(key, ids) {
     const all = this._tombstones();
     const set = new Set(all[key] || []);
@@ -3363,6 +3375,7 @@ class Component extends DCLogic {
     this.setState({ payouts: Array.isArray(pouts) ? pouts : [] });
     setTimeout(() => { this._backfillPayouts(); this._backfillFunded(); setTimeout(() => this._checkBadges(true), 0); }, 0);
     let mts = null; try { mts = JSON.parse(localStorage.getItem(this._k('phntm-my-trades-v1')) || 'null'); } catch (e) {}
+    mts = this._dropDead('phntm-my-trades-v1', mts);
     if (Array.isArray(mts)) mts = mts.map((t) => (t.acct ? t : { ...t, acct: 'Live' })); // legacy trades → Live bucket
     if (!Array.isArray(mts)) { mts = []; } // new accounts start empty — no demo trades
     const rep = this._btRepairDates(mts);
@@ -3372,6 +3385,7 @@ class Component extends DCLogic {
     let rt = null; try { rt = JSON.parse(localStorage.getItem(this._k('phntm-routines-v1')) || 'null'); } catch (e) {}
     this.setState({ routines: Array.isArray(rt) ? rt : [{ id: 1, name: 'Review yesterday\u2019s trades', done: {} }, { id: 2, name: 'Mark key levels before open', done: {} }, { id: 3, name: 'No trades in first 5 min', done: {} }, { id: 4, name: 'Journal every entry', done: {} }] });
     let nt = null; try { nt = JSON.parse(localStorage.getItem(this._k('phntm-notes-v1')) || 'null'); } catch (e) {}
+    nt = this._dropDead('phntm-notes-v1', nt);
     this.setState({ notes: Array.isArray(nt) ? nt : [] });
     let nc = null; try { nc = JSON.parse(localStorage.getItem(this._k('phntm-note-cats-v1')) || 'null'); } catch (e) {}
     this.setState({ noteCats: Array.isArray(nc) ? nc : [] });
