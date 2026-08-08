@@ -77,7 +77,7 @@ button,input,select,textarea{font-family:inherit}
 [contenteditable] figure[data-fig] img{border-radius:8px}
 [contenteditable] figure[data-fig]{position:relative}
 [contenteditable] figure[data-fig] img{pointer-events:auto}
-[contenteditable] figcaption[data-cap]{font-family:Archivo,sans-serif;font-size:13.5px;font-weight:500;letter-spacing:.005em;line-height:1.45;margin:0 0 9px;min-height:1.3em;outline:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;caret-color:#ffffff;background:linear-gradient(96deg,#ffffff 0%,#dcdcdc 42%,#8f8f8f 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+[contenteditable] figcaption[data-cap]{font-family:Archivo,sans-serif;font-size:13.5px;font-weight:500;letter-spacing:.005em;line-height:1.45;margin:0 0 9px;min-height:1.3em;outline:none;white-space:pre-wrap;overflow-wrap:anywhere;caret-color:#ffffff;background:linear-gradient(96deg,#ffffff 0%,#dcdcdc 42%,#8f8f8f 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 /* an empty caption must drop the gradient, or the placeholder is clipped to nothing */
 [contenteditable] figcaption[data-cap]:empty{background:none;-webkit-text-fill-color:#6f6f6f;color:#6f6f6f;font-weight:400}
 [contenteditable] figcaption[data-cap]:empty:before{content:'Add a title\2026';pointer-events:none}
@@ -1837,18 +1837,21 @@ class Component extends DCLogic {
       const fig = cap.closest('figure[data-fig]');
       const root = this._bodyEl;
       if (!fig || !root) return;
-      // step out to the block after the figure (or its row), creating one if needed
+      // Enter on a title opens a line WHERE YOU ARE and pushes the picture down, rather
+      // than hopping the caret over the picture to the far side of it.
       let anchor = fig.closest('div[data-figrow]') || fig;
       while (anchor.parentNode && anchor.parentNode !== root) anchor = anchor.parentNode;
-      let next = anchor.nextElementSibling;
-      if (!next || next.tagName === 'FIGURE' || next.getAttribute('data-figrow') != null) {
-        next = document.createElement('p');
-        next.appendChild(document.createElement('br'));
-        root.insertBefore(next, anchor.nextSibling);
+      let line = anchor.previousElementSibling;
+      const reusable = line && line.tagName === 'P' && !line.textContent.trim();
+      if (!reusable) {
+        line = document.createElement('p');
+        line.appendChild(document.createElement('br'));
+        root.insertBefore(line, anchor);
       }
       const r = document.createRange();
-      r.selectNodeContents(next); r.collapse(true);
+      r.selectNodeContents(line); r.collapse(true);
       sel.removeAllRanges(); sel.addRange(r);
+      this._keepCaretVisible();
     }
   }
   _autoList() {
@@ -1913,6 +1916,22 @@ class Component extends DCLogic {
       else if (r.top < margin) window.scrollBy({ top: r.top - margin, behavior: 'auto' });
     } catch (e) {}
   }
+  // A figure is inline-block: when one is the FIRST thing in a note there is no text
+  // node above it, so clicking the top-left lands you in the picture and Enter has
+  // nothing to split. Keep an empty line in front of a leading picture at all times.
+  _edLeadLine(root) {
+    if (!root) return null;
+    let first = root.firstElementChild;
+    while (first && first.nodeType === 1 && !first.textContent.trim() && first.tagName === 'BR') first = first.nextElementSibling;
+    if (!first) return null;
+    const leads = first.tagName === 'FIGURE' || first.getAttribute('data-figrow') != null
+                  || (first.querySelector && first.tagName === 'DIV' && first.querySelector('figure[data-fig]') && !first.textContent.trim());
+    if (!leads) return null;
+    const p = document.createElement('p');
+    p.appendChild(document.createElement('br'));
+    root.insertBefore(p, first);
+    return p;
+  }
   _edBodyInput(ev) {
     this._keepCaretVisible();
     this._autoList();
@@ -1924,6 +1943,7 @@ class Component extends DCLogic {
     root.querySelectorAll('figcaption[data-cap]').forEach((c) => {
       if (!c.textContent.trim() && c.innerHTML !== '') c.innerHTML = '';
     });
+    this._edLeadLine(root);
   }
   _edBodyDbl(ev) {
     const t = ev.target;
@@ -4536,7 +4556,7 @@ class Component extends DCLogic {
           setEdCat: (e) => this._edSet('cat', e.target.value),
           setEdSource: (e) => this._edSet('source', e.target.value),
           catPicks, hasCatPicks: catPicks.length > 0,
-          bodyRef: (el) => { this._bodyEl = el; if (el) { this._annoWatch(); el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._normaliseFigures(); this._pruneFigures(el); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
+          bodyRef: (el) => { this._bodyEl = el; if (el) { this._annoWatch(); setTimeout(() => this._edLeadLine(el), 0); el.onfocus = () => { this._activeEditable = el; this._edLeadLine(el); }; el.onpaste = (e) => this._edPaste(e); el.ondblclick = (e) => this._wordAt(e.clientX, e.clientY); el.onclick = (e) => { if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); } if (el && this._edMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.bodyHtml) || ''); this._normaliseFigures(); this._pruneFigures(el); this._edMountedFor = this._edKey; setTimeout(() => { try { el.focus(); const r = document.createRange(); r.selectNodeContents(el); r.collapse(false); const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r); } catch (e) {} }, 40); } },
           lessonRef: (el) => { this._lessonEl = el; if (el) { el.onfocus = () => { this._activeEditable = el; }; el.onpaste = (e) => this._edPaste(e); el.ondragstart = (e) => this._edDragStart(e); el.ondragover = (e) => this._edDragOver(e); el.ondragleave = () => this._edDragLeave(); el.ondrop = (e) => this._edDrop(e); el.ondragend = () => { this._clearFigHint(); this._dragFig = null; setTimeout(() => this._unnestFigures(), 0); }; el.oninput = () => this._edBodyInput(); el.onkeydown = (e) => this._edBodyKey(e); el.ondblclick = (e) => { this._edBodyDbl(e); if (!e.defaultPrevented) this._wordAt(e.clientX, e.clientY); }; el.onclick = (e) => { this._edBodyClick(e); if (e.detail >= 3) this._blockAt(e.clientX, e.clientY); }; } if (el && this._lessonMountedFor !== this._edKey) { el.innerHTML = this._clean((this.state.ed && this.state.ed.lessonHtml) || ''); this._normaliseFigures(el); this._pruneFigures(el); this._lessonMountedFor = this._edKey; } },
           syncFmt: () => this._syncFmt(),
           insertDivider: () => this._edInsertHr(),
@@ -4931,8 +4951,8 @@ class Component extends DCLogic {
       lightboxImg: this.state.lightbox ? React.createElement('img', {
         src: this.state.lightbox,
         onClick: (e) => e.stopPropagation(),
-        // upscale small images to fill the binding dimension, but keep the box hugging
-        // the picture so the radius and shadow frame the image, not dead space
+        // Fit to the viewport but never past the picture's own pixels — upscaling is
+        // what made opening a shot look softer than the copy in the note.
         // a cached image fires no load event, so size it the moment the node exists —
         // otherwise it paints full width first and only snaps down on a later decode
         ref: (im) => {
@@ -4940,7 +4960,9 @@ class Component extends DCLogic {
           const fit = () => {
             const nw = im.naturalWidth || 0, nh = im.naturalHeight || 0;
             if (!nw || !nh) return false;
-            im.style.width = Math.round(Math.min(window.innerWidth * 0.96, window.innerHeight * 0.94 * (nw / nh))) + 'px';
+            const fitW = Math.min(window.innerWidth * 0.96, window.innerHeight * 0.94 * (nw / nh));
+            // capping at the natural width keeps it 1:1 instead of blowing it up
+            im.style.width = Math.round(Math.min(fitW, nw)) + 'px';
             im.style.visibility = 'visible';
             return true;
           };
